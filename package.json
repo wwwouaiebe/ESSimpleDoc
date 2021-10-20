@@ -1,0 +1,6 @@
+{
+  "type" : "module",
+  "dependencies": {
+     "@babel/parser": "^7.15.8"
+  }
+}
