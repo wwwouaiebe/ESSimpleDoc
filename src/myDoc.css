@@ -49,6 +49,11 @@ h3
 	margin-left : 3cm;
 }
 
+h3 > span
+{
+	color : gray;
+	font-size : 80%;
+}
 h4 
 {
 	margin-left : 4cm;
@@ -59,9 +64,30 @@ h1, h2, h3, h4, h5, h6 {
 	margin-bottom: 1em;
 }
 
-div {
+div,
+table
+ {
 	margin-left : 6cm;
 }
+
+table
+{
+	table-layout:auto;
+	border-collapse: collapse;
+}
+
+th,
+td
+ {
+  border: 1px solid;
+  padding : 0.1cm;
+}
+
+th
+{
+	background-color: lightgray;
+}
+
 .private 
 {
 	display: none;
@@ -75,4 +101,10 @@ div.private
 div.public 
 {
 	margin-left : 0;
+}
+div.srcCode 
+{
+	margin-left : 1cm;
+	font-family : monospace;
+	overflow: clip;
 }

@@ -9,14 +9,16 @@ class HtmlBuilder {
 
 	#buildParams ( methodOrProperty ) {
 		this.#html += '<h4>Parameters</h4>';
+		this.#html += '<table><tr><th>Name</th> <th>Type</th> <th>Description</th></tr>';
 		methodOrProperty.params.forEach (
 			param => {
 				const paramDoc = methodOrProperty?.doc?.params.find ( first => first.name === param );
 				const paramType = paramDoc ? paramDoc.type : '';
 				const paramDesc = paramDoc ? paramDoc.desc : '';
-				this.#html += `<div>${param}</div> <div>${paramType}</div> <div>${paramDesc}</div>`;
+				this.#html += `<tr><td>${param}</td> <td>${paramType}</td> <td>${paramDesc}</td></tr>`;
 			}
 		);
+		this.#html += '</table>';
 	}
 
 	#buildMethodsAndProperties ( methodsOrPropertiesDoc, heading ) {
@@ -26,23 +28,23 @@ class HtmlBuilder {
 		this.#html += `${heading}`;
 		methodsOrPropertiesDoc.forEach (
 			methodOrProperty => {
-				const className = methodOrProperty.private ? 'private' : 'public';
-				const asyncPrefix = methodOrProperty.async ? 'async ' : '';
-				const staticPrefix = methodOrProperty.static ? 'static ' : '';
+				const cssClassName = methodOrProperty.private ? 'private' : 'public';
+				const asyncPrefix = methodOrProperty.async ? '<span>async</span> ' : '';
+				const staticPrefix = methodOrProperty.static ? '<span>static</span> ' : '';
 				const namePrefix = methodOrProperty.private ? '#' : '';
 				const getSetPrefix =
 					'set' === methodOrProperty.kind || 'get' === methodOrProperty.kind
 						?
-						methodOrProperty.kind + ' '
+						'<span>' + methodOrProperty.kind + '</span> '
 						:
 						'';
-				const type = methodOrProperty?.doc?.type ?? '';
-				this.#html += `<div class="${className}">`;
+				const type = methodOrProperty?.doc?.type ? '<span> : ' + methodOrProperty.doc.type + '</span>' : '';
+				this.#html += `<div class="${cssClassName}">`;
 				this.#html +=
 					`<h3>${asyncPrefix}${staticPrefix}${getSetPrefix}${namePrefix}${methodOrProperty.name} ${type}</h3>`;
 				this.#html += `<div>${methodOrProperty?.doc?.desc ?? '...description coming soon?'}</div>`;
 
-				if ( methodOrProperty.params && 0 !== methodOrProperty.params.length ) {
+				if ( methodOrProperty.params && 0 !== methodOrProperty.params.length && 0 === getSetPrefix.length ) {
 					this.#buildParams ( methodOrProperty );
 				}
 
@@ -62,7 +64,7 @@ class HtmlBuilder {
 	#buildClass ( classDoc ) {
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-			'<link type="text/css" rel="stylesheet" href="myDoc.css"></head><body>';
+			'<link type="text/css" rel="stylesheet" href="../src/myDoc.css"></head><body>';
 
 		const superClass = classDoc?.superClass ? ' extends ' + classDoc.superClass : '';
 
