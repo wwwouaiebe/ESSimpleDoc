@@ -8,19 +8,19 @@ class SourceFileBuilder {
 	}
 
 	build ( fileContent, fileName ) {
-		
+
 		const dirs = fileName.split ( '/' );
-		const htmlFileName = dirs.pop ( ).split ( '.' ) [ 0 ]+ 'js.html';
+		const htmlFileName = dirs.pop ( ).split ( '.' ) [ 0 ] + 'js.html';
 
 		let rootPath = '';
 		let rootPathCounter = dirs.length;
 		while ( 0 < rootPathCounter ) {
 			rootPath += '../';
 			rootPathCounter --;
-		};
+		}
 
 		this.#html =
-			`<!DOCTYPE html><html><head><meta charset="UTF-8">` +
+			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			`<link type="text/css" rel="stylesheet" href="${rootPath}src/myDoc.css"></head><body>`;
 
 		let lineCounter = 0;
@@ -36,13 +36,12 @@ class SourceFileBuilder {
 		);
 
 		this.#html += '</body></html>';
-		
+
 		new FileWriter ( ).write ( dirs, htmlFileName, this.#html );
-		
+
 		let fileLink = '';
 		dirs.forEach ( dir => fileLink += dir + '/'	);
-		
-		
+
 		theConfig.links.set ( fileName, fileLink + htmlFileName );
 	}
 }

@@ -1,10 +1,10 @@
 import CommentsParser from './CommentsParser.js';
 
 class DocVariableBuilder {
-	
+
 	constructor ( ) {
 	}
-	
+
 	build ( variableDeclarationElement, fileName ) {
 
 		const variableDoc = {
@@ -20,7 +20,7 @@ class DocVariableBuilder {
 			);
 			variableDoc.doc = new CommentsParser ( ).parse ( comments );
 		}
-		
+
 		return variableDoc;
 	}
 }

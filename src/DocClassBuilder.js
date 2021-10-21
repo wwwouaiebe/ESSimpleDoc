@@ -12,7 +12,7 @@ class DocClassBuilder {
 		while ( 0 < rootPathCounter ) {
 			rootPath += '../';
 			rootPathCounter --;
-		};
+		}
 
 		const commentsParser = new CommentsParser ( );
 		const classDoc = {
@@ -23,7 +23,7 @@ class DocClassBuilder {
 			rootPath : rootPath,
 			line : classDeclarationElement?.loc?.start?.line ?? '0'
 		};
-		
+
 		if ( classDeclarationElement.leadingComments ) {
 			const comments = [];
 			classDeclarationElement.leadingComments.forEach (

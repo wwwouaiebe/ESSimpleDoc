@@ -37,7 +37,7 @@ class CommentsParser {
 				this.#docTags.returns.desc += words [ counter ] + ' ';
 			}
 			break;
-		case '@global':
+		case '@global' :
 			this.#docTags.global = true;
 			break;
 		default :

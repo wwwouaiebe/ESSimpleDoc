@@ -57,7 +57,7 @@ class HtmlClassBuilder {
 					this.#html += `<h4>Returns</h4><div>${methodOrProperty.doc.returns.desc}</div>` +
 						`<div>Type : ${methodOrProperty.doc.returns.type}</div>`;
 				}
-				
+
 				this.#html += `<div>Source : file ${methodOrProperty.file} at line ${methodOrProperty.line}</div>`;
 				this.#html += '</div>';
 			}
@@ -67,17 +67,17 @@ class HtmlClassBuilder {
 	build ( classDoc ) {
 		this.#linkBuilder = new LinkBuilder ( );
 		this.#html =
-			`<!DOCTYPE html><html><head><meta charset="UTF-8">` +
+			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}../src/myDoc.css"></head><body>`;
 
 		const superClass = classDoc?.superClass ? ' extends ' + classDoc.superClass : '';
 
 		this.#html += `<h1>Class ${classDoc.name} ${superClass}</h1>`;
-		
+
 		if ( classDoc?.doc?.desc ) {
 			this.#html += `<div>${classDoc.doc.desc}</div>`;
 		}
-		
+
 		const sourceLink = this.#linkBuilder.getSourceLink ( classDoc );
 
 		this.#html += `<div>Source : <a href="${sourceLink}"> file ${classDoc.file} at line ${classDoc.line}</a></div>`;
@@ -162,7 +162,7 @@ class HtmlClassBuilder {
 		);
 
 		this.#html += '</body></html>';
-		
+
 		const dirs = classDoc.file.split ( '/' );
 		dirs.pop ( );
 		new FileWriter ( ).write ( dirs, classDoc.name + '.html', this.#html );

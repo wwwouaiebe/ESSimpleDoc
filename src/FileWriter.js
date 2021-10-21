@@ -1,33 +1,32 @@
 import fs from 'fs';
 import theConfig from './Config.js';
 
-
 class FileWriter {
-	
+
 	#currentDir = '';
 
 	constructor ( ) {
 	}
-	
-	#createDirs ( dirs ) { 
+
+	#createDirs ( dirs ) {
 		this.#currentDir = theConfig.docDir;
-		
+
 		dirs.forEach (
 			dir => {
 				this.#currentDir += dir + '/';
 				try {
-					if ( !fs.existsSync( this.#currentDir ) ) {
-						fs.mkdirSync( this.#currentDir )
+					if ( ! fs.existsSync ( this.#currentDir ) ) {
+						fs.mkdirSync ( this.#currentDir );
 					}
 				}
-				catch (err) {
-					console.error(err)
+				catch ( err ) {
+					console.error ( err );
 				}
 			}
 		);
-	
+
 	}
-	
+
 	write ( dirs, fileName, fileContent ) {
 		this.#createDirs ( dirs );
 		fs.writeFileSync ( this.#currentDir + fileName, fileContent );
