@@ -7,7 +7,12 @@ import SourceFileBuilder from './SourceFileBuilder.js';
 import HtmlClassBuilder from './HtmlClassBuilder.js';
 import HtmlVariablesBuilder from './HtmlVariablesBuilder.js';
 
+
 class DocBuilder {
+	
+	#sourceFileBuilder = null;
+	#docVariableBuilder = null;
+	#docClassBuilder = null;
 
 	#classesDocs = [];
 
@@ -36,20 +41,21 @@ class DocBuilder {
 	}
 
 	constructor ( ) {
+		Object.freeze ( this );
+		this.#sourceFileBuilder = new SourceFileBuilder ( );
+		this.#docClassBuilder =  new DocClassBuilder ( );
+		this.#docVariableBuilder = new DocVariableBuilder ( );
 	}
 
 	#buildFile ( ast, fileName ) {
-		this.#classesDocs.length = 0;
-		this.#variablesDocs.length = 0;
-
 		ast.program.body.forEach (
 			bodyElement => {
 				switch ( bodyElement.type ) {
 				case 'ClassDeclaration' :
-					this.#classesDocs.push ( new DocClassBuilder ( ).build ( bodyElement, fileName ) );
+					this.#classesDocs.push ( this.#docClassBuilder.build ( bodyElement, fileName ) );
 					break;
 				case 'VariableDeclaration' :
-					this.#variablesDocs.push ( new DocVariableBuilder ( ).build ( bodyElement, fileName ) );
+					this.#variablesDocs.push ( this.#docVariableBuilder.build ( bodyElement, fileName ) );
 					break;
 				default :
 					break;
@@ -64,7 +70,7 @@ class DocBuilder {
 				const fileContent = fs.readFileSync ( theConfig.srcDir + fileName, 'utf8' );
 				const ast = babelParser.parse ( fileContent, this.#parserOptions );
 				this.#buildFile ( ast, fileName );
-				new SourceFileBuilder ( ).build ( fileContent, fileName );
+				this.#sourceFileBuilder.build ( fileContent, fileName );
 			}
 		);
 

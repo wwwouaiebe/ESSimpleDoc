@@ -29,36 +29,37 @@ class HtmlClassBuilder {
 		}
 		this.#html += `${heading}`;
 		methodsOrPropertiesDoc.forEach (
-			methodOrProperty => {
-				const cssClassName = methodOrProperty.private ? 'private' : 'public';
-				const asyncPrefix = methodOrProperty.async ? '<span>async</span> ' : '';
-				const staticPrefix = methodOrProperty.static ? '<span>static</span> ' : '';
-				const namePrefix = methodOrProperty.private ? '#' : '';
+			methodOrPropertyDoc => {
+				const cssClassName = methodOrPropertyDoc.private ? 'private' : 'public';
+				const asyncPrefix = methodOrPropertyDoc.async ? '<span>async</span> ' : '';
+				const staticPrefix = methodOrPropertyDoc.static ? '<span>static</span> ' : '';
+				const namePrefix = methodOrPropertyDoc.private ? '#' : '';
 				const getSetPrefix =
-					'set' === methodOrProperty.kind || 'get' === methodOrProperty.kind
+					'set' === methodOrPropertyDoc.kind || 'get' === methodOrPropertyDoc.kind
 						?
-						'<span>' + methodOrProperty.kind + '</span> '
+						'<span>' + methodOrPropertyDoc.kind + '</span> '
 						:
 						'';
-				const type = methodOrProperty?.doc?.type ? '<span> : ' + methodOrProperty.doc.type + '</span>' : '';
+				const type = methodOrPropertyDoc?.commentsDoc?.type ? '<span> : ' + methodOrPropertyDoc.commentsDoc.type + '</span>' : '';
 				this.#html += `<div class="${cssClassName}">`;
 				this.#html +=
-					`<h3>${asyncPrefix}${staticPrefix}${getSetPrefix}${namePrefix}${methodOrProperty.name} ${type}</h3>`;
-				this.#html += `<div>${methodOrProperty?.doc?.desc ?? '...description coming soon?'}</div>`;
+					`<h3>${asyncPrefix}${staticPrefix}${getSetPrefix}${namePrefix}${methodOrPropertyDoc.name} ${type}</h3>`;
+				this.#html += `<div>${methodOrPropertyDoc?.commentsDoc?.desc ?? '...description coming soon?'}</div>`;
 
-				if ( methodOrProperty.params && 0 !== methodOrProperty.params.length && 0 === getSetPrefix.length ) {
-					this.#buildParams ( methodOrProperty );
+				this.#html += `<div>Source : file ${methodOrPropertyDoc.file} at line ${methodOrPropertyDoc.line}</div>`;
+
+				if ( methodOrPropertyDoc.params && 0 !== methodOrPropertyDoc.params.length && 0 === getSetPrefix.length ) {
+					this.#buildParams ( methodOrPropertyDoc );
 				}
 
 				if (
-					methodOrProperty.doc &&
-					( '' !== methodOrProperty.doc.returns.type || '' !== methodOrProperty.doc.returns.desc )
+					methodOrPropertyDoc.commentsDoc &&
+					( '' !== methodOrPropertyDoc.commentsDoc.returns.type || '' !== methodOrPropertyDoc.commentsDoc.returns.desc )
 				) {
-					this.#html += `<h4>Returns</h4><div>${methodOrProperty.doc.returns.desc}</div>` +
-						`<div>Type : ${methodOrProperty.doc.returns.type}</div>`;
+					this.#html += `<h4>Returns</h4><div>${methodOrPropertyDoc.commentsDoc.returns.desc}</div>` +
+						`<div>Type : ${methodOrPropertyDoc.commentsDoc.returns.type}</div>`;
 				}
 
-				this.#html += `<div>Source : file ${methodOrProperty.file} at line ${methodOrProperty.line}</div>`;
 				this.#html += '</div>';
 			}
 		);
@@ -74,8 +75,8 @@ class HtmlClassBuilder {
 
 		this.#html += `<h1>Class ${classDoc.name} ${superClass}</h1>`;
 
-		if ( classDoc?.doc?.desc ) {
-			this.#html += `<div>${classDoc.doc.desc}</div>`;
+		if ( classDoc?.commentsDoc?.desc ) {
+			this.#html += `<div>${classDoc.commentsDoc.desc}</div>`;
 		}
 
 		const sourceLink = this.#linkBuilder.getSourceLink ( classDoc );
