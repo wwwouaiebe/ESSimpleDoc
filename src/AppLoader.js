@@ -2,6 +2,7 @@ import fs from 'fs';
 import babelParser from '@babel/parser';
 import DocBuilder from './DocBuilder.js';
 import HtmlClassBuilder from './HtmlClassBuilder.js';
+import HtmlVariablesBuilder from './HtmlVariablesBuilder.js';
 import SourceFileBuilder from './SourceFileBuilder.js';
 import theConfig from './Config.js';
 
@@ -76,10 +77,28 @@ class AppLoader {
 		
 		const htmlClassBuilder = new HtmlClassBuilder ( );
 		this.#classesDocs.forEach ( classDoc => htmlClassBuilder.build ( classDoc ) );
+		
+		new HtmlVariablesBuilder ( ).build ( this.#variablesDocs );
 	}
+
+	#cleanOldFiles ( ) {
+		fs.rmSync ( 
+			theConfig.docDir,
+			{ recursive: true, force: true },
+			err => {
+				if (err) {
+					throw err;
+				}
+			}
+		);
+		
+		fs.mkdirSync( theConfig.docDir );
+	}
+
 
 	loadApp ( ) {
 		this.#createFileList ( );
+		this.#cleanOldFiles ( );
 		this.#buildFiles ( );
 		console.error ( 'Done' );
 	}

@@ -1,9 +1,9 @@
-import fs from 'fs';
-import theConfig from './Config.js';
+import FileWriter from './FileWriter.js';
 
 class HtmlClassBuilder {
 
-	#html = ''
+	#html = '';
+	#rootPath = '';
 
 	constructor ( ) { }
 
@@ -63,8 +63,8 @@ class HtmlClassBuilder {
 
 	build ( classDoc ) {
 		this.#html =
-			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-			'<link type="text/css" rel="stylesheet" href="../src/myDoc.css"></head><body>';
+			`<!DOCTYPE html><html><head><meta charset="UTF-8">` +
+			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}../src/myDoc.css"></head><body>`;
 
 		const superClass = classDoc?.superClass ? ' extends ' + classDoc.superClass : '';
 
@@ -156,8 +156,10 @@ class HtmlClassBuilder {
 		);
 
 		this.#html += '</body></html>';
-
-		fs.writeFileSync ( theConfig.docDir + classDoc.name + '.html', this.#html );
+		
+		const dirs = classDoc.file.split ( '/' );
+		dirs.pop ( );
+		new FileWriter ( ).write ( dirs, classDoc.name + '.html', this.#html );
 	}
 }
 

@@ -7,12 +7,20 @@ class DocClassBuilder {
 
 	build ( classDeclarationElement, fileName ) {
 
+		let rootPath = '';
+		let rootPathCounter = fileName.split ( '/' ).length - 1;
+		while ( 0 < rootPathCounter ) {
+			rootPath += '../';
+			rootPathCounter --;
+		};
+
 		const commentsParser = new CommentsParser ( );
 		const classDoc = {
 			name : classDeclarationElement.id.name,
 			superClass : classDeclarationElement?.superClass?.name,
 			methodsAndProperties : [],
 			file : fileName,
+			rootPath : rootPath,
 			line : classDeclarationElement?.loc?.start?.line ?? '0'
 		};
 		
@@ -23,7 +31,6 @@ class DocClassBuilder {
 			);
 			classDoc.doc = commentsParser.parse ( comments );
 		}
-	
 
 		classDeclarationElement.body.body.forEach (
 			bodyElement => {

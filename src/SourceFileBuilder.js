@@ -1,5 +1,5 @@
 import theConfig from './Config.js';
-import fs from 'fs';
+import FileWriter from './FileWriter.js';
 
 class SourceFileBuilder {
 
@@ -8,10 +8,20 @@ class SourceFileBuilder {
 	}
 
 	build ( fileContent, fileName ) {
+		
+		const dirs = fileName.split ( '/' );
+		const htmlFileName = dirs.pop ( ).split ( '.' ) [ 0 ]+ 'js.html';
+
+		let rootPath = '';
+		let rootPathCounter = dirs.length;
+		while ( 0 < rootPathCounter ) {
+			rootPath += '../';
+			rootPathCounter --;
+		};
 
 		this.#html =
-			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-			'<link type="text/css" rel="stylesheet" href="../src/myDoc.css"></head><body>';
+			`<!DOCTYPE html><html><head><meta charset="UTF-8">` +
+			`<link type="text/css" rel="stylesheet" href="${rootPath}src/myDoc.css"></head><body>`;
 
 		let lineCounter = 0;
 		fileContent.split ( /\r\n|\r|\n/ ).forEach (
@@ -26,11 +36,8 @@ class SourceFileBuilder {
 		);
 
 		this.#html += '</body></html>';
-		const sourceFileName =
-			theConfig.docDir +
-			fileName.split ( '/' ).reverse ( ) [ 0 ].split ( '.' ) [ 0 ] +
-			'js.html';
-		fs.writeFileSync ( sourceFileName, this.#html );
+
+		new FileWriter ( ).write ( dirs, htmlFileName, this.#html );
 	}
 }
 
