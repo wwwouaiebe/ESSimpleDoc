@@ -98,7 +98,7 @@ class AppLoader {
 
 	loadApp ( ) {
 		this.#createFileList ( );
-		this.#cleanOldFiles ( );
+		//this.#cleanOldFiles ( );
 		this.#buildFiles ( );
 		console.error ( 'Done' );
 	}

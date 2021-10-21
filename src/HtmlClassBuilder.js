@@ -1,9 +1,11 @@
 import FileWriter from './FileWriter.js';
+import LinkBuilder from './LinkBuilder.js';
 
 class HtmlClassBuilder {
 
 	#html = '';
 	#rootPath = '';
+	#linkBuilder = null;
 
 	constructor ( ) { }
 
@@ -55,6 +57,7 @@ class HtmlClassBuilder {
 					this.#html += `<h4>Returns</h4><div>${methodOrProperty.doc.returns.desc}</div>` +
 						`<div>Type : ${methodOrProperty.doc.returns.type}</div>`;
 				}
+				
 				this.#html += `<div>Source : file ${methodOrProperty.file} at line ${methodOrProperty.line}</div>`;
 				this.#html += '</div>';
 			}
@@ -62,6 +65,7 @@ class HtmlClassBuilder {
 	}
 
 	build ( classDoc ) {
+		this.#linkBuilder = new LinkBuilder ( );
 		this.#html =
 			`<!DOCTYPE html><html><head><meta charset="UTF-8">` +
 			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}../src/myDoc.css"></head><body>`;
@@ -73,8 +77,10 @@ class HtmlClassBuilder {
 		if ( classDoc?.doc?.desc ) {
 			this.#html += `<div>${classDoc.doc.desc}</div>`;
 		}
+		
+		const sourceLink = this.#linkBuilder.getSourceLink ( classDoc );
 
-		this.#html += `<div>Source : file ${classDoc.file} at line ${classDoc.line}</div>`;
+		this.#html += `<div>Source : <a href="${sourceLink}"> file ${classDoc.file} at line ${classDoc.line}</a></div>`;
 		this.#buildMethodsAndProperties (
 			classDoc.methodsAndProperties.filter (
 				methodOrProperty => (

@@ -36,8 +36,14 @@ class SourceFileBuilder {
 		);
 
 		this.#html += '</body></html>';
-
+		
 		new FileWriter ( ).write ( dirs, htmlFileName, this.#html );
+		
+		let fileLink = '';
+		dirs.forEach ( dir => fileLink += dir + '/'	);
+		
+		
+		theConfig.links.set ( fileName, fileLink + htmlFileName );
 	}
 }
 
