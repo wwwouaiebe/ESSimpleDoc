@@ -1,7 +1,7 @@
 import fs from 'fs';
 import theConfig from './Config.js';
 
-class HtmlBuilder {
+class HtmlClassBuilder {
 
 	#html = ''
 
@@ -61,7 +61,7 @@ class HtmlBuilder {
 		);
 	}
 
-	#buildClass ( classDoc ) {
+	build ( classDoc ) {
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			'<link type="text/css" rel="stylesheet" href="../src/myDoc.css"></head><body>';
@@ -69,6 +69,10 @@ class HtmlBuilder {
 		const superClass = classDoc?.superClass ? ' extends ' + classDoc.superClass : '';
 
 		this.#html += `<h1>Class ${classDoc.name} ${superClass}</h1>`;
+		
+		if ( classDoc?.doc?.desc ) {
+			this.#html += `<div>${classDoc.doc.desc}</div>`;
+		}
 
 		this.#html += `<div>Source : file ${classDoc.file} at line ${classDoc.line}</div>`;
 		this.#buildMethodsAndProperties (
@@ -155,15 +159,6 @@ class HtmlBuilder {
 
 		fs.writeFileSync ( theConfig.docDir + classDoc.name + '.html', this.#html );
 	}
-
-	build ( doc ) {
-		doc.forEach (
-			classDoc => {
-				this.#buildClass ( classDoc );
-			}
-		);
-	}
-
 }
 
-export default HtmlBuilder;
+export default HtmlClassBuilder;

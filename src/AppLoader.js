@@ -1,13 +1,16 @@
 import fs from 'fs';
 import babelParser from '@babel/parser';
 import DocBuilder from './DocBuilder.js';
-import HtmlBuilder from './HtmlBuilder.js';
+import HtmlClassBuilder from './HtmlClassBuilder.js';
 import SourceFileBuilder from './SourceFileBuilder.js';
 import theConfig from './Config.js';
 
 class AppLoader {
 
+	#rootDir = '';
 	#fileList = [];
+	#classesDocs = [];
+	#variablesDocs = [];
 
 	#parserOptions = {
 		allowAwaitOutsideFunction : true,
@@ -35,11 +38,11 @@ class AppLoader {
 	}
 
 	#readDir ( dir ) {
-		const fileNames = fs.readdirSync ( dir );
+		const fileNames = fs.readdirSync ( this.#rootDir + dir );
 
 		fileNames.forEach (
 			fileName => {
-				const lstat = fs.lstatSync ( dir + fileName );
+				const lstat = fs.lstatSync ( this.#rootDir + dir + fileName );
 				if ( lstat.isDirectory ( ) ) {
 					this.#readDir ( dir + fileName + '/' );
 				}
@@ -53,20 +56,26 @@ class AppLoader {
 	}
 
 	#createFileList ( ) {
+		this.#rootDir = theConfig.srcDir;
 		this.#fileList = [];
-		this.#readDir ( theConfig.srcDir );
+		this.#readDir ( '' );
 	}
 
 	#buildFiles ( ) {
+		const docBuilder = new DocBuilder ( );
 		this.#fileList.forEach (
 			fileName => {
-				const fileContent = fs.readFileSync ( fileName, 'utf8' );
+				const fileContent = fs.readFileSync ( this.#rootDir + fileName, 'utf8' );
 				const ast = babelParser.parse ( fileContent, this.#parserOptions );
-				const doc = new DocBuilder ( ).build ( ast, fileName );
-				new HtmlBuilder ( ).build ( doc );
+				docBuilder.build ( ast, fileName );
+				this.#classesDocs = this.#classesDocs.concat ( docBuilder.classesDocs );
+				this.#variablesDocs = this.#variablesDocs.concat ( docBuilder.variablesDocs );
 				new SourceFileBuilder ( ).build ( fileContent, fileName );
 			}
 		);
+		
+		const htmlClassBuilder = new HtmlClassBuilder ( );
+		this.#classesDocs.forEach ( classDoc => htmlClassBuilder.build ( classDoc ) );
 	}
 
 	loadApp ( ) {

@@ -15,6 +15,15 @@ class DocClassBuilder {
 			file : fileName,
 			line : classDeclarationElement?.loc?.start?.line ?? '0'
 		};
+		
+		if ( classDeclarationElement.leadingComments ) {
+			const comments = [];
+			classDeclarationElement.leadingComments.forEach (
+				comment => { comments.push ( comment?.value ); }
+			);
+			classDoc.doc = commentsParser.parse ( comments );
+		}
+	
 
 		classDeclarationElement.body.body.forEach (
 			bodyElement => {

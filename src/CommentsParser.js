@@ -9,7 +9,10 @@ class CommentsParser {
 		const paramDoc = { type : '', name : words [ 2 ], desc : '' };
 		switch ( words [ 0 ] ) {
 		case '@desc' :
-			this.#docTags.desc = docTag.replace ( 'desc ', '' );
+			this.#docTags.desc = docTag.replace ( '@desc ', '' );
+			break;
+		case '@classdesc' :
+			this.#docTags.desc = docTag.replace ( '@classdesc ', '' );
 			break;
 		case '@type' :
 			if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
@@ -33,6 +36,9 @@ class CommentsParser {
 			for ( let counter = 2; counter < words.length; counter ++ ) {
 				this.#docTags.returns.desc += words [ counter ] + ' ';
 			}
+			break;
+		case '@global':
+			this.#docTags.global = true;
 			break;
 		default :
 			if ( '@' !== words [ 0 ] [ 0 ] ) {
