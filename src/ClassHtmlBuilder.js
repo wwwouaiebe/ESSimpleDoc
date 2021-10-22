@@ -1,6 +1,6 @@
 import FileWriter from './FileWriter.js';
 import theLinkBuilder from './LinkBuilder.js';
-
+import NavBuilder from './NavBuilder.js';
 class ClassHtmlBuilder {
 
 	#html = '';
@@ -139,6 +139,8 @@ class ClassHtmlBuilder {
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}../src/myDoc.css"></head><body>`;
 
+		this.#html += new NavBuilder ( ).build ( this.#rootPath );
+		
 		const superClass =
 			classDoc?.superClass
 				?
@@ -154,41 +156,6 @@ class ClassHtmlBuilder {
 
 		const sourceLink = theLinkBuilder.getSourceLink ( classDoc );
 		this.#html += `<div>Source : <a href="${sourceLink}"> file ${classDoc.file} at line ${classDoc.line}</a></div>`;
-
-		this.#buildMethodsAndProperties (
-			classDoc.methodsAndProperties.filter (
-				methodOrProperty => (
-					'property' === methodOrProperty.isA &&
-						methodOrProperty.private
-				)
-			).sort ( ( first, second ) => first.name.localeCompare ( second.name ) ),
-			'<h2 class="private">Private properties</h2>'
-		);
-
-		this.#buildMethodsAndProperties (
-			classDoc.methodsAndProperties.filter (
-				methodOrProperty => (
-					'method' === methodOrProperty.isA &&
-						methodOrProperty.private &&
-						( 'set' === methodOrProperty.kind || 'get' === methodOrProperty.kind ) &&
-						'constructor' !== methodOrProperty.kind
-				)
-			).sort ( ( first, second ) => ( first.name + first.kind ).localeCompare ( second.name + second.kind ) ),
-			'<h2 class="private">Private getters and setters</h2>'
-		);
-
-		this.#buildMethodsAndProperties (
-			classDoc.methodsAndProperties.filter (
-				methodOrProperty => (
-					'method' === methodOrProperty.isA &&
-						methodOrProperty.private &&
-						'set' !== methodOrProperty.kind &&
-						'get' !== methodOrProperty.kind	&&
-						'constructor' !== methodOrProperty.kind
-				)
-			).sort ( ( first, second ) => first.name.localeCompare ( second.name ) ),
-			'<h2 class="private">Private methods</h2>'
-		);
 
 		this.#buildMethodsAndProperties (
 			classDoc.methodsAndProperties.filter (
@@ -233,6 +200,41 @@ class ClassHtmlBuilder {
 				)
 			).sort ( ( first, second ) => first.name.localeCompare ( second.name ) ),
 			'<h2 class="public">Public methods</h2>'
+		);
+
+		this.#buildMethodsAndProperties (
+			classDoc.methodsAndProperties.filter (
+				methodOrProperty => (
+					'property' === methodOrProperty.isA &&
+						methodOrProperty.private
+				)
+			).sort ( ( first, second ) => first.name.localeCompare ( second.name ) ),
+			'<h2 class="private">Private properties</h2>'
+		);
+
+		this.#buildMethodsAndProperties (
+			classDoc.methodsAndProperties.filter (
+				methodOrProperty => (
+					'method' === methodOrProperty.isA &&
+						methodOrProperty.private &&
+						( 'set' === methodOrProperty.kind || 'get' === methodOrProperty.kind ) &&
+						'constructor' !== methodOrProperty.kind
+				)
+			).sort ( ( first, second ) => ( first.name + first.kind ).localeCompare ( second.name + second.kind ) ),
+			'<h2 class="private">Private getters and setters</h2>'
+		);
+
+		this.#buildMethodsAndProperties (
+			classDoc.methodsAndProperties.filter (
+				methodOrProperty => (
+					'method' === methodOrProperty.isA &&
+						methodOrProperty.private &&
+						'set' !== methodOrProperty.kind &&
+						'get' !== methodOrProperty.kind	&&
+						'constructor' !== methodOrProperty.kind
+				)
+			).sort ( ( first, second ) => first.name.localeCompare ( second.name ) ),
+			'<h2 class="private">Private methods</h2>'
 		);
 
 		this.#html += '</body></html>';

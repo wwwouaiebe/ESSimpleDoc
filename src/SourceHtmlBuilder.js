@@ -1,5 +1,6 @@
 import FileWriter from './FileWriter.js';
 import theLinkBuilder from './LinkBuilder.js';
+import NavBuilder from './NavBuilder.js';
 
 class SourceHtmlBuilder {
 
@@ -29,6 +30,9 @@ class SourceHtmlBuilder {
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			`<link type="text/css" rel="stylesheet" href="${rootPath}../src/myDoc.css"></head><body>`;
 
+		// nav
+		html += new NavBuilder ( ).build ( rootPath );
+
 		// body
 		let lineCounter = 0;
 		fileContent.split ( /\r\n|\r|\n/ ).forEach (
@@ -51,8 +55,6 @@ class SourceHtmlBuilder {
 		// write file
 		new FileWriter ( ).write ( dirs, htmlFileName, html );
 
-		// Saving link
-		theLinkBuilder.setSourceLink ( fileName, htmlFilePath + htmlFileName );
 	}
 }
 

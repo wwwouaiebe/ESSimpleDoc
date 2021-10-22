@@ -1,6 +1,7 @@
 import fs from 'fs';
 import theConfig from './Config.js';
 import theLinkBuilder from './LinkBuilder.js';
+import NavBuilder from './NavBuilder.js';
 
 class VariablesHtmlBuilder {
 
@@ -44,6 +45,9 @@ class VariablesHtmlBuilder {
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			'<link type="text/css" rel="stylesheet" href="../src/myDoc.css"></head><body>';
+			
+		this.#html += new NavBuilder ( ).build ( '' );
+
 		this.#html += '<h1>Global variables</h1>';
 		variablesDocs.forEach ( variableDoc => this.#buildVariable ( variableDoc ) );
 		this.#html += '</body></html>';

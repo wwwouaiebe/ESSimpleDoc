@@ -6,6 +6,7 @@ import theConfig from './Config.js';
 import SourceHtmlBuilder from './SourceHtmlBuilder.js';
 import ClassHtmlBuilder from './ClassHtmlBuilder.js';
 import VariablesHtmlBuilder from './VariablesHtmlBuilder.js';
+import theLinkBuilder from './LinkBuilder.js';
 
 class DocBuilder {
 
@@ -69,12 +70,25 @@ class DocBuilder {
 				const fileContent = fs.readFileSync ( theConfig.srcDir + fileName, 'utf8' );
 				const ast = babelParser.parse ( fileContent, this.#parserOptions );
 				this.#buildFile ( ast, fileName );
-				this.#sourceHtmlBuilder.build ( fileContent, fileName );
+				const htmlFileName = fileName.replace ( '.js', 'js.html' );
+				theLinkBuilder.setSourceLink ( fileName, htmlFileName );
+
 			}
 		);
+		// Saving link
+		this.#classesDocs.forEach ( classDoc => theLinkBuilder.setClassLink ( classDoc ) );
+		this.#variablesDocs.forEach ( variableDoc => theLinkBuilder.setVariableLink ( variableDoc ) );
+
 
 		const classHtmlBuilder = new ClassHtmlBuilder ( );
 		this.#classesDocs.forEach ( classDoc => classHtmlBuilder.build ( classDoc ) );
+
+		filesList.forEach (
+			fileName => {
+				const fileContent = fs.readFileSync ( theConfig.srcDir + fileName, 'utf8' );
+				this.#sourceHtmlBuilder.build ( fileContent, fileName );
+			}
+		);
 
 		new VariablesHtmlBuilder ( ).build ( this.#variablesDocs );
 	}

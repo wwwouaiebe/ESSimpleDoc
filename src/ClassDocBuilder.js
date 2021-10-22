@@ -122,7 +122,6 @@ class ClassDocBuilder {
 		Object.freeze ( classDoc.methodsAndProperties );
 		Object.freeze ( classDoc );
 
-		theLinkBuilder.setClassLink ( classDoc );
 
 		return classDoc;
 	}
