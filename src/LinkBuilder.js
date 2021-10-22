@@ -1,5 +1,6 @@
 class LinkBuilder {
 
+	#sourcesLinksCache = null;
 	#sourcesLinks = null;
 	#classesLinksCache = null;
 	#classesLinks = null;
@@ -19,16 +20,16 @@ class LinkBuilder {
 	}
 
 	setClassLink ( classDoc ) {
-		this.#classesLinks.set ( 
-			classDoc.name, 
+		this.#classesLinks.set (
+			classDoc.name,
 			classDoc.file.substr ( 0, classDoc.file.lastIndexOf ( '/' ) + 1 ) + classDoc.name + '.html'
 		);
 	}
 
 	get classesLinks ( ) {
 		if ( ! this.#classesLinksCache ) {
-			this.#classesLinksCache =  Array.from( this.#classesLinks ).sort ( 
-				( first, second) => first [ 0 ] .localeCompare ( second [ 0] ) 
+			this.#classesLinksCache = Array.from ( this.#classesLinks ).sort (
+				( first, second ) => first [ 0 ] .localeCompare ( second [ 0 ] )
 			);
 		}
 		return this.#classesLinksCache;
@@ -45,25 +46,34 @@ class LinkBuilder {
 	setSourceLink ( fileName, path ) {
 		this.#sourcesLinks.set ( fileName, path );
 	}
-	
+
+	get sourcesLinks ( ) {
+		if ( ! this.#sourcesLinksCache ) {
+			this.#sourcesLinksCache = Array.from ( this.#sourcesLinks ).sort (
+				( first, second ) => first [ 0 ] .localeCompare ( second [ 0 ] )
+			);
+		}
+		return this.#sourcesLinksCache;
+	}
+
 	setVariableLink ( variableDoc ) {
 		if ( variableDoc.commentsDoc?.global ) {
 			this.#variablesLinks.set (
 				variableDoc.name,
 				`variables.html#${variableDoc.name}`
-			)
+			);
 		}
 	}
-	
+
 	get variablesLinks ( ) {
 		if ( ! this.#variablesLinksCache ) {
-			this.#variablesLinksCache =  Array.from( this.#variablesLinks ).sort ( 
-				( first, second) => first [ 0 ] .localeCompare ( second [ 0 ] ) 
+			this.#variablesLinksCache = Array.from ( this.#variablesLinks ).sort (
+				( first, second ) => first [ 0 ] .localeCompare ( second [ 0 ] )
 			);
 		}
 		return this.#variablesLinksCache;
 	}
-	
+
 }
 
 const theLinkBuilder = new LinkBuilder ( );

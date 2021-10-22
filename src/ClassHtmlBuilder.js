@@ -134,13 +134,14 @@ class ClassHtmlBuilder {
 	}
 
 	build ( classDoc ) {
+		const navBuilder = new NavBuilder ( );
 		this.#rootPath = classDoc.rootPath;
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}../src/myDoc.css"></head><body>`;
 
-		this.#html += new NavBuilder ( ).build ( this.#rootPath );
-		
+		this.#html += navBuilder.build ( this.#rootPath );
+
 		const superClass =
 			classDoc?.superClass
 				?
@@ -237,6 +238,7 @@ class ClassHtmlBuilder {
 			'<h2 class="private">Private methods</h2>'
 		);
 
+		this.#html += navBuilder.footer;
 		this.#html += '</body></html>';
 
 		const dirs = classDoc.file.split ( '/' );

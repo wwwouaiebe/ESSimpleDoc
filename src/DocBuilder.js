@@ -75,10 +75,10 @@ class DocBuilder {
 
 			}
 		);
+
 		// Saving link
 		this.#classesDocs.forEach ( classDoc => theLinkBuilder.setClassLink ( classDoc ) );
 		this.#variablesDocs.forEach ( variableDoc => theLinkBuilder.setVariableLink ( variableDoc ) );
-
 
 		const classHtmlBuilder = new ClassHtmlBuilder ( );
 		this.#classesDocs.forEach ( classDoc => classHtmlBuilder.build ( classDoc ) );

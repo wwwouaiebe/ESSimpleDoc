@@ -52,17 +52,22 @@ nav > div
 	width: 3cm;
 	text-align: center;
 }
+#sourcesNav 
+{
+	background-color : blue;
+	left : 1cm;
+}
 
 #variablesNav 
 {
-	background-color : black;
-	left : 1cm;	
+	background-color : green;
+	left : 4cm;	
 }
 
 #classesNav
 {
 	background-color : red;
-	left : 4cm;
+	left : 7cm;
 }
 
 nav > div ~ ul 
@@ -77,6 +82,7 @@ nav > div ~ ul > li
 }
 
 
+nav > div#sourcesNav:hover ~ ul#sourcesNavList,
 nav > div#variablesNav:hover ~ ul#variablesNavList,
 nav > div#classesNav:hover ~ ul#classesNavList,
 nav > div ~ ul:hover
@@ -89,6 +95,8 @@ nav > div ~ ul:hover
 	padding : 1cm;
 	z-index : 100;
 	background-color : lightgrey;
+	border-bottom-style : solid;
+	border-bottom-width : 0.1mm;
 }
 
 h1 
@@ -172,4 +180,19 @@ div.srcCode
 	margin-left : 1cm;
 	font-family : monospace;
 	overflow: clip;
+}
+
+.hash
+{
+	background-color : yellow;
+}
+footer
+{
+	margin-top : 1cm;
+	padding-top: 1cm;
+	border-top-style : solid;
+	border-top-width : 0.1mm;
+	padding-bottom: 1cm;
+	border-bottom-style : solid;
+	border-bottom-width : 0.1mm;
 }

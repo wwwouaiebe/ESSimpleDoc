@@ -1,5 +1,4 @@
 import FileWriter from './FileWriter.js';
-import theLinkBuilder from './LinkBuilder.js';
 import NavBuilder from './NavBuilder.js';
 
 class SourceHtmlBuilder {
@@ -17,13 +16,9 @@ class SourceHtmlBuilder {
 		const dirs = fileName.split ( '/' );
 		const htmlFileName = dirs.pop ( ).split ( '.' ) [ 0 ] + 'js.html';
 		let rootPath = '';
-		let htmlFilePath = '';
-		dirs.forEach (
-			dir => {
-				htmlFilePath += dir + '/';
-				rootPath += '../';
-			}
-		);
+		dirs.forEach ( ( ) => rootPath += '../' );
+
+		const navBuilder = new NavBuilder ( );
 
 		// head
 		let html =
@@ -31,7 +26,9 @@ class SourceHtmlBuilder {
 			`<link type="text/css" rel="stylesheet" href="${rootPath}../src/myDoc.css"></head><body>`;
 
 		// nav
-		html += new NavBuilder ( ).build ( rootPath );
+		html += navBuilder.build ( rootPath );
+
+		html += `<h1>File : ${fileName}</h1>`;
 
 		// body
 		let lineCounter = 0;
@@ -45,11 +42,16 @@ class SourceHtmlBuilder {
 					.replaceAll ( '<', '&lt;' )
 					.replaceAll ( '>', '&gt;' );
 
-				html += `<div class="srcCode"><a id="L${strLineCounter}">${strLineCounter}</a>` +
+				html +=
+					`<div class="srcCode"><a id="L${strLineCounter}">${strLineCounter}</a>` +
 					`&nbsp;&nbsp;&nbsp;&nbsp;${htmlLine}</div>`;
 			}
 		);
 
+		html += navBuilder.footer;
+		html +=
+			'<script>document.getElementById ( new URL ( window.location' +
+			' ).hash.substr( 1 ) )?.parentNode.classList.add ( \'hash\' )</script>';
 		html += '</body></html>';
 
 		// write file

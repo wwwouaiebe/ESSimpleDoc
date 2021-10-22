@@ -41,16 +41,22 @@ class VariablesHtmlBuilder {
 	}
 
 	build ( variablesDocs ) {
+
+		const navBuilder = new NavBuilder ( );
 		variablesDocs.sort ( ( first, second ) => first.name.localeCompare ( second.name ) );
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			'<link type="text/css" rel="stylesheet" href="../src/myDoc.css"></head><body>';
-			
-		this.#html += new NavBuilder ( ).build ( '' );
+
+		this.#html += navBuilder.build ( '' );
 
 		this.#html += '<h1>Global variables</h1>';
 		variablesDocs.forEach ( variableDoc => this.#buildVariable ( variableDoc ) );
+
+		this.#html += navBuilder.footer;
+
 		this.#html += '</body></html>';
+
 		fs.writeFileSync ( theConfig.docDir + 'variables.html', this.#html );
 	}
 }

@@ -1,5 +1,3 @@
-import theLinkBuilder from './LinkBuilder.js';
-
 import CommentDocBuilder from './CommentDocBuilder.js';
 
 class VariableDocBuilder {
