@@ -14,13 +14,14 @@ class VariablesHtmlBuilder {
 		if ( ! variableDoc.commentsDoc || ! variableDoc.commentsDoc.global ) {
 			return;
 		}
+
 		// type
-		const typePostfix = 
+		const typePostfix =
 			variableDoc?.commentsDoc?.type
-			?
-			' : ' + theLinkBuilder.getClassLink ( variableDoc?.commentsDoc?.type, '' )
-			:
-			'';
+				?
+				' : ' + theLinkBuilder.getClassLink ( variableDoc?.commentsDoc?.type, '' )
+				:
+				'';
 
 		variableDoc.commentsDoc?.type ?? '';
 		this.#html +=
@@ -31,7 +32,7 @@ class VariablesHtmlBuilder {
 		if ( variableDoc.commentsDoc?.desc && '' !== variableDoc.commentsDoc.desc ) {
 			this.#html += `<div>${variableDoc.commentsDoc.desc}</div>`;
 		}
-		
+
 		// source
 
 		const sourceLink = theLinkBuilder.getSourceLink ( variableDoc );
@@ -39,7 +40,7 @@ class VariablesHtmlBuilder {
 	}
 
 	build ( variablesDocs ) {
-		variablesDocs.sort ( ( first, second ) => first.name.localeCompare ( second.name ) ); 
+		variablesDocs.sort ( ( first, second ) => first.name.localeCompare ( second.name ) );
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			'<link type="text/css" rel="stylesheet" href="../src/myDoc.css"></head><body>';

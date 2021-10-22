@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "myDoc",
+  "name": "simpleesdoc",
   "version": "1.0.0-dev",
   "devDependencies": {
     "@babel/eslint-parser": "^7.15.8",

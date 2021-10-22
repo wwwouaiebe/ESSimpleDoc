@@ -7,9 +7,8 @@ import SourceHtmlBuilder from './SourceHtmlBuilder.js';
 import ClassHtmlBuilder from './ClassHtmlBuilder.js';
 import VariablesHtmlBuilder from './VariablesHtmlBuilder.js';
 
-
 class DocBuilder {
-	
+
 	#sourceHtmlBuilder = null;
 	#variableDocBuilder = null;
 	#classDocBuilder = null;
@@ -43,7 +42,7 @@ class DocBuilder {
 	constructor ( ) {
 		Object.freeze ( this );
 		this.#sourceHtmlBuilder = new SourceHtmlBuilder ( );
-		this.#classDocBuilder =  new ClassDocBuilder ( );
+		this.#classDocBuilder = new ClassDocBuilder ( );
 		this.#variableDocBuilder = new VariableDocBuilder ( );
 	}
 
@@ -81,7 +80,7 @@ class DocBuilder {
 	}
 
 	get classesDocs ( ) { return this.#classesDocs; }
-	
+
 	get variablesDocs ( ) { return this.#variablesDocs; }
 }
 

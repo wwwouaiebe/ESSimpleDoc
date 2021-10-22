@@ -6,7 +6,7 @@ class ClassHtmlBuilder {
 	#html = '';
 	#rootPath = '';
 
-	constructor ( ) { 
+	constructor ( ) {
 		Object.freeze ( this );
 	}
 
@@ -23,14 +23,14 @@ class ClassHtmlBuilder {
 		);
 		this.#html += '</table>';
 	}
-	
+
 	#buildParamsHeader ( methodOrPropertyDoc ) {
 		let params = '';
 		if ( methodOrPropertyDoc.params ) {
-			methodOrPropertyDoc.params.forEach ( param => params += param +', ' );
+			methodOrPropertyDoc.params.forEach ( param => params += param + ', ' );
 			params = params.substr ( 0, params.length - 2 );
 		}
-		
+
 		return ` ( ${params} )`;
 	}
 
@@ -41,17 +41,23 @@ class ClassHtmlBuilder {
 		this.#html += `${heading}`;
 		methodsOrPropertiesDoc.forEach (
 			methodOrPropertyDoc => {
+
 				// header class
 				const cssClassName = methodOrPropertyDoc.private ? 'private' : 'public';
-				
+
 				// header readonly
-				const readOnlyPrefix = 
-					'get' === methodOrPropertyDoc.kind && ! methodsOrPropertiesDoc.find ( method => 'set' === method.kind && methodOrPropertyDoc.name === method.name )
+				const readOnlyPrefix =
+					'get' ===
+						methodOrPropertyDoc.kind
+						&&
+						! methodsOrPropertiesDoc.find (
+							method => 'set' === method.kind && methodOrPropertyDoc.name === method.name
+						)
 						?
 						'<span>readonly </span>'
 						:
 						'';
-						
+
 				// header get set
 				const getSetPrefix =
 					'set' === methodOrPropertyDoc.kind || 'get' === methodOrPropertyDoc.kind
@@ -59,7 +65,7 @@ class ClassHtmlBuilder {
 						'<span>' + methodOrPropertyDoc.kind + '</span> '
 						:
 						'';
-						
+
 				// header async
 				const asyncPrefix = methodOrPropertyDoc.async ? '<span>async</span> ' : '';
 
@@ -68,33 +74,39 @@ class ClassHtmlBuilder {
 
 				// header #
 				const namePrefix = methodOrPropertyDoc.private ? '#' : '';
-				
+
 				// header params
-				const paramsPostfix = 
-					'method' === methodOrPropertyDoc.isA && 0 === getSetPrefix.length 
+				const paramsPostfix =
+					'method' === methodOrPropertyDoc.isA && 0 === getSetPrefix.length
 						?
 						this.#buildParamsHeader ( methodOrPropertyDoc )
-						: 
+						:
 						'';
-						
+
 				// header type
-				const typePostfix = 
+				const typePostfix =
 					methodOrPropertyDoc?.commentsDoc?.type
-						? 
-						' <span> : ' + theLinkBuilder.getClassLink ( methodOrPropertyDoc.commentsDoc.type, this.#rootPath ) + '</span>' 
-						: 
+						?
+						' <span> : ' +
+						theLinkBuilder.getClassLink ( methodOrPropertyDoc.commentsDoc.type, this.#rootPath ) +
+						'</span>'
+						:
 						'';
 
 				this.#html += `<div class="${cssClassName}">`;
 				this.#html +=
-					`<h3>${readOnlyPrefix}${asyncPrefix}${staticPrefix}${getSetPrefix}${namePrefix}${methodOrPropertyDoc.name}${paramsPostfix}${typePostfix}</h3>`;
-					
+					`<h3>${readOnlyPrefix}${asyncPrefix}${staticPrefix}${getSetPrefix}${namePrefix}` +
+					`${methodOrPropertyDoc.name}` +
+					`${paramsPostfix}${typePostfix}</h3>`;
+
 				// description
 				this.#html += `<div>${methodOrPropertyDoc?.commentsDoc?.desc ?? '...description coming soon?'}</div>`;
 
 				// source
 				const sourceLink = theLinkBuilder.getSourceLink ( methodOrPropertyDoc );
-				this.#html += `<div>Source : <a href="${sourceLink}"> file ${methodOrPropertyDoc.file} at line ${methodOrPropertyDoc.line}</a></div>`;
+				this.#html +=
+					`<div>Source : <a href="${sourceLink}"> file ${methodOrPropertyDoc.file}` +
+					` at line ${methodOrPropertyDoc.line}</a></div>`;
 
 				// params
 				if ( methodOrPropertyDoc.params && 0 !== methodOrPropertyDoc.params.length && 0 === getSetPrefix.length ) {
@@ -104,9 +116,14 @@ class ClassHtmlBuilder {
 				// returns
 				if (
 					methodOrPropertyDoc.commentsDoc &&
-					( '' !== methodOrPropertyDoc.commentsDoc.returns.type || '' !== methodOrPropertyDoc.commentsDoc.returns.desc )
+					(
+						'' !== methodOrPropertyDoc.commentsDoc.returns.type
+						||
+						'' !== methodOrPropertyDoc.commentsDoc.returns.desc
+					)
 				) {
-					const returnType = theLinkBuilder.getClassLink ( methodOrPropertyDoc.commentsDoc.returns.type, this.#rootPath );
+					const returnType =
+						theLinkBuilder.getClassLink ( methodOrPropertyDoc.commentsDoc.returns.type, this.#rootPath );
 					this.#html += `<h4>Returns</h4><div>${methodOrPropertyDoc.commentsDoc.returns.desc}</div>` +
 						`<div>Type : ${returnType}</div>`;
 				}
@@ -122,7 +139,12 @@ class ClassHtmlBuilder {
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}../src/myDoc.css"></head><body>`;
 
-		const superClass = classDoc?.superClass ? '<span> extends ' + theLinkBuilder.getClassLink ( classDoc.superClass, this.#rootPath ) + '</span>' : '';
+		const superClass =
+			classDoc?.superClass
+				?
+				'<span> extends ' + theLinkBuilder.getClassLink ( classDoc.superClass, this.#rootPath ) + '</span>'
+				:
+				'';
 
 		this.#html += `<h1><span>Class</span> ${classDoc.name} ${superClass}</h1>`;
 
@@ -132,7 +154,7 @@ class ClassHtmlBuilder {
 
 		const sourceLink = theLinkBuilder.getSourceLink ( classDoc );
 		this.#html += `<div>Source : <a href="${sourceLink}"> file ${classDoc.file} at line ${classDoc.line}</a></div>`;
-		
+
 		this.#buildMethodsAndProperties (
 			classDoc.methodsAndProperties.filter (
 				methodOrProperty => (

@@ -8,7 +8,7 @@ class ClassDocBuilder {
 	}
 
 	build ( classDeclarationNode, fileName ) {
-		
+
 		/*
 		const classDoc = {
 			name : {string} the class name; found in ast
@@ -29,7 +29,7 @@ class ClassDocBuilder {
 		}
 
 		const commentDocBuilder = new CommentDocBuilder ( );
-		
+
 		const classDoc = {
 			name : classDeclarationNode.id.name,
 			methodsAndProperties : [],
@@ -41,7 +41,7 @@ class ClassDocBuilder {
 		if ( classDeclarationNode?.superClass?.name ) {
 			classDoc.superClass = classDeclarationNode.superClass.name;
 		}
-		
+
 		if ( classDeclarationNode.leadingComments ) {
 			const comments = [];
 			classDeclarationNode.leadingComments.forEach (
@@ -61,13 +61,14 @@ class ClassDocBuilder {
 			file : {string} the file name in witch the method or property is declared, including path since theConfig.docDir
 			rootPath : rootPath, the path between the html file and theConfig.docDir
 			line : {string} the line at witch the method or property is declared; found in ast
-			commentsDoc : {Object|null} the doc found in the comments of the method or property 
+			commentsDoc : {Object|null} the doc found in the comments of the method or property
 		};
 		*/
-		
+
 		classDeclarationNode.body.body.forEach (
 			methodOrPropertyNode => {
-				//methodOrPropertyDoc
+
+				// methodOrPropertyDoc
 				const methodOrPropertyDoc = {
 					name : methodOrPropertyNode?.key?.name || methodOrPropertyNode?.key?.id?.name,
 					static : methodOrPropertyNode.static,
@@ -120,9 +121,9 @@ class ClassDocBuilder {
 
 		Object.freeze ( classDoc.methodsAndProperties );
 		Object.freeze ( classDoc );
-		
+
 		theLinkBuilder.setClassLink ( classDoc );
-		
+
 		return classDoc;
 	}
 }

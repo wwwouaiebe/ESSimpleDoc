@@ -6,7 +6,7 @@ class CommentDocBuilder {
 	}
 
 	#parseCommentTag ( commentTag ) {
-		
+
 		// Splitting the tag into words
 		const words = commentTag.split ( ' ' );
 		switch ( words [ 0 ] ) {
@@ -58,19 +58,19 @@ class CommentDocBuilder {
 
 	#parseComment ( comment ) {
 		let tmpComment = comment;
-		
+
 		// replacing \n \r and \t with space and @ with a strange text surely not used
 		tmpComment = tmpComment
 			.replaceAll ( '\r', ' ' )
 			.replaceAll ( '\t', ' ' )
 			.replaceAll ( '\n', ' ' )
 			.replaceAll ( '@', '§§§@' );
-		
+
 		// removing multiple spaces
 		while ( tmpComment.includes ( '  ' ) ) {
 			tmpComment = tmpComment.replaceAll ( '  ', ' ' );
 		}
-		
+
 		// spliting the comments at the strange text, so the comment are splitted, preserving the @
 		tmpComment.split ( '§§§' ).forEach (
 			commentTag => { this.#parseCommentTag ( commentTag ); }
@@ -86,7 +86,7 @@ class CommentDocBuilder {
 		returns :{returns} An array with the type and description of the params
 		global : {boolean} the property is a global property
 	}
-	
+
 	param = {
 		type : {string} the type of the param
 		desc : {string} the description of the param
@@ -96,9 +96,9 @@ class CommentDocBuilder {
 		type : {string} the type of the param
 		desc : {string} the description of the param
 	}
-	
+
 	*/
-	
+
 	build ( comments ) {
 
 		this.#commentsDoc = {

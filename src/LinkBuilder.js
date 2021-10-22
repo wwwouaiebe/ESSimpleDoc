@@ -1,9 +1,7 @@
-import theConfig from './Config.js';
-
 class LinkBuilder {
 
 	#sourcesLinks = null;
-	
+
 	#classesLinks = null;
 
 	constructor ( ) {
@@ -11,14 +9,14 @@ class LinkBuilder {
 		this.#sourcesLinks = new Map ( );
 		this.#classesLinks = new Map ( );
 	}
-	
+
 	getClassLink ( className, rootPath ) {
 		const classLink = this.#classesLinks.get ( className );
 		return classLink ? `<a href="${rootPath + classLink}">${className}</a>` : className;
 	}
-	
+
 	setClassLink ( classDoc ) {
-		this.#classesLinks.set ( classDoc.name, classDoc.file.replace ('.js', '.html' ) );
+		this.#classesLinks.set ( classDoc.name, classDoc.file.replace ( '.js', '.html' ) );
 	}
 
 	getSourceLink ( doc ) {
@@ -28,8 +26,8 @@ class LinkBuilder {
 		}
 		return null;
 	}
-	
-	setSourceLink ( fileName, path) {
+
+	setSourceLink ( fileName, path ) {
 		this.#sourcesLinks.set ( fileName, path );
 	}
 }
