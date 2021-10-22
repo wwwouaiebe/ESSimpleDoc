@@ -1,7 +1,7 @@
 import FileWriter from './FileWriter.js';
 import LinkBuilder from './LinkBuilder.js';
 
-class HtmlClassBuilder {
+class ClassHtmlBuilder {
 
 	#html = '';
 	#rootPath = '';
@@ -46,7 +46,11 @@ class HtmlClassBuilder {
 					`<h3>${asyncPrefix}${staticPrefix}${getSetPrefix}${namePrefix}${methodOrPropertyDoc.name} ${type}</h3>`;
 				this.#html += `<div>${methodOrPropertyDoc?.commentsDoc?.desc ?? '...description coming soon?'}</div>`;
 
-				this.#html += `<div>Source : file ${methodOrPropertyDoc.file} at line ${methodOrPropertyDoc.line}</div>`;
+				const sourceLink = this.#linkBuilder.getSourceLink ( methodOrPropertyDoc );
+				this.#html += `<div>Source : <a href="${sourceLink}"> file ${methodOrPropertyDoc.file} at line ${methodOrPropertyDoc.line}</a></div>`;
+
+
+				//this.#html += `<div>Source : file ${methodOrPropertyDoc.file} at line ${methodOrPropertyDoc.line}</div>`;
 
 				if ( methodOrPropertyDoc.params && 0 !== methodOrPropertyDoc.params.length && 0 === getSetPrefix.length ) {
 					this.#buildParams ( methodOrPropertyDoc );
@@ -80,8 +84,8 @@ class HtmlClassBuilder {
 		}
 
 		const sourceLink = this.#linkBuilder.getSourceLink ( classDoc );
-
 		this.#html += `<div>Source : <a href="${sourceLink}"> file ${classDoc.file} at line ${classDoc.line}</a></div>`;
+		
 		this.#buildMethodsAndProperties (
 			classDoc.methodsAndProperties.filter (
 				methodOrProperty => (
@@ -170,4 +174,4 @@ class HtmlClassBuilder {
 	}
 }
 
-export default HtmlClassBuilder;
+export default ClassHtmlBuilder;

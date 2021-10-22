@@ -1,7 +1,7 @@
 import fs from 'fs';
 import theConfig from './Config.js';
 
-class HtmlVariablesBuilder {
+class VariablesHtmlBuilder {
 
 	#html = '';
 
@@ -9,16 +9,16 @@ class HtmlVariablesBuilder {
 	}
 
 	#buildVariable ( variableDoc ) {
-		if ( ! variableDoc.doc ) {
+		if ( ! variableDoc.commentsDoc ) {
 			return;
 		}
 		this.#html +=
 			`<a id="${variableDoc.name}"></a><h3><span>${variableDoc?.kind ?? ''} </span>` +
 			`${variableDoc.name}` +
-			` : <span>${variableDoc.doc?.type ?? ''}</span></h3>`;
+			` : <span>${variableDoc.commentsDoc?.type ?? ''}</span></h3>`;
 
-		if ( variableDoc.doc?.desc && '' !== variableDoc.doc.desc ) {
-			this.#html += `<div>${variableDoc.doc.desc}</div>`;
+		if ( variableDoc.commentsDoc?.desc && '' !== variableDoc.commentsDoc.desc ) {
+			this.#html += `<div>${variableDoc.commentsDoc.desc}</div>`;
 		}
 		this.#html += `<div>Source : file ${variableDoc.file} at line ${variableDoc.line}</div>`;
 	}
@@ -29,11 +29,9 @@ class HtmlVariablesBuilder {
 			'<link type="text/css" rel="stylesheet" href="../src/myDoc.css"></head><body>';
 		this.#html += '<h1>Global variables</h1>';
 		variablesDocs.forEach ( variableDoc => this.#buildVariable ( variableDoc ) );
-
 		this.#html += '</body></html>';
-
 		fs.writeFileSync ( theConfig.docDir + 'variables.html', this.#html );
 	}
 }
 
-export default HtmlVariablesBuilder;
+export default VariablesHtmlBuilder;

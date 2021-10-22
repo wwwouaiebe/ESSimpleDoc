@@ -1,4 +1,3 @@
-
 import theConfig from './Config.js';
 
 class LinkBuilder {

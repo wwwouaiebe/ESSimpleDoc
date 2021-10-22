@@ -1,7 +1,7 @@
 import theConfig from './Config.js';
 import FileWriter from './FileWriter.js';
 
-class SourceFileBuilder {
+class SourceHtmlBuilder {
 
 	constructor ( ) {
 		Object.freeze ( this );
@@ -57,4 +57,4 @@ class SourceFileBuilder {
 	}
 }
 
-export default SourceFileBuilder;
+export default SourceHtmlBuilder;

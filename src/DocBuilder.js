@@ -1,18 +1,18 @@
 import fs from 'fs';
 import babelParser from '@babel/parser';
-import DocClassBuilder from './DocClassBuilder.js';
-import DocVariableBuilder from './DocVariableBuilder.js';
+import ClassDocBuilder from './ClassDocBuilder.js';
+import VariableDocBuilder from './VariableDocBuilder.js';
 import theConfig from './Config.js';
-import SourceFileBuilder from './SourceFileBuilder.js';
-import HtmlClassBuilder from './HtmlClassBuilder.js';
-import HtmlVariablesBuilder from './HtmlVariablesBuilder.js';
+import SourceHtmlBuilder from './SourceHtmlBuilder.js';
+import ClassHtmlBuilder from './ClassHtmlBuilder.js';
+import VariablesHtmlBuilder from './VariablesHtmlBuilder.js';
 
 
 class DocBuilder {
 	
-	#sourceFileBuilder = null;
-	#docVariableBuilder = null;
-	#docClassBuilder = null;
+	#sourceHtmlBuilder = null;
+	#variableDocBuilder = null;
+	#classDocBuilder = null;
 
 	#classesDocs = [];
 
@@ -42,9 +42,9 @@ class DocBuilder {
 
 	constructor ( ) {
 		Object.freeze ( this );
-		this.#sourceFileBuilder = new SourceFileBuilder ( );
-		this.#docClassBuilder =  new DocClassBuilder ( );
-		this.#docVariableBuilder = new DocVariableBuilder ( );
+		this.#sourceHtmlBuilder = new SourceHtmlBuilder ( );
+		this.#classDocBuilder =  new ClassDocBuilder ( );
+		this.#variableDocBuilder = new VariableDocBuilder ( );
 	}
 
 	#buildFile ( ast, fileName ) {
@@ -52,10 +52,10 @@ class DocBuilder {
 			bodyElement => {
 				switch ( bodyElement.type ) {
 				case 'ClassDeclaration' :
-					this.#classesDocs.push ( this.#docClassBuilder.build ( bodyElement, fileName ) );
+					this.#classesDocs.push ( this.#classDocBuilder.build ( bodyElement, fileName ) );
 					break;
 				case 'VariableDeclaration' :
-					this.#variablesDocs.push ( this.#docVariableBuilder.build ( bodyElement, fileName ) );
+					this.#variablesDocs.push ( this.#variableDocBuilder.build ( bodyElement, fileName ) );
 					break;
 				default :
 					break;
@@ -70,17 +70,18 @@ class DocBuilder {
 				const fileContent = fs.readFileSync ( theConfig.srcDir + fileName, 'utf8' );
 				const ast = babelParser.parse ( fileContent, this.#parserOptions );
 				this.#buildFile ( ast, fileName );
-				this.#sourceFileBuilder.build ( fileContent, fileName );
+				this.#sourceHtmlBuilder.build ( fileContent, fileName );
 			}
 		);
 
-		const htmlClassBuilder = new HtmlClassBuilder ( );
-		this.#classesDocs.forEach ( classDoc => htmlClassBuilder.build ( classDoc ) );
+		const classHtmlBuilder = new ClassHtmlBuilder ( );
+		this.#classesDocs.forEach ( classDoc => classHtmlBuilder.build ( classDoc ) );
 
-		new HtmlVariablesBuilder ( ).build ( this.#variablesDocs );
+		new VariablesHtmlBuilder ( ).build ( this.#variablesDocs );
 	}
 
 	get classesDocs ( ) { return this.#classesDocs; }
+	
 	get variablesDocs ( ) { return this.#variablesDocs; }
 }
 

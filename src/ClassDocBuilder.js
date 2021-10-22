@@ -1,6 +1,6 @@
 import CommentsParser from './CommentsParser.js';
 
-class DocClassBuilder {
+class ClassDocBuilder {
 
 	constructor ( ) {
 	}
@@ -33,7 +33,7 @@ class DocClassBuilder {
 			methodsAndProperties : [],
 			file : fileName,
 			rootPath : rootPath,
-			line : classDeclarationElement?.loc?.start?.line ?? '0'
+			line : classDeclarationElement.loc.start.line
 		};
 
 		if ( classDeclarationElement?.superClass?.name ) {
@@ -57,6 +57,7 @@ class DocClassBuilder {
 			isA : {string} the type ( = 'method' or 'property' ); found in ast
 			private : {boolean} the method or property is private; found in ast
 			file : {string} the file name in witch the method or property is declared, including path since theConfig.docDir
+			rootPath : rootPath, the path between the html file and theConfig.docDir
 			line : {string} the line at witch the method or property is declared; found in ast
 			commentsDoc : {Object|null} the doc found in the comments of the method or property 
 		};
@@ -71,6 +72,7 @@ class DocClassBuilder {
 					async : bodyElement.async,
 					kind : bodyElement?.kind,
 					file : fileName,
+					rootPath : rootPath,
 					line : bodyElement.loc.start.line
 				};
 				if ( bodyElement.leadingComments ) {
@@ -120,4 +122,4 @@ class DocClassBuilder {
 	}
 }
 
-export default DocClassBuilder;
+export default ClassDocBuilder;
