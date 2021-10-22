@@ -22,6 +22,7 @@ class VariableDocBuilder {
 			name : variableDeclarationNode.declarations [ 0 ].id.name,
 			kind : variableDeclarationNode?.kind,
 			file : fileName,
+			rootPath : '',
 			line : variableDeclarationNode.loc.start.line
 		};
 		if ( variableDeclarationNode.leadingComments ) {

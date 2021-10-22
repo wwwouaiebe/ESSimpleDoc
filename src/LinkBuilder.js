@@ -3,13 +3,22 @@ import theConfig from './Config.js';
 class LinkBuilder {
 
 	#sourcesLinks = null;
+	
+	#classesLinks = null;
 
 	constructor ( ) {
 		Object.freeze ( this );
-		this.#sourcesLinks = new Map ( )
+		this.#sourcesLinks = new Map ( );
+		this.#classesLinks = new Map ( );
 	}
 	
-	getClassLink ( ) {
+	getClassLink ( className, rootPath ) {
+		const classLink = this.#classesLinks.get ( className );
+		return classLink ? `<a href="${rootPath + classLink}">${className}</a>` : className;
+	}
+	
+	setClassLink ( classDoc ) {
+		this.#classesLinks.set ( classDoc.name, classDoc.file.replace ('.js', '.html' ) );
 	}
 
 	getSourceLink ( doc ) {

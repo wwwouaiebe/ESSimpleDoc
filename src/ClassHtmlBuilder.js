@@ -16,7 +16,7 @@ class ClassHtmlBuilder {
 		methodOrPropertyDoc.params.forEach (
 			param => {
 				const paramDoc = methodOrPropertyDoc?.commentsDoc?.params.find ( first => first.name === param );
-				const paramType = paramDoc ? paramDoc.type : '';
+				const paramType = paramDoc ? theLinkBuilder.getClassLink ( paramDoc.type, this.#rootPath ) : '';
 				const paramDesc = paramDoc ? paramDoc.desc : '';
 				this.#html += `<tr><td>${param}</td> <td>${paramType}</td> <td>${paramDesc}</td></tr>`;
 			}
@@ -30,7 +30,6 @@ class ClassHtmlBuilder {
 			methodOrPropertyDoc.params.forEach ( param => params += param +', ' );
 			params = params.substr ( 0, params.length - 2 );
 		}
-
 		
 		return ` ( ${params} )`;
 	}
@@ -79,7 +78,12 @@ class ClassHtmlBuilder {
 						'';
 						
 				// header type
-				const typePostfix = methodOrPropertyDoc?.commentsDoc?.type ? ' <span> : ' + methodOrPropertyDoc.commentsDoc.type + '</span>' : '';
+				const typePostfix = 
+					methodOrPropertyDoc?.commentsDoc?.type
+						? 
+						' <span> : ' + theLinkBuilder.getClassLink ( methodOrPropertyDoc.commentsDoc.type, this.#rootPath ) + '</span>' 
+						: 
+						'';
 
 				this.#html += `<div class="${cssClassName}">`;
 				this.#html +=
@@ -102,8 +106,9 @@ class ClassHtmlBuilder {
 					methodOrPropertyDoc.commentsDoc &&
 					( '' !== methodOrPropertyDoc.commentsDoc.returns.type || '' !== methodOrPropertyDoc.commentsDoc.returns.desc )
 				) {
+					const returnType = theLinkBuilder.getClassLink ( methodOrPropertyDoc.commentsDoc.returns.type, this.#rootPath );
 					this.#html += `<h4>Returns</h4><div>${methodOrPropertyDoc.commentsDoc.returns.desc}</div>` +
-						`<div>Type : ${methodOrPropertyDoc.commentsDoc.returns.type}</div>`;
+						`<div>Type : ${returnType}</div>`;
 				}
 
 				this.#html += '</div>';
@@ -112,13 +117,14 @@ class ClassHtmlBuilder {
 	}
 
 	build ( classDoc ) {
+		this.#rootPath = classDoc.rootPath;
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}../src/myDoc.css"></head><body>`;
 
-		const superClass = classDoc?.superClass ? ' extends ' + classDoc.superClass : '';
+		const superClass = classDoc?.superClass ? '<span> extends ' + theLinkBuilder.getClassLink ( classDoc.superClass, this.#rootPath ) + '</span>' : '';
 
-		this.#html += `<h1>Class ${classDoc.name} ${superClass}</h1>`;
+		this.#html += `<h1><span>Class</span> ${classDoc.name} ${superClass}</h1>`;
 
 		if ( classDoc?.commentsDoc?.desc ) {
 			this.#html += `<div>${classDoc.commentsDoc.desc}</div>`;

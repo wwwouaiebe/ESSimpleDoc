@@ -1,4 +1,5 @@
 import CommentDocBuilder from './CommentDocBuilder.js';
+import theLinkBuilder from './LinkBuilder.js';
 
 class ClassDocBuilder {
 
@@ -118,7 +119,11 @@ class ClassDocBuilder {
 		);
 
 		Object.freeze ( classDoc.methodsAndProperties );
-		return Object.freeze ( classDoc );
+		Object.freeze ( classDoc );
+		
+		theLinkBuilder.setClassLink ( classDoc );
+		
+		return classDoc;
 	}
 }
 
