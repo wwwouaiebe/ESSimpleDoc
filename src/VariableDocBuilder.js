@@ -1,11 +1,12 @@
-import CommentsParser from './CommentsParser.js';
+import CommentDocBuilder from './CommentDocBuilder.js';
 
 class VariableDocBuilder {
 
 	constructor ( ) {
+		Object.freeze ( this );
 	}
 
-	build ( variableDeclarationElement, fileName ) {
+	build ( variableDeclarationNode, fileName ) {
 
 		/*
 		const variableDoc = {
@@ -18,17 +19,17 @@ class VariableDocBuilder {
 		*/
 
 		const variableDoc = {
-			name : variableDeclarationElement.declarations [ 0 ].id.name,
-			kind : variableDeclarationElement?.kind,
+			name : variableDeclarationNode.declarations [ 0 ].id.name,
+			kind : variableDeclarationNode?.kind,
 			file : fileName,
-			line : variableDeclarationElement.loc.start.line
+			line : variableDeclarationNode.loc.start.line
 		};
-		if ( variableDeclarationElement.leadingComments ) {
+		if ( variableDeclarationNode.leadingComments ) {
 			const comments = [];
-			variableDeclarationElement.leadingComments.forEach (
+			variableDeclarationNode.leadingComments.forEach (
 				comment => { comments.push ( comment?.value ); }
 			);
-			variableDoc.commentsDoc = new CommentsParser ( ).parse ( comments );
+			variableDoc.commentsDoc = new CommentDocBuilder ( ).build ( comments );
 		}
 
 		return Object.freeze ( variableDoc );

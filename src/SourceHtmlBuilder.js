@@ -1,5 +1,6 @@
 import theConfig from './Config.js';
 import FileWriter from './FileWriter.js';
+import theLinkBuilder from './LinkBuilder.js';
 
 class SourceHtmlBuilder {
 
@@ -53,7 +54,7 @@ class SourceHtmlBuilder {
 		new FileWriter ( ).write ( dirs, htmlFileName, html );
 
 		// Saving link
-		theConfig.links.set ( fileName, htmlFilePath + htmlFileName );
+		theLinkBuilder.setSourceLink ( fileName, htmlFilePath + htmlFileName );
 	}
 }
 

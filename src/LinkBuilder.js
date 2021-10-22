@@ -2,16 +2,29 @@ import theConfig from './Config.js';
 
 class LinkBuilder {
 
+	#sourcesLinks = null;
+
 	constructor ( ) {
+		Object.freeze ( this );
+		this.#sourcesLinks = new Map ( )
+	}
+	
+	getClassLink ( ) {
 	}
 
-	getSourceLink ( classDoc ) {
-		let fileLink = theConfig.links.get ( classDoc.file );
-		if ( fileLink ) {
-			return classDoc.rootPath + fileLink + '#L' + String ( classDoc.line ).padStart ( 5, '_' );
+	getSourceLink ( doc ) {
+		let sourceLink = this.#sourcesLinks.get ( doc.file );
+		if ( sourceLink ) {
+			return doc.rootPath + sourceLink + '#L' + String ( doc.line ).padStart ( 5, '_' );
 		}
 		return null;
 	}
+	
+	setSourceLink ( fileName, path) {
+		this.#sourcesLinks.set ( fileName, path );
+	}
 }
 
-export default LinkBuilder;
+const theLinkBuilder = new LinkBuilder ( );
+
+export default theLinkBuilder;

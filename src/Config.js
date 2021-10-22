@@ -1,7 +1,6 @@
 const theConfig = {
 	srcDir : './in/',
-	docDir : './out/',
-	links : new Map ( )
+	docDir : './out/'
 };
 
 export default theConfig;

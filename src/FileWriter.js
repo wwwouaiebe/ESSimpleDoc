@@ -6,6 +6,7 @@ class FileWriter {
 	#currentDir = '';
 
 	constructor ( ) {
+		Object.freeze ( this );
 	}
 
 	#createDirs ( dirs ) {

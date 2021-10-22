@@ -1,11 +1,12 @@
-import CommentsParser from './CommentsParser.js';
+import CommentDocBuilder from './CommentDocBuilder.js';
 
 class ClassDocBuilder {
 
 	constructor ( ) {
+		Object.freeze ( this );
 	}
 
-	build ( classDeclarationElement, fileName ) {
+	build ( classDeclarationNode, fileName ) {
 		
 		/*
 		const classDoc = {
@@ -26,26 +27,26 @@ class ClassDocBuilder {
 			rootPathCounter --;
 		}
 
-		const commentsParser = new CommentsParser ( );
+		const commentDocBuilder = new CommentDocBuilder ( );
 		
 		const classDoc = {
-			name : classDeclarationElement.id.name,
+			name : classDeclarationNode.id.name,
 			methodsAndProperties : [],
 			file : fileName,
 			rootPath : rootPath,
-			line : classDeclarationElement.loc.start.line
+			line : classDeclarationNode.loc.start.line
 		};
 
-		if ( classDeclarationElement?.superClass?.name ) {
-			classDoc.superClass = classDeclarationElement.superClass.name;
+		if ( classDeclarationNode?.superClass?.name ) {
+			classDoc.superClass = classDeclarationNode.superClass.name;
 		}
 		
-		if ( classDeclarationElement.leadingComments ) {
+		if ( classDeclarationNode.leadingComments ) {
 			const comments = [];
-			classDeclarationElement.leadingComments.forEach (
+			classDeclarationNode.leadingComments.forEach (
 				comment => { comments.push ( comment?.value ); }
 			);
-			classDoc.commentsDoc = commentsParser.parse ( comments );
+			classDoc.commentsDoc = commentDocBuilder.build ( comments );
 		}
 
 		/*
@@ -63,32 +64,32 @@ class ClassDocBuilder {
 		};
 		*/
 		
-		classDeclarationElement.body.body.forEach (
-			bodyElement => {
+		classDeclarationNode.body.body.forEach (
+			methodOrPropertyNode => {
 				//methodOrPropertyDoc
 				const methodOrPropertyDoc = {
-					name : bodyElement?.key?.name || bodyElement?.key?.id?.name,
-					static : bodyElement.static,
-					async : bodyElement.async,
-					kind : bodyElement?.kind,
+					name : methodOrPropertyNode?.key?.name || methodOrPropertyNode?.key?.id?.name,
+					static : methodOrPropertyNode.static,
+					async : methodOrPropertyNode.async,
+					kind : methodOrPropertyNode?.kind,
 					file : fileName,
 					rootPath : rootPath,
-					line : bodyElement.loc.start.line
+					line : methodOrPropertyNode.loc.start.line
 				};
-				if ( bodyElement.leadingComments ) {
+				if ( methodOrPropertyNode.leadingComments ) {
 					const comments = [];
-					bodyElement.leadingComments.forEach (
+					methodOrPropertyNode.leadingComments.forEach (
 						comment => { comments.push ( comment?.value ); }
 					);
-					methodOrPropertyDoc.commentsDoc = commentsParser.parse ( comments );
+					methodOrPropertyDoc.commentsDoc = commentDocBuilder.build ( comments );
 				}
-				if ( bodyElement.params ) {
+				if ( methodOrPropertyNode.params ) {
 					methodOrPropertyDoc.params = [];
-					bodyElement.params.forEach (
+					methodOrPropertyNode.params.forEach (
 						param => { methodOrPropertyDoc.params.push ( param?.name ); }
 					);
 				}
-				switch ( bodyElement.type ) {
+				switch ( methodOrPropertyNode.type ) {
 				case 'ClassPrivateProperty' :
 					methodOrPropertyDoc.private = true;
 					methodOrPropertyDoc.isA = 'property';
@@ -115,9 +116,8 @@ class ClassDocBuilder {
 				}
 			}
 		);
-		
-		
 
+		Object.freeze ( classDoc.methodsAndProperties );
 		return Object.freeze ( classDoc );
 	}
 }

@@ -6,6 +6,7 @@ class VariablesHtmlBuilder {
 	#html = '';
 
 	constructor ( ) {
+		Object.freeze ( this );
 	}
 
 	#buildVariable ( variableDoc ) {

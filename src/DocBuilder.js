@@ -49,13 +49,13 @@ class DocBuilder {
 
 	#buildFile ( ast, fileName ) {
 		ast.program.body.forEach (
-			bodyElement => {
-				switch ( bodyElement.type ) {
+			astNode => {
+				switch ( astNode.type ) {
 				case 'ClassDeclaration' :
-					this.#classesDocs.push ( this.#classDocBuilder.build ( bodyElement, fileName ) );
+					this.#classesDocs.push ( this.#classDocBuilder.build ( astNode, fileName ) );
 					break;
 				case 'VariableDeclaration' :
-					this.#variablesDocs.push ( this.#variableDocBuilder.build ( bodyElement, fileName ) );
+					this.#variablesDocs.push ( this.#variableDocBuilder.build ( astNode, fileName ) );
 					break;
 				default :
 					break;

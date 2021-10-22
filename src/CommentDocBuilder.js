@@ -1,7 +1,8 @@
-class CommentsParser {
+class CommentDocBuilder {
 
 	#commentsDoc = null;
 	constructor ( ) {
+		Object.freeze ( this );
 	}
 
 	#parseCommentTag ( commentTag ) {
@@ -98,7 +99,7 @@ class CommentsParser {
 	
 	*/
 	
-	parse ( comments ) {
+	build ( comments ) {
 
 		this.#commentsDoc = {
 			params : [],
@@ -116,4 +117,4 @@ class CommentsParser {
 	}
 }
 
-export default CommentsParser;
+export default CommentDocBuilder;
