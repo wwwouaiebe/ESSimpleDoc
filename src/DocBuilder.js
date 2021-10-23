@@ -7,6 +7,7 @@ import SourceHtmlBuilder from './SourceHtmlBuilder.js';
 import ClassHtmlBuilder from './ClassHtmlBuilder.js';
 import VariablesHtmlBuilder from './VariablesHtmlBuilder.js';
 import theLinkBuilder from './LinkBuilder.js';
+import DocsValidator from './DocsValidator.js';
 
 class DocBuilder {
 
@@ -79,6 +80,11 @@ class DocBuilder {
 		// Saving link
 		this.#classesDocs.forEach ( classDoc => theLinkBuilder.setClassLink ( classDoc ) );
 		this.#variablesDocs.forEach ( variableDoc => theLinkBuilder.setVariableLink ( variableDoc ) );
+
+		if ( theConfig.validate ) {
+			const docsValidator = new DocsValidator ( );
+			docsValidator.validate ( this.#classesDocs );
+		}
 
 		const classHtmlBuilder = new ClassHtmlBuilder ( );
 		this.#classesDocs.forEach ( classDoc => classHtmlBuilder.build ( classDoc ) );

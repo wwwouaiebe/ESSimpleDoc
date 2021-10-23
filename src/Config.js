@@ -1,6 +1,8 @@
 const theConfig = {
-	srcDir : './in/',
-	docDir : './out/'
+	srcDir : null, // './src/',
+	docDir : null, //'./out/'
+	appDir : null,
+	validate : false
 };
 
 export default theConfig;
