@@ -1,5 +1,33 @@
+/*
+Copyright - 2017 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
+
+This  program is free software;
+you can redistribute it and/or modify it under the terms of the
+GNU General Public License as published by the Free Software Foundation;
+either version 3 of the License, or any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/*
+Changes:
+	- v1.0.0:
+		- created
+Doc reviewed 20211021
+*/
+
 import FileWriter from './FileWriter.js';
-import NavBuilder from './NavBuilder.js';
+import NavHtmlBuilder from './NavHtmlBuilder.js';
+
+/**
+Build the sources HTML pages
+*/
 
 class SourceHtmlBuilder {
 
@@ -18,7 +46,7 @@ class SourceHtmlBuilder {
 		let rootPath = '';
 		dirs.forEach ( ( ) => rootPath += '../' );
 
-		const navBuilder = new NavBuilder ( );
+		const navHtmlBuilder = new NavHtmlBuilder ( );
 
 		// head
 		let html =
@@ -26,7 +54,7 @@ class SourceHtmlBuilder {
 			`<link type="text/css" rel="stylesheet" href="${rootPath}SimpleESDoc.css"></head><body>`;
 
 		// nav
-		html += navBuilder.build ( rootPath );
+		html += navHtmlBuilder.build ( rootPath );
 
 		html += `<h1>File : ${fileName}</h1>`;
 
@@ -48,7 +76,7 @@ class SourceHtmlBuilder {
 			}
 		);
 
-		html += navBuilder.footer;
+		html += navHtmlBuilder.footer;
 		html +=
 			'<script>document.getElementById ( new URL ( window.location' +
 			' ).hash.substr( 1 ) )?.parentNode.classList.add ( \'hash\' )</script>';
@@ -61,3 +89,10 @@ class SourceHtmlBuilder {
 }
 
 export default SourceHtmlBuilder;
+/*
+@------------------------------------------------------------------------------------------------------------------------------
+
+end of file
+
+@------------------------------------------------------------------------------------------------------------------------------
+*/
