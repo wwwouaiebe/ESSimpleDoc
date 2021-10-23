@@ -76,6 +76,10 @@ class LinkBuilder {
 
 }
 
+/**
+@global
+*/
+
 const theLinkBuilder = new LinkBuilder ( );
 
 export default theLinkBuilder;

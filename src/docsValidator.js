@@ -49,7 +49,7 @@ class docsValidator {
 	#logFault ( rule, doc ) {
 		this.#errorsCounter ++;
 		console.error ( 
-			`${rule.errorLevel} '${rule.ruleMessage}' for ${doc.name} in file ${doc.file} at line ${doc.line}: `
+			`${rule.errorLevel} '${rule.ruleMessage}' for ${doc.name} in file \x1b[31m${doc.file}\x1b[0m at line \x1b[31m${doc.line}\x1b[0m: `
 		);
 	}
 	

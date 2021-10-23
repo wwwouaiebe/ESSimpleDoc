@@ -138,7 +138,7 @@ class ClassHtmlBuilder {
 		this.#rootPath = classDoc.rootPath;
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}../src/myDoc.css"></head><body>`;
+			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}SimpleESDoc.css"></head><body>`;
 
 		this.#html += navBuilder.build ( this.#rootPath );
 

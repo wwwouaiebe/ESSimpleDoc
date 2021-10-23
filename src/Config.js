@@ -1,8 +1,13 @@
+/**
+@global
+*/
+
 const theConfig = {
-	srcDir : null, // './src/',
-	docDir : null, //'./out/'
+	srcDir : null,
+	docDir : null,
 	appDir : null,
-	validate : false
+	validate : false,
+	launch : false
 };
 
 export default theConfig;

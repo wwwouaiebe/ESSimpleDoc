@@ -8,6 +8,7 @@ import ClassHtmlBuilder from './ClassHtmlBuilder.js';
 import VariablesHtmlBuilder from './VariablesHtmlBuilder.js';
 import theLinkBuilder from './LinkBuilder.js';
 import DocsValidator from './DocsValidator.js';
+import IndexHtmlBuilder from './IndexHtmlBuilder.js';
 
 class DocBuilder {
 
@@ -97,6 +98,8 @@ class DocBuilder {
 		);
 
 		new VariablesHtmlBuilder ( ).build ( this.#variablesDocs );
+		
+		new IndexHtmlBuilder ( ).build ( );
 	}
 
 	get classesDocs ( ) { return this.#classesDocs; }

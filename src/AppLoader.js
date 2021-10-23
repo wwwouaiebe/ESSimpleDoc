@@ -3,6 +3,7 @@ import process from 'process';
 
 import DocBuilder from './DocBuilder.js';
 import theConfig from './Config.js';
+import child_process from 'child_process';
 
 class AppLoader {
 
@@ -84,6 +85,9 @@ class AppLoader {
 				if ( '--validate' === arg ) {
 					theConfig.validate = true;
 				}
+				if ( '--launch' === arg ) {
+					theConfig.launch = true;
+				}
 			}
 		);
 		
@@ -97,18 +101,25 @@ class AppLoader {
 			process.exit ( 9 );
 		}
 	}
-
+	
 	loadApp ( ) {
 		this.#startTime = process.hrtime.bigint ( );
 		console.error ('' );
+		
 		this.#createConfig ( )
 		this.#createFileList ( );
 		this.#cleanOldFiles ( );
+		fs.copyFileSync ( theConfig.appDir + 'SimpleESDoc.css', theConfig.docDir + 'SimpleESDoc.css' );
+		
 		new DocBuilder ( ).buildFiles ( this.#filesList );
+		
 		const deltaTime = process.hrtime.bigint ( ) - this.#startTime;
 		const execTime = String ( deltaTime / 1000000000n ) + '.' + String( deltaTime % 1000000000n ).substr (0, 3 );
-		console.error ( `Documentation generated in ${execTime} seconds in the folder \x1b[32m${theConfig.docDir}\x1b[0m` );
+		console.error ( `Documentation generated in ${execTime} seconds in the folder \x1b[36m${theConfig.docDir}\x1b[0m` );
 		console.error ('' );
+		if ( theConfig.launch ) {
+			child_process.exec( theConfig.docDir + 'index.html' );
+		}
 	}
 }
 

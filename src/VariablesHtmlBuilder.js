@@ -46,7 +46,7 @@ class VariablesHtmlBuilder {
 		variablesDocs.sort ( ( first, second ) => first.name.localeCompare ( second.name ) );
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-			'<link type="text/css" rel="stylesheet" href="../src/myDoc.css"></head><body>';
+			'<link type="text/css" rel="stylesheet" href="SimpleESDoc.css"></head><body>';
 
 		this.#html += navBuilder.build ( '' );
 

@@ -23,7 +23,7 @@ class SourceHtmlBuilder {
 		// head
 		let html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-			`<link type="text/css" rel="stylesheet" href="${rootPath}../src/myDoc.css"></head><body>`;
+			`<link type="text/css" rel="stylesheet" href="${rootPath}SimpleESDoc.css"></head><body>`;
 
 		// nav
 		html += navBuilder.build ( rootPath );
