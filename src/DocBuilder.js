@@ -42,14 +42,46 @@ and finally buid HTML pages from the doc objects.
 
 class DocBuilder {
 
-	#sourceHtmlBuilder = null;
-	#variableDocBuilder = null;
-	#classDocBuilder = null;
+	/**
+	A SourceHtmlBuilder object used by the class
+	@type {SourceHtmlBuilder}
+	*/
+	
+	#sourceHtmlBuilder;
 
+	/**
+	A VariableDocBuilder object used by the class
+	@type {VariableDocBuilder}
+	*/
+	
+	#variableDocBuilder;
+
+	/**
+	A ClassDocBuilder object used by the class
+	@type {ClassDocBuilder}
+	*/
+	
+	#classDocBuilder;
+
+	/**
+	The generated ClassDoc objects
+	@type {Array.<ClassDoc>}
+	*/
+	
 	#classesDocs = [];
 
+	/**
+	The generated VariableDoc objects
+	@type {Array.<VariableDoc>}
+	*/
+	
 	#variablesDocs = [];
 
+	/**
+	The options for the babel/parser
+	@type {Object}
+	*/
+	
 	#parserOptions = {
 		allowAwaitOutsideFunction : true,
 		allowImportExportEverywhere : true,
@@ -72,22 +104,34 @@ class DocBuilder {
 		sourceType : 'module'
 	}
 
+	/**
+	The constructor
+	*/
+	
 	constructor ( ) {
 		Object.freeze ( this );
 		this.#sourceHtmlBuilder = new SourceHtmlBuilder ( );
 		this.#classDocBuilder = new ClassDocBuilder ( );
 		this.#variableDocBuilder = new VariableDocBuilder ( );
 	}
+	
+	/**
+	Build all the docs for a file
+	@param {Object} parserResult The root 
+	<a href="https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md">ast node</a> 
+	given by the babel/parser
+	@param {String} sourceFileName The source file name, including relative path since theConfig.srcDir
+	*/
 
-	#buildFile ( ast, fileName ) {
-		ast.program.body.forEach (
+	#buildDocs ( parserResult, sourceFileName ) {
+		parserResult.program.body.forEach (
 			astNode => {
 				switch ( astNode.type ) {
 				case 'ClassDeclaration' :
-					this.#classesDocs.push ( this.#classDocBuilder.build ( astNode, fileName ) );
+					this.#classesDocs.push ( this.#classDocBuilder.build ( astNode, sourceFileName ) );
 					break;
 				case 'VariableDeclaration' :
-					this.#variablesDocs.push ( this.#variableDocBuilder.build ( astNode, fileName ) );
+					this.#variablesDocs.push ( this.#variableDocBuilder.build ( astNode, sourceFileName ) );
 					break;
 				default :
 					break;
@@ -95,44 +139,71 @@ class DocBuilder {
 			}
 		);
 	}
+	
+	/**
+	Build all the docs for the app and then build all the html files
+	@param {Array.<String>} sourceFilesList The source files names, including relative path since theConfig.srcDir
+	*/
 
-	buildFiles ( filesList ) {
-		filesList.forEach (
-			fileName => {
-				const fileContent = fs.readFileSync ( theConfig.srcDir + fileName, 'utf8' );
-				const ast = babelParser.parse ( fileContent, this.#parserOptions );
-				this.#buildFile ( ast, fileName );
-				const htmlFileName = fileName.replace ( '.js', 'js.html' );
-				theLinkBuilder.setSourceLink ( fileName, htmlFileName );
+	buildFiles ( sourceFilesList ) {
+		sourceFilesList.forEach (
+			sourceFileName => {
+				// Reading the source
+				const fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
+				
+				// buiding docs for the source
+				this.#buildDocs ( 
+					babelParser.parse ( fileContent, this.#parserOptions ), 
+					sourceFileName 
+				);
+				
+				// buiding the links for the source
+				const htmlFileName = sourceFileName.replace ( '.js', 'js.html' );
+				theLinkBuilder.setSourceLink ( sourceFileName, htmlFileName );
 
 			}
 		);
 
-		// Saving link
+		// Saving links for classes and variables
 		this.#classesDocs.forEach ( classDoc => theLinkBuilder.setClassLink ( classDoc ) );
 		this.#variablesDocs.forEach ( variableDoc => theLinkBuilder.setVariableLink ( variableDoc ) );
 
+		// Validation
 		if ( theConfig.validate ) {
 			const docsValidator = new DocsValidator ( );
 			docsValidator.validate ( this.#classesDocs );
 		}
 
+		// Building classes html files
 		const classHtmlBuilder = new ClassHtmlBuilder ( );
 		this.#classesDocs.forEach ( classDoc => classHtmlBuilder.build ( classDoc ) );
 
-		filesList.forEach (
-			fileName => {
-				const fileContent = fs.readFileSync ( theConfig.srcDir + fileName, 'utf8' );
-				this.#sourceHtmlBuilder.build ( fileContent, fileName );
+		// Building sources html files
+		sourceFilesList.forEach (
+			sourceFileName => {
+				const fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
+				this.#sourceHtmlBuilder.build ( fileContent, sourceFileName );
 			}
 		);
 
+		// Building the variables html file
 		new VariablesHtmlBuilder ( ).build ( this.#variablesDocs );
 
+		// Building the index.html file
 		new IndexHtmlBuilder ( ).build ( );
 	}
 
+	/**
+	The generated ClassDoc objects
+	@type {Array.<ClassDoc>}
+	*/
+
 	get classesDocs ( ) { return this.#classesDocs; }
+
+	/**
+	The generated VariableDoc objects
+	@type {Array.<VariableDoc>}
+	*/
 
 	get variablesDocs ( ) { return this.#variablesDocs; }
 }

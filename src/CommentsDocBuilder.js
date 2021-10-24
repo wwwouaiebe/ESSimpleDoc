@@ -69,37 +69,36 @@ class CommentsDocBuilder {
 	*/
 
 	#parseType ( type ) {
-		let returnType =
+		const tmpType =
 			type
 				.replaceAll ( '{', '' )
 				.replaceAll ( '}', '' )
 				.replaceAll ( ' ', '' )
+				.replaceAll ( '.<', ' of ' )
 				.replaceAll ( '<', '' )
 				.replaceAll ( '>', '' )
 				.replaceAll ( '!', '' )
 				.replaceAll ( '.', ' of ' )
 				.replaceAll ( '?', 'null or ' )
 				.replaceAll ( '|', ' or ' );
-		if ( '' === returnType ) {
+		if ( '' === tmpType ) {
 			return null;
 		}
-		let returnTypeArray = returnType.split ( ' ' );
-
-		switch ( returnTypeArray.length ) {
-		case 1 :
-			returnType = this.#capitalizeFirstLetter ( returnTypeArray [ 0 ] );
-			break;
-		case 3 :
-			returnType = this.#capitalizeFirstLetter ( returnTypeArray [ 0 ] ) +
-					' ' + returnTypeArray [ 1 ] + ' ' +
-					this.#capitalizeFirstLetter ( returnTypeArray [ 2 ] );
-			break;
-		default :
-			returnType = null;
-			break;
-		}
-
-		return returnType;
+		
+		let returnValue = '';
+		tmpType.trim( ).split ( ' ' ).forEach ( 
+			word => {
+				returnValue += 
+					( ['of', 'null', 'or'].indexOf ( word ) === -1 )
+					?
+					this.#capitalizeFirstLetter ( word )
+					:
+					word;
+				returnValue += ' ';
+			}
+		);
+		
+		return returnValue.trimEnd ( );
 
 	}
 

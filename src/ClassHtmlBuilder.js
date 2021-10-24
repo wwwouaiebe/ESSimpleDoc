@@ -218,7 +218,7 @@ class ClassHtmlBuilder {
 			)
 		) {
 			const returnType =
-				theLinkBuilder.getClassLink ( methodOrPropertyDoc.commentsDoc.returns.type, this.#rootPath );
+				theLinkBuilder.getTypeLinks ( methodOrPropertyDoc.commentsDoc.returns.type, this.#rootPath );
 			this.#html += `<h4>Returns</h4><div>${methodOrPropertyDoc.commentsDoc.returns.desc}</div>` +
 				`<div>Type : ${returnType}</div>`;
 		}

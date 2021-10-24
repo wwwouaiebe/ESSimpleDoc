@@ -31,12 +31,24 @@ Build the index.html home page
 */
 
 class IndexHtmlBuilder {
+	
+	/**
+	The constructor
+	*/
+	
 	constructor ( ) {
 		Object.freeze ( this );
 	}
 
+	/**
+	Build the index.html page
+	*/
+	
 	build ( ) {
+		
 		const navHtmlBuilder = new NavHtmlBuilder ( );
+		
+		// head
 		let html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			'<link type="text/css" rel="stylesheet" href="SimpleESDoc.css"></head><body>';
@@ -44,18 +56,22 @@ class IndexHtmlBuilder {
 		// nav
 		html += navHtmlBuilder.build ( '' );
 
+		// reading the content of the indexUserContent.html file
 		if ( fs.existsSync ( theConfig.srcDir + 'indexUserContent.html' ) ) {
+			// and adding to the html
 			html += fs.readFileSync ( theConfig.srcDir + 'indexUserContent.html' );
 		}
 		else {
+			// or adding a default content
 			html += '<div><p>Move the mouse on one of the blue, green or red rectangles on top of the page to display' +
 			' the menus and select an item in the menu.<p></div>';
 		}
 
+		// footer
 		html += navHtmlBuilder.footer;
-
 		html += '</body></html>';
-
+		
+		// writing file
 		fs.writeFileSync ( theConfig.docDir + 'index.html', html );
 	}
 }

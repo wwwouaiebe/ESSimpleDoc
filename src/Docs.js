@@ -43,10 +43,7 @@ class VariableDoc {
 	The constructor. Seal the object, so it's not possible to add new properties to the object
 	*/
 
-	constructor ( ) {
-
-		// Object.seal ( this );
-	}
+	constructor ( ) { }
 
 }
 
@@ -195,7 +192,7 @@ class CommentsDoc {
 
 	/**
 	The returns type of the commented method
-	@type {}
+	@type {TypeDescription}
 	*/
 
 	returns = null;

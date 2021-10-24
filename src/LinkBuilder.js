@@ -27,36 +27,95 @@ Store all the links  created from the source document and get the links complete
 */
 
 class LinkBuilder {
+	
+	/**
+	A cache for the sources links
+	@type {Array.<Array.<String>>}
+	*/
 
-	#sourcesLinksCache = null;
-	#sourcesLinks = null;
-	#classesLinksCache = null;
-	#classesLinks = null;
-	#variablesLinksCache = null;
-	#variablesLinks = null;
+	#sourcesLinksCache;
+	
+	/**
+	The links to the sources  files
+	@type {Map.<String>}
+	*/
+	
+	#sourcesLinks;
+	
+	/**
+	A cache for the classes links
+	@type {Array.<Array.<String>>}
+	*/
+	
+	#classesLinksCache;
+	
+	/**
+	The links to the classes  files
+	@type {Map.<String>}
+	*/
+	
+	#classesLinks;
+	
+	/**
+	A cache for the variables links
+	@type {Array.<Array.<String>>}
+	*/
 
-	#mdnLinks = {
-		Array : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array',
-		Map : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map',
-		Boolean : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean',
-		Number : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number',
-		String : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String',
-		Promise : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
-		Function : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function'
-	};
+	#variablesLinksCache;
+	
+	/**
+	The links to the variables file and the variables in the file
+	@type {Map.<String>}
+	*/
 
+	#variablesLinks;
+	
+	/**
+	The links to the mdn documentation
+	@type {Object}
+	*/
+
+	#mdnLinks = Object.freeze (
+		{
+			Array : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array',
+			Map : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map',
+			Boolean : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean',
+			Number : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number',
+			String : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String',
+			Promise : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
+			Function : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function'
+		}
+	);
+
+	/**
+	The constructor
+	*/
+	
 	constructor ( ) {
 		Object.freeze ( this );
 		this.#sourcesLinks = new Map ( );
 		this.#classesLinks = new Map ( );
 		this.#variablesLinks = new Map ( );
 	}
+	
+	/**
+	Get the html link to a class file
+	@param {String} className The name of the class for witch the link must be created
+	@param {string} rootPath The path between the file where the link will be inserted and theConfig.docDir 
+	( something like '../../../', depending of the folders tree )
+	@return {String} An html string with the link or the className when the link is not found
+	*/
 
 	getClassLink ( className, rootPath ) {
 		const classLink = this.#classesLinks.get ( className );
 		return classLink ? `<a href="${rootPath + classLink}">${className}</a>` : className;
 	}
 
+	/**
+	Store a link to a class file 
+	@param {ClassDoc} classDoc the doc with the class documentation
+	*/
+	
 	setClassLink ( classDoc ) {
 		this.#classesLinks.set (
 			classDoc.name,
@@ -64,14 +123,27 @@ class LinkBuilder {
 		);
 	}
 
+	/**
+	Get all the classes links. Each subAray contains the class name and the class link.
+	@type {Array.<Array.<String>>}
+	*/
+
 	get classesLinks ( ) {
 		if ( ! this.#classesLinksCache ) {
-			this.#classesLinksCache = Array.from ( this.#classesLinks ).sort (
+			// Create the cache if not exists
+			this.#classesLinksCache = this.#classesLinksCache ?? Array.from ( this.#classesLinks ).sort (
 				( first, second ) => first [ 0 ] .localeCompare ( second [ 0 ] )
 			);
 		}
+
 		return this.#classesLinksCache;
 	}
+	
+	/**
+	Get a link to a source file
+	@param {VariableDoc|MethodOrPropertyDoc|VariableDoc} doc The doc for witch the link to the source file must be created.
+	@return {?String } The link to the source file
+	*/
 
 	getSourceLink ( doc ) {
 		let sourceLink = this.#sourcesLinks.get ( doc.file );
@@ -81,9 +153,20 @@ class LinkBuilder {
 		return null;
 	}
 
+	/**
+	Store a link to a source file 
+	@param {ClassDoc} classDoc the doc with the class documentation
+	*/
+
 	setSourceLink ( fileName, path ) {
 		this.#sourcesLinks.set ( fileName, path );
 	}
+
+	/**
+	Get all the sources links. Each subAray contains the source file name and the path
+	between theConfig.docDir  and the source file, included file name
+	@type {Array.<Array.<String>>}
+	*/
 
 	get sourcesLinks ( ) {
 		if ( ! this.#sourcesLinksCache ) {
@@ -94,6 +177,11 @@ class LinkBuilder {
 		return this.#sourcesLinksCache;
 	}
 
+	/**
+	Store a link to a variable in the variables.html file 
+	@param {VariableDoc} variableDoc the doc with the variable documentation
+	*/
+
 	setVariableLink ( variableDoc ) {
 		this.#variablesLinks.set (
 			variableDoc.name,
@@ -101,6 +189,29 @@ class LinkBuilder {
 		);
 	}
 
+	/**
+	Get all the variables links. Each subAray contains the variable name and the variable link.
+	@type {Array.<Array.<String>>}
+	*/
+
+	get variablesLinks ( ) {
+		if ( ! this.#variablesLinksCache ) {
+			this.#variablesLinksCache = Array.from ( this.#variablesLinks ).sort (
+				( first, second ) => first [ 0 ] .localeCompare ( second [ 0 ] )
+			);
+		}
+		return this.#variablesLinksCache;
+	}
+
+	/**
+	Get the link to a type
+	@param {String} type The type for witch the link must be created. Must be a single word
+	@param {string} rootPath The path between the file where the link will be inserted and theConfig.docDir 
+	( something like '../../../', depending of the folders tree )
+	@return {String} The link to the type. We search first in the classes links, then in the mdn links. If nothing
+	found, the type without html link is returned.
+	*/
+	
 	#getTypeLink ( type, rootPath ) {
 		const classLink = this.#classesLinks.get ( type );
 		if ( classLink ) {
@@ -113,6 +224,15 @@ class LinkBuilder {
 		return type;
 	}
 
+	/**
+	Get the links to a type
+	@param {String} type The types for witch the link must be created. Can be multiple word
+	@param {string} rootPath The path between the file where the link will be inserted and theConfig.docDir 
+	( something like '../../../', depending of the folders tree )
+	@return {String} The html links to the types. We search first in the classes links, then in the mdn links. If nothing
+	found, the types without html link is returned.
+	*/
+
 	getTypeLinks ( type, rootPath ) {
 		if ( ! type ) {
 			return 'null';
@@ -124,16 +244,15 @@ class LinkBuilder {
 
 		return returnType.trimEnd ( );
 	}
-
-	get variablesLinks ( ) {
-		if ( ! this.#variablesLinksCache ) {
-			this.#variablesLinksCache = Array.from ( this.#variablesLinks ).sort (
-				( first, second ) => first [ 0 ] .localeCompare ( second [ 0 ] )
-			);
-		}
-		return this.#variablesLinksCache;
-	}
-
+	
+	/**
+	Add links to a description
+	@param {String} desc The description to complete with links
+	@param {string} rootPath The path between the file where the link will be inserted and theConfig.docDir 
+	( something like '../../../', depending of the folders tree )
+	@return {String} The description completed with html links
+	*/
+	
 	getDescLink ( desc, rootPath ) {
 		let returnDesc = '';
 		desc.split ( ' ' ).forEach (
