@@ -28,7 +28,7 @@ import theLinkBuilder from './LinkBuilder.js';
 import NavHtmlBuilder from './NavHtmlBuilder.js';
 
 /**
-Build the HTML page for all the global variables
+Build the HTML page for all the variables
 */
 
 class VariablesHtmlBuilder {
@@ -40,7 +40,8 @@ class VariablesHtmlBuilder {
 	}
 
 	#buildVariable ( variableDoc ) {
-		if ( ! variableDoc.commentsDoc || ! variableDoc.commentsDoc.global ) {
+		
+		if ( ! variableDoc.commentsDoc ) {
 			return;
 		}
 
@@ -58,9 +59,15 @@ class VariablesHtmlBuilder {
 			`${variableDoc.name}<span>${typePostfix}</span></h3>`;
 
 		// description
-		if ( variableDoc.commentsDoc?.desc && '' !== variableDoc.commentsDoc.desc ) {
-			this.#html += `<div>${variableDoc.commentsDoc.desc}</div>`;
-		}
+		const desc =
+			variableDoc?.commentsDoc?.desc
+				?
+				theLinkBuilder.getDescLink ( variableDoc.commentsDoc.desc, '' )
+				:
+				' ...No description provided. Coming soon?';
+			
+			
+		this.#html += `<div>${desc}</div>`;
 
 		// source
 

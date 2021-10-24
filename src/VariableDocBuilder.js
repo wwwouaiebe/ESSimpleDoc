@@ -22,7 +22,7 @@ Changes:
 Doc reviewed 20211021
 */
 
-import CommentDocBuilder from './CommentDocBuilder.js';
+import CommentsDocBuilder from './CommentsDocBuilder.js';
 import { VariableDoc } from './Docs.js';
 
 /**
@@ -49,7 +49,7 @@ class VariableDocBuilder {
 			variableDeclarationNode.leadingComments.forEach (
 				comment => { comments.push ( comment?.value ); }
 			);
-			variableDoc.commentsDoc = new CommentDocBuilder ( ).build ( comments );
+			variableDoc.commentsDoc = new CommentsDocBuilder ( ).build ( comments );
 		}
 
 		return Object.freeze ( variableDoc );

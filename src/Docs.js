@@ -201,13 +201,6 @@ class CommentsDoc {
 	returns = null;
 
 	/**
-	A flag indicating that the commented variable is a global variable
-	@type {?boolean}
-	*/
-
-	global = null;
-
-	/**
 	The constructor
 	*/
 

@@ -22,29 +22,55 @@ Changes:
 Doc reviewed 20211021
 */
 
-import CommentDocBuilder from './CommentDocBuilder.js';
+import CommentsDocBuilder from './CommentsDocBuilder.js';
 import { MethodOrPropertyDoc, ClassDoc } from './Docs.js';
 
 /**
-Build a doc object for a class
+Build a ClassDoc object for a class
 */
 
 class ClassDocBuilder {
 
-	#rootPath = null;
+	/**
+	The path between the html file and theConfig.docDir ( something like '../../../', depending of the folders tree )
+	@type {String}
+	*/
 
-	#fileName = null;
+	#rootPath;
 
-	#commentDocBuilder = null;
+	/**
+	The file name in witch the current class is declared
+	@type {String}
+	*/
+
+	#fileName;
+
+	/**
+	A CommentsDocBuilder object
+	@type {CommentsDocBuilder}
+	*/
+
+	#commentsDocBuilder;
+
+	/**
+	The constructor
+	*/
 
 	constructor ( ) {
 		Object.freeze ( this );
-		this.#commentDocBuilder = new CommentDocBuilder ( );
+		this.#commentsDocBuilder = new CommentsDocBuilder ( );
 	}
+
+	/**
+	Build a MethodOrPropertyDoc object from an
+	<a href="https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md">ast node</a>
+	@param {Object} methodOrPropertyNode An ast node of type
+	ClassPrivateProperty, ClassProperty, ClassPrivateMethod or ClassMethod
+	@return {MethodOrPropertyDoc} The created object
+	*/
 
 	#buildMethodOrPropertyDoc ( methodOrPropertyNode ) {
 
-		// methodOrPropertyDoc
 		const methodOrPropertyDoc = new MethodOrPropertyDoc ( );
 
 		methodOrPropertyDoc.name = methodOrPropertyNode?.key?.name || methodOrPropertyNode?.key?.id?.name;
@@ -60,14 +86,16 @@ class ClassDocBuilder {
 			methodOrPropertyNode.leadingComments.forEach (
 				comment => { comments.push ( comment?.value ); }
 			);
-			methodOrPropertyDoc.commentsDoc = this.#commentDocBuilder.build ( comments );
+			methodOrPropertyDoc.commentsDoc = this.#commentsDocBuilder.build ( comments );
 		}
+
 		if ( methodOrPropertyNode.params ) {
 			methodOrPropertyDoc.params = [];
 			methodOrPropertyNode.params.forEach (
 				param => { methodOrPropertyDoc.params.push ( param?.name ); }
 			);
 		}
+
 		switch ( methodOrPropertyNode.type ) {
 		case 'ClassPrivateProperty' :
 			methodOrPropertyDoc.private = true;
@@ -92,21 +120,30 @@ class ClassDocBuilder {
 		return Object.freeze ( methodOrPropertyDoc );
 	}
 
+	/**
+	Build a ClassDoc object from an
+	<a href="https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md">ast node</a>
+	@param {Object} classDeclarationNode An ast node of type classDeclarationNode
+	@return {ClassDoc} The created object
+	*/
+
 	build ( classDeclarationNode, fileName ) {
 
+		// Saving the fileName for others methods
 		this.#fileName = fileName;
 
+		// Computing rootPath
 		this.#rootPath = '';
-		let rootPathCounter = fileName.split ( '/' ).length - 1;
+		let rootPathCounter = this.#fileName.split ( '/' ).length - 1;
 		while ( 0 < rootPathCounter ) {
 			this.#rootPath += '../';
 			rootPathCounter --;
 		}
 
+		// Creating the ClassDoc object
 		const classDoc = new ClassDoc;
-
 		classDoc.name = classDeclarationNode.id.name;
-		classDoc.file = fileName;
+		classDoc.file = this.#fileName;
 		classDoc.rootPath = this.#rootPath;
 		classDoc.line = classDeclarationNode.loc.start.line;
 
@@ -119,12 +156,13 @@ class ClassDocBuilder {
 			classDeclarationNode.leadingComments.forEach (
 				comment => { comments.push ( comment?.value ); }
 			);
-			classDoc.commentsDoc = this.#commentDocBuilder.build ( comments );
+			classDoc.commentsDoc = this.#commentsDocBuilder.build ( comments );
 		}
 
+		// Adding methods and properties
 		classDeclarationNode.body.body.forEach (
 			methodOrPropertyNode => {
-				const methodOrPropertyDoc = this.#buildMethodOrPropertyDoc ( methodOrPropertyNode, fileName );
+				const methodOrPropertyDoc = this.#buildMethodOrPropertyDoc ( methodOrPropertyNode, this.#fileName );
 				if ( methodOrPropertyDoc.isA ) {
 					classDoc.methodsAndProperties = ( classDoc.methodsAndProperties ?? [] );
 					classDoc.methodsAndProperties.push ( methodOrPropertyDoc );

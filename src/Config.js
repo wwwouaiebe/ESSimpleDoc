@@ -23,17 +23,62 @@ Doc reviewed 20211021
 */
 
 /**
-Container for the app configuration
-@global
+A simple container to store the app configuration
 */
 
-const theConfig = {
-	srcDir : null,
-	docDir : null,
-	appDir : null,
-	validate : false,
-	launch : false
-};
+class Config {
+
+	/**
+	The directory where the source files are. Coming from the --in parameter
+	@type {string}
+	*/
+	
+	srcDir
+
+	/**
+	The directory where the documentation files will be installed. Coming from the --out parameter
+	@type {string}
+	*/
+
+	docDir
+
+	/**
+	The directory where the app is installed. Coming from the app parameter
+	@type {string}
+	*/
+
+	appDir
+
+	/**
+	A flag indicating the validation must be done. Coming from the --validate parameter
+	@type {boolean}
+	*/
+
+	validate
+
+	/**
+	A flag indicating that the documentation must be opened in the browser immediately after 
+	the generation. Coming from the --launch parameter
+	@type {boolean}
+	*/
+
+	launch
+	
+	/**
+	The constructor
+	*/
+
+	constructor ( ) {
+	}
+	
+
+}
+
+/**
+The one and only one instance of Config class. Notice that the object will be froozen directly after reading the parameters
+*/
+
+const theConfig = new Config;
 
 export default theConfig;
 

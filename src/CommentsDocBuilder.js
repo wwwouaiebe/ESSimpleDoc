@@ -25,22 +25,48 @@ Doc reviewed 20211021
 import { TypeDescription, CommentsDoc } from './Docs.js';
 
 /**
-Build a doc object from the comments of a class, a method, a property or a variable
+Build a CommentsDoc object from the comments of a class, a method, a property or a variable
 */
 
-class CommentDocBuilder {
+class CommentsDocBuilder {
 
-	#commentsDoc = null;
+	/**
+	The currently builded comments
+	@type {CommentsDoc}
+	*/
+
+	#commentsDoc;
+
+	/**
+	The constructor
+	*/
+
 	constructor ( ) {
 		Object.freeze ( this );
 	}
 
-	#capitalizeFirstLetter ( str ) {
-		if ( 'null' === str.toLowerCase ( ) ) {
+	/**
+	Set to uppercase the first letter of a word
+	@param {String} word The word to capitalize
+	@return {String} The capitalized word
+	*/
+
+	#capitalizeFirstLetter ( word ) {
+		if ( 'null' === word.toLowerCase ( ) ) {
 			return 'null';
 		}
-		return str [ 0 ].toUpperCase ( ) + str.substr ( 1 );
+		return word [ 0 ].toUpperCase ( ) + word.substr ( 1 );
 	}
+
+	/**
+	Parse a JSdoc type tag ( the value into {} for a @type, @param, @return or @returns JSDoc tags.
+	Remove the { } < > ! and space chars from the type, replace the . char with ' of ',
+	replace the ? char with 'null or ', replace the | char with ' or ' and finally capitalize the first letter
+	of the types, so '{number}' is parsed to 'Number', '{?string}' is parsed to 'null or String',
+	'Array.<number>' is parsed to 'Array of Number', {string|number} is parsed to 'String or Number'
+	@param {string} type The type tag to parse
+	@return {string} The parsed type
+	*/
 
 	#parseType ( type ) {
 		let returnType =
@@ -76,6 +102,13 @@ class CommentDocBuilder {
 		return returnType;
 
 	}
+
+	/**
+	Parse a comment tag. A comment tag is a text starting at the beginning of a comment or starting with a @ char
+	and finishing just before the next @ char in the comment
+	@param {string} commentTag the comment tag to parse
+	*/
+
 	#parseCommentTag ( commentTag ) {
 
 		// Splitting the tag into words
@@ -118,23 +151,23 @@ class CommentDocBuilder {
 			Object.freeze ( typeDescription );
 			this.#commentsDoc.returns = typeDescription;
 			break;
-		case '@global' :
-			this.#commentsDoc.global = true;
-			break;
 		default :
 			if ( '@' !== words [ 0 ] [ 0 ] ) {
 				this.#commentsDoc.desc = commentTag;
 			}
 			break;
-
 		}
 	}
 
+	/**
+	Parse a comment and extracts the @desc, @classdesc, @type, @param, @return, @returns JSDoc tags
+	@param {string} comment The comment to parse
+	*/
+
 	#parseComment ( comment ) {
-		let tmpComment = comment;
 
 		// replacing \n \r and \t with space and @ with a strange text surely not used
-		tmpComment = tmpComment
+		let tmpComment = comment
 			.replaceAll ( '\r', ' ' )
 			.replaceAll ( '\t', ' ' )
 			.replaceAll ( '\n', ' ' )
@@ -145,12 +178,20 @@ class CommentDocBuilder {
 			tmpComment = tmpComment.replaceAll ( '  ', ' ' );
 		}
 
-		// spliting the comments at the strange text, so the comment are splitted, preserving the @
+		// spliting the comments at the strange text, so the comment is splitted, preserving the @
 		tmpComment.split ( '§§§' ).forEach (
+
+			// and parsing each result
 			commentTag => { this.#parseCommentTag ( commentTag ); }
 		);
 
 	}
+
+	/**
+	Build a CommentsDoc object from the comments found in the code before the class/method/properties/variable
+	@param {Array.<string>} comments The comments to use
+	@return {CommentsDoc} An object with the comments
+	*/
 
 	build ( comments ) {
 
@@ -167,7 +208,7 @@ class CommentDocBuilder {
 	}
 }
 
-export default CommentDocBuilder;
+export default CommentsDocBuilder;
 
 /*
 @------------------------------------------------------------------------------------------------------------------------------

@@ -25,8 +25,7 @@ Doc reviewed 20211021
 import fs from 'fs';
 import process from 'process';
 
-/* eslint-disable-next-line camelcase */
-import child_process from 'child_process';
+import childProcess from 'child_process';
 
 import DocBuilder from './DocBuilder.js';
 import theConfig from './Config.js';
@@ -42,22 +41,26 @@ class AppLoader {
 	@type {number}
 	*/
 
-	/* eslint-disable-next-line no-magic-numbers */
-	#EXIT_BAD_PARAMETER = 9;
+	#EXIT_BAD_PARAMETER;
 
 	/**
 	The source files names
 	@type {Array.<String>}
 	*/
 
-	#sourceFileNames = [];
+	#sourceFileNames;
 
 	/**
 	The constructor
 	*/
 
 	constructor ( ) {
+
 		Object.freeze ( this );
+
+		// eslint-disable-next-line no-magic-numbers
+		this.#EXIT_BAD_PARAMETER = 9;
+		this.#sourceFileNames = [];
 	}
 
 	/**
@@ -180,6 +183,9 @@ class AppLoader {
 
 		theConfig.appDir = process.argv [ 1 ].substr ( 0, process.argv [ 1 ].lastIndexOf ( '\\' ) + 1 );
 
+		// the config is now frozen
+		Object.freeze ( theConfig );
+
 		// stop the app if we don't have a source directory
 		if ( ! theConfig.srcDir ) {
 			console.error ( 'Invalid or missing \x1b[31m--in\x1b[0m parameter' );
@@ -228,7 +234,7 @@ class AppLoader {
 		console.error ( '' );
 		if ( theConfig.launch ) {
 			/* eslint-disable-next-line camelcase */
-			child_process.exec ( theConfig.docDir + 'index.html' );
+			childProcess.exec ( theConfig.docDir + 'index.html' );
 		}
 	}
 }

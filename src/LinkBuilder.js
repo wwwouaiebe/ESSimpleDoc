@@ -95,12 +95,10 @@ class LinkBuilder {
 	}
 
 	setVariableLink ( variableDoc ) {
-		if ( variableDoc.commentsDoc?.global ) {
-			this.#variablesLinks.set (
-				variableDoc.name,
-				`variables.html#${variableDoc.name}`
-			);
-		}
+		this.#variablesLinks.set (
+			variableDoc.name,
+			`variables.html#${variableDoc.name}`
+		);
 	}
 
 	#getTypeLink ( type, rootPath ) {
@@ -134,6 +132,14 @@ class LinkBuilder {
 			);
 		}
 		return this.#variablesLinksCache;
+	}
+
+	getDescLink ( desc, rootPath ) {
+		let returnDesc = '';
+		desc.split ( ' ' ).forEach (
+			word => returnDesc += this.#getTypeLink ( word, rootPath ) + ' '
+		);
+		return returnDesc.trimEnd ( );
 	}
 }
 
