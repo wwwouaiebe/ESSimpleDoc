@@ -35,6 +35,16 @@ class LinkBuilder {
 	#variablesLinksCache = null;
 	#variablesLinks = null;
 
+	#mdnLinks = {
+		Array : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array',
+		Map : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map',
+		Boolean : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean',
+		Number : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number',
+		String : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String',
+		Promise : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
+		Function : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function'
+	};
+
 	constructor ( ) {
 		Object.freeze ( this );
 		this.#sourcesLinks = new Map ( );
@@ -93,6 +103,30 @@ class LinkBuilder {
 		}
 	}
 
+	#getTypeLink ( type, rootPath ) {
+		const classLink = this.#classesLinks.get ( type );
+		if ( classLink ) {
+			return `<a href="${rootPath + classLink}">${type}</a>`;
+		}
+		const mdnLink = this.#mdnLinks [ type ];
+		if ( mdnLink ) {
+			return `<a href="${mdnLink}">${type}</a>`;
+		}
+		return type;
+	}
+
+	getTypeLinks ( type, rootPath ) {
+		if ( ! type ) {
+			return 'null';
+		}
+		let returnType = '';
+		type.split ( ' ' ).forEach (
+			tmpType => returnType += this.#getTypeLink ( tmpType, rootPath ) + ' '
+		);
+
+		return returnType.trimEnd ( );
+	}
+
 	get variablesLinks ( ) {
 		if ( ! this.#variablesLinksCache ) {
 			this.#variablesLinksCache = Array.from ( this.#variablesLinks ).sort (
@@ -101,7 +135,6 @@ class LinkBuilder {
 		}
 		return this.#variablesLinksCache;
 	}
-
 }
 
 /**

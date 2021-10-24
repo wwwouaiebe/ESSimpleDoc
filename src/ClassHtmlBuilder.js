@@ -45,7 +45,7 @@ class ClassHtmlBuilder {
 		methodOrPropertyDoc.params.forEach (
 			param => {
 				const paramDoc = methodOrPropertyDoc?.commentsDoc?.params?.find ( first => first.name === param );
-				const paramType = paramDoc ? theLinkBuilder.getClassLink ( paramDoc.type, this.#rootPath ) : '';
+				const paramType = paramDoc ? theLinkBuilder.getTypeLinks ( paramDoc.type, this.#rootPath ) : '';
 				const paramDesc = paramDoc ? paramDoc.desc : '';
 				this.#html += `<tr><td>${param}</td> <td>${paramType}</td> <td>${paramDesc}</td></tr>`;
 			}
@@ -56,7 +56,9 @@ class ClassHtmlBuilder {
 	#buildParamsHeader ( methodOrPropertyDoc ) {
 		let params = '';
 		if ( methodOrPropertyDoc.params ) {
-			methodOrPropertyDoc.params.forEach ( param => params += param + ', ' );
+			methodOrPropertyDoc.params.forEach (
+				param => params += param + ', '
+			);
 			params = params.substr ( 0, params.length - 2 );
 		}
 
@@ -117,7 +119,7 @@ class ClassHtmlBuilder {
 					methodOrPropertyDoc?.commentsDoc?.type
 						?
 						' <span> : ' +
-						theLinkBuilder.getClassLink ( methodOrPropertyDoc.commentsDoc.type, this.#rootPath ) +
+						theLinkBuilder.getTypeLinks ( methodOrPropertyDoc.commentsDoc.type, this.#rootPath ) +
 						'</span>'
 						:
 						'';

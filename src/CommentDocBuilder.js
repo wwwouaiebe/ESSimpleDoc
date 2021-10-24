@@ -35,8 +35,46 @@ class CommentDocBuilder {
 		Object.freeze ( this );
 	}
 
+	#capitalizeFirstLetter ( str ) {
+		if ( 'null' === str.toLowerCase ( ) ) {
+			return 'null';
+		}
+		return str [ 0 ].toUpperCase ( ) + str.substr ( 1 );
+	}
+
 	#parseType ( type ) {
-		return type.replace ( '{', '' ).replace ( '}', '' );
+		let returnType =
+			type
+				.replaceAll ( '{', '' )
+				.replaceAll ( '}', '' )
+				.replaceAll ( ' ', '' )
+				.replaceAll ( '<', '' )
+				.replaceAll ( '>', '' )
+				.replaceAll ( '!', '' )
+				.replaceAll ( '.', ' of ' )
+				.replaceAll ( '?', 'null or ' )
+				.replaceAll ( '|', ' or ' );
+		if ( '' === returnType ) {
+			return null;
+		}
+		let returnTypeArray = returnType.split ( ' ' );
+
+		switch ( returnTypeArray.length ) {
+		case 1 :
+			returnType = this.#capitalizeFirstLetter ( returnTypeArray [ 0 ] );
+			break;
+		case 3 :
+			returnType = this.#capitalizeFirstLetter ( returnTypeArray [ 0 ] ) +
+					' ' + returnTypeArray [ 1 ] + ' ' +
+					this.#capitalizeFirstLetter ( returnTypeArray [ 2 ] );
+			break;
+		default :
+			returnType = null;
+			break;
+		}
+
+		return returnType;
+
 	}
 	#parseCommentTag ( commentTag ) {
 
