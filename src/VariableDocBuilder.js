@@ -23,6 +23,7 @@ Doc reviewed 20211021
 */
 
 import CommentDocBuilder from './CommentDocBuilder.js';
+import { VariableDoc } from './Docs.js';
 
 /**
 Build the doc object for a variable
@@ -36,23 +37,13 @@ class VariableDocBuilder {
 
 	build ( variableDeclarationNode, fileName ) {
 
-		/*
-		const variableDoc = {
-			name : {string} the variable name; found in ast
-			kind : {string} the kind of variable ( = 'const', 'let'... ); found in ast
-			file : {string} the file name in witch the variable is declared, including path since theConfig.docDir
-			line : {string} the line at witch the variable is declared; found in ast
-			commentsDoc : {Object|null} the doc found in the comments of the variable
-		};
-		*/
+		const variableDoc = new VariableDoc ( );
+		variableDoc.name = variableDeclarationNode.declarations [ 0 ].id.name;
+		variableDoc.kind = variableDeclarationNode?.kind;
+		variableDoc.file = fileName;
+		variableDoc.rootPath = '';
+		variableDoc.line = variableDeclarationNode.loc.start.line;
 
-		const variableDoc = {
-			name : variableDeclarationNode.declarations [ 0 ].id.name,
-			kind : variableDeclarationNode?.kind,
-			file : fileName,
-			rootPath : '',
-			line : variableDeclarationNode.loc.start.line
-		};
 		if ( variableDeclarationNode.leadingComments ) {
 			const comments = [];
 			variableDeclarationNode.leadingComments.forEach (
@@ -66,6 +57,7 @@ class VariableDocBuilder {
 }
 
 export default VariableDocBuilder;
+
 /*
 @------------------------------------------------------------------------------------------------------------------------------
 

@@ -25,7 +25,7 @@
 		"no-case-declarations" : [ "warn" ],
 		"no-else-return" : ["warn" ],
 		"no-eval" : [ "error" ],
-		"no-console" : ["warn", { "allow" : ["error"] }],
+		"no-console" : ["warn", { "allow" : ["error", "clear"] }],
 		"no-extend-native" : [ "error" ],
 		"no-extra-bind" : [ "error" ],
 		"no-implicit-coercion" : [ "error" ],

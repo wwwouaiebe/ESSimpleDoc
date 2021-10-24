@@ -24,6 +24,8 @@ Doc reviewed 20211021
 
 import fs from 'fs';
 import process from 'process';
+
+/* eslint-disable-next-line camelcase */
 import child_process from 'child_process';
 
 import DocBuilder from './DocBuilder.js';
@@ -35,38 +37,71 @@ Start the app: read the arguments, set the config, create the source file list a
 
 class AppLoader {
 
-	#startTime = null;
-	#filesList = [];
+	/**
+	A const to use when exit the app due to a bad parameter
+	@type {number}
+	*/
+
+	/* eslint-disable-next-line no-magic-numbers */
+	#EXIT_BAD_PARAMETER = 9;
+
+	/**
+	The source files names
+	@type {Array.<String>}
+	*/
+
+	#sourceFileNames = [];
+
+	/**
+	The constructor
+	*/
 
 	constructor ( ) {
 		Object.freeze ( this );
 	}
 
+	/**
+	Read recursively the contains of a directory and store all the js files found in this.#sourceFileNames
+	@param {String} dir The directory to read. It's a relative path, starting at source directory
+	*/
+
 	#readDir ( dir ) {
+
+		// Searching all files and directories present in the directory
 		const fileNames = fs.readdirSync ( theConfig.srcDir + dir );
 
+		// Loop on the results
 		fileNames.forEach (
 			fileName => {
+
+				// Searching the stat of the file/directory
 				const lstat = fs.lstatSync ( theConfig.srcDir + dir + fileName );
+
+				// It's a directory. Reading this recursively
 				if ( lstat.isDirectory ( ) ) {
+
+					// It's a directory. Reading this recursively
 					this.#readDir ( dir + fileName + '/' );
 				}
 				else if ( lstat.isFile ( ) ) {
+
+					// it's a file. Adding to the files list with the relative path  if the extension is 'js'
 					if ( 'js' === fileName.split ( '.' ).reverse ( )[ 0 ] ) {
-						this.#filesList.push ( dir + fileName );
+						this.#sourceFileNames.push ( dir + fileName );
 					}
 				}
 			}
 		);
 	}
 
-	#createFileList ( ) {
-		this.#filesList = [];
-		this.#readDir ( '' );
-	}
+	/**
+	Clean the previously created files, to avoid deprecated files in the documentation.
+	*/
 
 	#cleanOldFiles ( ) {
 		try {
+
+			// Removing the complete documentation directory
 			fs.rmSync (
 				theConfig.docDir,
 				{ recursive : true, force : true },
@@ -77,76 +112,123 @@ class AppLoader {
 				}
 			);
 
+			// and then recreating
 			fs.mkdirSync ( theConfig.docDir );
 		}
 		catch {
-			console.error ( `\x1b[31mNot possible to clean the ${theConfig.docDir} folder\x1b[0m` )
+
+			// Sometime the cleaning fails due to opened files
+			console.error ( `\x1b[31mNot possible to clean the ${theConfig.docDir} folder\x1b[0m` );
 		}
 	}
-	
+
+	/**
+	Complete theConfig object from the app parameters
+	*/
+
 	#createConfig ( ) {
-		process.argv.forEach ( 
+
+		// Loop on tha app parameters
+		process.argv.forEach (
 			arg => {
-				const argContent = arg.split ( '=' )
-				if ( argContent [ 1 ] ){
+
+				// splitting the arguments at the = char
+				const argContent = arg.split ( '=' );
+				if ( argContent [ 1 ] ) {
 					switch ( argContent [ 0 ] ) {
-						case '--in' :
-							if (fs.existsSync ( argContent [ 1 ] ) ) {
-								theConfig.srcDir = fs.realpathSync ( argContent [ 1 ] ) + '\\';
-							}
-							else {
-								console.error ( 'Invalid path for the --in parameter\x1b[31m%s\x1b[0m', argContent [ 1 ] );
-								process.exit ( 9 );
-							}
-							break;
-						case '--out' :
-							try {
-								theConfig.docDir = fs.realpathSync ( argContent [ 1 ] ) + '\\';
-							}
-							catch {
-								console.error ( 'Invalid path for the --out parameter\x1b[31m%s\x1b[0m ', argContent [ 1 ] );
-								process.exit ( 9 );
-							}
-							break;
+					case '--in' :
+
+						// It's the 'in' parameter. We verify that the given directory exists
+						// and We complete the path to have an absolute path
+						if ( fs.existsSync ( argContent [ 1 ] ) ) {
+							theConfig.srcDir = fs.realpathSync ( argContent [ 1 ] ) + '\\';
+						}
+						else {
+							console.error ( 'Invalid path for the --in parameter\x1b[31m%s\x1b[0m', argContent [ 1 ] );
+							process.exit ( this.#EXIT_BAD_PARAMETER );
+						}
+						break;
+					case '--out' :
+
+						// It's the 'out' parameter. We complete the path to have an absolute path
+						try {
+							theConfig.docDir = fs.realpathSync ( argContent [ 1 ] ) + '\\';
+						}
+						catch {
+
+							// Invalid directory given by user
+							console.error ( 'Invalid path for the --out parameter\x1b[31m%s\x1b[0m ', argContent [ 1 ] );
+							process.exit ( this.#EXIT_BAD_PARAMETER );
+						}
+						break;
+					default :
+						break;
 					}
 				}
+
+				// validate boolean argument
 				if ( '--validate' === arg ) {
 					theConfig.validate = true;
 				}
+
+				// launch boolean argument
 				if ( '--launch' === arg ) {
 					theConfig.launch = true;
 				}
 			}
 		);
-		
+
 		theConfig.appDir = process.argv [ 1 ].substr ( 0, process.argv [ 1 ].lastIndexOf ( '\\' ) + 1 );
+
+		// stop the app if we don't have a source directory
 		if ( ! theConfig.srcDir ) {
-			console.error ( `Invalid \x1b[31m--in\x1b[0m parameter` );
-			process.exit ( 9 );
+			console.error ( 'Invalid or missing \x1b[31m--in\x1b[0m parameter' );
+			process.exit ( this.#EXIT_BAD_PARAMETER );
 		}
+
+		// stop the app if we don't have a document directory
 		if ( ! theConfig.docDir ) {
-			console.error ( `Invalid \x1b[31m--out\x1b[0m parameter` );
-			process.exit ( 9 );
+			console.error ( 'Invalid or missing \x1b[31m--out\x1b[0m parameter' );
+			process.exit ( this.#EXIT_BAD_PARAMETER );
 		}
 	}
-	
+
+	/**
+	Load the app, searching all the needed infos to run the app correctly
+	*/
+
 	loadApp ( ) {
-		this.#startTime = process.hrtime.bigint ( );
-		console.error ( '' );
-		
-		this.#createConfig ( )
-		this.#createFileList ( );
+
+		// start time
+		const startTime = process.hrtime.bigint ( );
+		console.clear ( );
+		console.error ( 'Starting...' );
+
+		// config
+		this.#createConfig ( );
+
+		// source files list
+		this.#readDir ( '' );
+
+		// Cleaning old files
 		this.#cleanOldFiles ( );
+
+		// copy the css file in the documentation directory
 		fs.copyFileSync ( theConfig.appDir + 'SimpleESDoc.css', theConfig.docDir + 'SimpleESDoc.css' );
-		
-		new DocBuilder ( ).buildFiles ( this.#filesList );
-		
-		const deltaTime = process.hrtime.bigint ( ) - this.#startTime;
-		const execTime = String ( deltaTime / 1000000000n ) + '.' + String( deltaTime % 1000000000n ).substr (0, 3 );
+
+		// starting the build
+		new DocBuilder ( ).buildFiles ( this.#sourceFileNames );
+
+		// end of the process
+		const deltaTime = process.hrtime.bigint ( ) - startTime;
+
+		/* eslint-disable-next-line no-magic-numbers */
+		const execTime = String ( deltaTime / 1000000000n ) + '.' + String ( deltaTime % 1000000000n ).substr ( 0, 3 );
 		console.error ( `Documentation generated in ${execTime} seconds in the folder \x1b[36m${theConfig.docDir}\x1b[0m` );
-		console.error ('' );
+		console.error ( '' );
 		if ( theConfig.launch ) {
-			child_process.exec( theConfig.docDir + 'index.html' );
+			/* eslint-disable-next-line camelcase */
+			child_process.exec ( theConfig.docDir + 'index.html' );
 		}
 	}
 }

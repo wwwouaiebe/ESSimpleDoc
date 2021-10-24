@@ -22,6 +22,8 @@ Changes:
 Doc reviewed 20211021
 */
 
+import { TypeDescription, CommentsDoc } from './Docs.js';
+
 /**
 Build a doc object from the comments of a class, a method, a property or a variable
 */
@@ -33,10 +35,14 @@ class CommentDocBuilder {
 		Object.freeze ( this );
 	}
 
+	#parseType ( type ) {
+		return type.replace ( '{', '' ).replace ( '}', '' );
+	}
 	#parseCommentTag ( commentTag ) {
 
 		// Splitting the tag into words
 		const words = commentTag.split ( ' ' );
+		let typeDescription = null;
 		switch ( words [ 0 ] ) {
 		case '@desc' :
 			this.#commentsDoc.desc = commentTag.replace ( '@desc ', '' );
@@ -46,31 +52,33 @@ class CommentDocBuilder {
 			break;
 		case '@type' :
 			if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
-				this.#commentsDoc.type = words [ 1 ].replace ( '{', '' ).replace ( '}', '' );
+				this.#commentsDoc.type = this.#parseType ( words [ 1 ] );
 			}
 			break;
 		case '@param' :
-			{
-				const paramDoc = { type : '', name : words [ 2 ], desc : '' };
-				if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
-					paramDoc.type = words [ 1 ].replace ( '{', '' ).replace ( '}', '' );
-				}
-				for ( let counter = 3; counter < words.length; counter ++ ) {
-					paramDoc.desc += words [ counter ] + ' ';
-				}
-				Object.freeze ( paramDoc );
-				this.#commentsDoc.params.push ( paramDoc );
+			typeDescription = new TypeDescription ( );
+			if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
+				typeDescription.type = this.#parseType ( words [ 1 ] );
 			}
+			typeDescription.name = words [ 2 ];
+			for ( let counter = 3; counter < words.length; counter ++ ) {
+				typeDescription.desc = ( typeDescription.desc ?? '' ) + words [ counter ] + ' ';
+			}
+			Object.freeze ( typeDescription );
+			this.#commentsDoc.params = ( this.#commentsDoc.params ?? [] );
+			this.#commentsDoc.params.push ( typeDescription );
 			break;
 		case '@return' :
 		case '@returns' :
+			typeDescription = new TypeDescription ( );
 			if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
-				this.#commentsDoc.returns.type = words [ 1 ].replace ( '{', '' ).replace ( '}', '' );
+				typeDescription.type = words [ 1 ].replace ( '{', '' ).replace ( '}', '' );
 			}
 			for ( let counter = 2; counter < words.length; counter ++ ) {
-				this.#commentsDoc.returns.desc += words [ counter ] + ' ';
+				typeDescription.desc = ( typeDescription.desc ?? '' ) + words [ counter ] + ' ';
 			}
-			Object.freeze ( this.#commentsDoc.returns );
+			Object.freeze ( typeDescription );
+			this.#commentsDoc.returns = typeDescription;
 			break;
 		case '@global' :
 			this.#commentsDoc.global = true;
@@ -106,33 +114,9 @@ class CommentDocBuilder {
 
 	}
 
-	/*
-	commentsDoc = {
-		desc : {string} the description found in the comments = the free text or the @desc tag or @classdesc tag text
-		type : {string} the type of the property = the @type tag text
-		params : {Array.<param>} An array with the type and description of the params
-		returns :{returns} An array with the type and description of the params
-		global : {boolean} the property is a global property
-	}
-
-	param = {
-		type : {string} the type of the param
-		desc : {string} the description of the param
-	}
-
-	returns = {
-		type : {string} the type of the param
-		desc : {string} the description of the param
-	}
-
-	*/
-
 	build ( comments ) {
 
-		this.#commentsDoc = {
-			params : [],
-			returns : { type : '', desc : '' }
-		};
+		this.#commentsDoc = new CommentsDoc ( );
 
 		comments.forEach (
 			comment => {

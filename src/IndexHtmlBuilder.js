@@ -23,8 +23,8 @@ Doc reviewed 20211021
 */
 
 import fs from 'fs';
-import theConfig from './Config.js'
-import NavHtmlBuilder from './NavHtmlBuilder.js'
+import theConfig from './Config.js';
+import NavHtmlBuilder from './NavHtmlBuilder.js';
 
 /**
 Build the index.html home page
@@ -34,25 +34,26 @@ class IndexHtmlBuilder {
 	constructor ( ) {
 		Object.freeze ( this );
 	}
-	
+
 	build ( ) {
 		const navHtmlBuilder = new NavHtmlBuilder ( );
-		let html = 
+		let html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-			`<link type="text/css" rel="stylesheet" href="SimpleESDoc.css"></head><body>`;
+			'<link type="text/css" rel="stylesheet" href="SimpleESDoc.css"></head><body>';
 
 		// nav
 		html += navHtmlBuilder.build ( '' );
-		
+
 		if ( fs.existsSync ( theConfig.srcDir + 'indexUserContent.html' ) ) {
 			html += fs.readFileSync ( theConfig.srcDir + 'indexUserContent.html' );
 		}
 		else {
-			html += '<div><p>Move the mouse on one of blue, green or red rectangles on top of the page to display the menus and select an item in the menu.<p></div>'
+			html += '<div><p>Move the mouse on one of the blue, green or red rectangles on top of the page to display' +
+			' the menus and select an item in the menu.<p></div>';
 		}
-		
+
 		html += navHtmlBuilder.footer;
-		
+
 		html += '</body></html>';
 
 		fs.writeFileSync ( theConfig.docDir + 'index.html', html );

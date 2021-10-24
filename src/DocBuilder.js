@@ -36,7 +36,7 @@ import DocsValidator from './DocsValidator.js';
 import IndexHtmlBuilder from './IndexHtmlBuilder.js';
 
 /**
-Build the complete documentation: generate AST from the source files, then extracting doc objects from AST 
+Build the complete documentation: generate AST from the source files, then extracting doc objects from AST
 and finally buid HTML pages from the doc objects.
 */
 
@@ -128,7 +128,7 @@ class DocBuilder {
 		);
 
 		new VariablesHtmlBuilder ( ).build ( this.#variablesDocs );
-		
+
 		new IndexHtmlBuilder ( ).build ( );
 	}
 

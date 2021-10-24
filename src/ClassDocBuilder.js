@@ -23,6 +23,7 @@ Doc reviewed 20211021
 */
 
 import CommentDocBuilder from './CommentDocBuilder.js';
+import { MethodOrPropertyDoc, ClassDoc } from './Docs.js';
 
 /**
 Build a doc object for a class
@@ -30,40 +31,84 @@ Build a doc object for a class
 
 class ClassDocBuilder {
 
+	#rootPath = null;
+
+	#fileName = null;
+
+	#commentDocBuilder = null;
+
 	constructor ( ) {
 		Object.freeze ( this );
+		this.#commentDocBuilder = new CommentDocBuilder ( );
+	}
+
+	#buildMethodOrPropertyDoc ( methodOrPropertyNode ) {
+
+		// methodOrPropertyDoc
+		const methodOrPropertyDoc = new MethodOrPropertyDoc ( );
+
+		methodOrPropertyDoc.name = methodOrPropertyNode?.key?.name || methodOrPropertyNode?.key?.id?.name;
+		methodOrPropertyDoc.static = methodOrPropertyNode.static;
+		methodOrPropertyDoc.async = methodOrPropertyNode.async;
+		methodOrPropertyDoc.kind = methodOrPropertyNode?.kind;
+		methodOrPropertyDoc.file = this.#fileName;
+		methodOrPropertyDoc.rootPath = this.#rootPath;
+		methodOrPropertyDoc.line = methodOrPropertyNode.loc.start.line;
+
+		if ( methodOrPropertyNode.leadingComments ) {
+			const comments = [];
+			methodOrPropertyNode.leadingComments.forEach (
+				comment => { comments.push ( comment?.value ); }
+			);
+			methodOrPropertyDoc.commentsDoc = this.#commentDocBuilder.build ( comments );
+		}
+		if ( methodOrPropertyNode.params ) {
+			methodOrPropertyDoc.params = [];
+			methodOrPropertyNode.params.forEach (
+				param => { methodOrPropertyDoc.params.push ( param?.name ); }
+			);
+		}
+		switch ( methodOrPropertyNode.type ) {
+		case 'ClassPrivateProperty' :
+			methodOrPropertyDoc.private = true;
+			methodOrPropertyDoc.isA = 'property';
+			break;
+		case 'ClassProperty' :
+			methodOrPropertyDoc.private = false;
+			methodOrPropertyDoc.isA = 'property';
+			break;
+		case 'ClassPrivateMethod' :
+			methodOrPropertyDoc.private = true;
+			methodOrPropertyDoc.isA = 'method';
+			break;
+		case 'ClassMethod' :
+			methodOrPropertyDoc.private = false;
+			methodOrPropertyDoc.isA = 'method';
+			break;
+		default :
+			break;
+		}
+
+		return Object.freeze ( methodOrPropertyDoc );
 	}
 
 	build ( classDeclarationNode, fileName ) {
 
-		/*
-		const classDoc = {
-			name : {string} the class name; found in ast
-			superClass : {string|null} the super class name; found in ast
-			methodsAndProperties : [] an array with the methods and properties docs; found in ast
-			file : {string} the file name in witch the class is declared, including path since theConfig.docDir
-			rootPath : rootPath, the path between the html file and theConfig.docDir
-			line : {string} the line at witch the class is declared; found in ast
-			commentsDoc : {Object|null} the doc found in the comments of the class
-		};
-		*/
+		this.#fileName = fileName;
 
-		let rootPath = '';
+		this.#rootPath = '';
 		let rootPathCounter = fileName.split ( '/' ).length - 1;
 		while ( 0 < rootPathCounter ) {
-			rootPath += '../';
+			this.#rootPath += '../';
 			rootPathCounter --;
 		}
 
-		const commentDocBuilder = new CommentDocBuilder ( );
+		const classDoc = new ClassDoc;
 
-		const classDoc = {
-			name : classDeclarationNode.id.name,
-			methodsAndProperties : [],
-			file : fileName,
-			rootPath : rootPath,
-			line : classDeclarationNode.loc.start.line
-		};
+		classDoc.name = classDeclarationNode.id.name;
+		classDoc.file = fileName;
+		classDoc.rootPath = this.#rootPath;
+		classDoc.line = classDeclarationNode.loc.start.line;
 
 		if ( classDeclarationNode?.superClass?.name ) {
 			classDoc.superClass = classDeclarationNode.superClass.name;
@@ -74,74 +119,15 @@ class ClassDocBuilder {
 			classDeclarationNode.leadingComments.forEach (
 				comment => { comments.push ( comment?.value ); }
 			);
-			classDoc.commentsDoc = commentDocBuilder.build ( comments );
+			classDoc.commentsDoc = this.#commentDocBuilder.build ( comments );
 		}
-
-		/*
-		const methodOrPropertyDoc = {
-			name : {string} the method or property name; found in ast
-			static : {boolean} the method or property is static; found in ast
-			async : {boolean} the method or property is async; found in ast
-			kind : {string} the kind of method ( = 'get', 'set' or 'constructor' ); found in ast
-			isA : {string} the type ( = 'method' or 'property' ); found in ast
-			private : {boolean} the method or property is private; found in ast
-			file : {string} the file name in witch the method or property is declared, including path since theConfig.docDir
-			rootPath : rootPath, the path between the html file and theConfig.docDir
-			line : {string} the line at witch the method or property is declared; found in ast
-			commentsDoc : {Object|null} the doc found in the comments of the method or property
-		};
-		*/
 
 		classDeclarationNode.body.body.forEach (
 			methodOrPropertyNode => {
-
-				// methodOrPropertyDoc
-				const methodOrPropertyDoc = {
-					name : methodOrPropertyNode?.key?.name || methodOrPropertyNode?.key?.id?.name,
-					static : methodOrPropertyNode.static,
-					async : methodOrPropertyNode.async,
-					kind : methodOrPropertyNode?.kind,
-					file : fileName,
-					rootPath : rootPath,
-					line : methodOrPropertyNode.loc.start.line
-				};
-				if ( methodOrPropertyNode.leadingComments ) {
-					const comments = [];
-					methodOrPropertyNode.leadingComments.forEach (
-						comment => { comments.push ( comment?.value ); }
-					);
-					methodOrPropertyDoc.commentsDoc = commentDocBuilder.build ( comments );
-				}
-				if ( methodOrPropertyNode.params ) {
-					methodOrPropertyDoc.params = [];
-					methodOrPropertyNode.params.forEach (
-						param => { methodOrPropertyDoc.params.push ( param?.name ); }
-					);
-				}
-				switch ( methodOrPropertyNode.type ) {
-				case 'ClassPrivateProperty' :
-					methodOrPropertyDoc.private = true;
-					methodOrPropertyDoc.isA = 'property';
-					classDoc.methodsAndProperties.push ( Object.freeze ( methodOrPropertyDoc ) );
-					break;
-				case 'ClassProperty' :
-					methodOrPropertyDoc.private = false;
-					methodOrPropertyDoc.isA = 'property';
-					classDoc.methodsAndProperties.push ( Object.freeze ( methodOrPropertyDoc ) );
-					break;
-				case 'ClassPrivateMethod' :
-					methodOrPropertyDoc.private = true;
-					methodOrPropertyDoc.isA = 'method';
-					classDoc.methodsAndProperties.push ( Object.freeze ( methodOrPropertyDoc ) );
-					break;
-				case 'ClassMethod' :
-					methodOrPropertyDoc.private = false;
-					methodOrPropertyDoc.isA = 'method';
-					classDoc.methodsAndProperties.push ( Object.freeze ( methodOrPropertyDoc ) );
-					break;
-				default :
-					break;
-
+				const methodOrPropertyDoc = this.#buildMethodOrPropertyDoc ( methodOrPropertyNode, fileName );
+				if ( methodOrPropertyDoc.isA ) {
+					classDoc.methodsAndProperties = ( classDoc.methodsAndProperties ?? [] );
+					classDoc.methodsAndProperties.push ( methodOrPropertyDoc );
 				}
 			}
 		);

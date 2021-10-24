@@ -44,7 +44,7 @@ class ClassHtmlBuilder {
 		this.#html += '<table><tr><th>Name</th> <th>Type</th> <th>Description</th></tr>';
 		methodOrPropertyDoc.params.forEach (
 			param => {
-				const paramDoc = methodOrPropertyDoc?.commentsDoc?.params.find ( first => first.name === param );
+				const paramDoc = methodOrPropertyDoc?.commentsDoc?.params?.find ( first => first.name === param );
 				const paramType = paramDoc ? theLinkBuilder.getClassLink ( paramDoc.type, this.#rootPath ) : '';
 				const paramDesc = paramDoc ? paramDoc.desc : '';
 				this.#html += `<tr><td>${param}</td> <td>${paramType}</td> <td>${paramDesc}</td></tr>`;
@@ -144,7 +144,8 @@ class ClassHtmlBuilder {
 
 				// returns
 				if (
-					methodOrPropertyDoc.commentsDoc &&
+					methodOrPropertyDoc?.commentsDoc?.returns?.type &&
+					methodOrPropertyDoc?.commentsDoc?.returns?.desc &&
 					(
 						'' !== methodOrPropertyDoc.commentsDoc.returns.type
 						||
