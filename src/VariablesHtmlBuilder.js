@@ -85,7 +85,7 @@ class VariablesHtmlBuilder {
 
 	/**
 	Build the variables.html page
-	@param {Array.<VariableDoc>} variablesDoc the docs objects for all variables
+	@param {Array.<VariableDoc>} variablesDocs The docs objects for all variables
 	*/
 
 	build ( variablesDocs ) {

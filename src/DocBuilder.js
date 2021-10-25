@@ -22,6 +22,7 @@ Changes:
 Doc reviewed 20211021
 */
 
+import process from 'process';
 import fs from 'fs';
 import babelParser from '@babel/parser';
 
@@ -146,22 +147,34 @@ class DocBuilder {
 	*/
 
 	buildFiles ( sourceFilesList ) {
+		let fileContent = null;
+		let ast = null;
 		sourceFilesList.forEach (
 			sourceFileName => {
-
-				// Reading the source
-				const fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
-
+				try {
+					// Reading the source
+					fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
+					ast = babelParser.parse ( fileContent, this.#parserOptions );
+				}
+				catch ( err ){
+					console.error ( err );
+					/*
+					console.error ( 
+						`\n\t\x1b[31mError\x1b[0m parsing file \x1b[31m${sourceFileName}\x1b[0m` +
+						` at line ${err.loc.line} column ${err.loc.column} : \n\t\t${err.message}\n` 
+					);
+					*/
+					process.exit ( 1 );
+				}
 				// buiding docs for the source
 				this.#buildDocs (
-					babelParser.parse ( fileContent, this.#parserOptions ),
+					ast ,
 					sourceFileName
 				);
 
 				// buiding the links for the source
 				const htmlFileName = sourceFileName.replace ( '.js', 'js.html' );
 				theLinkBuilder.setSourceLink ( sourceFileName, htmlFileName );
-
 			}
 		);
 
@@ -172,7 +185,7 @@ class DocBuilder {
 		// Validation
 		if ( theConfig.validate ) {
 			const docsValidator = new DocsValidator ( );
-			docsValidator.validate ( this.#classesDocs );
+			docsValidator.validate ( this.#classesDocs, this.#variablesDocs );
 		}
 
 		// Building classes html files

@@ -80,16 +80,9 @@ class ClassDocBuilder {
 		methodOrPropertyDoc.file = this.#fileName;
 		methodOrPropertyDoc.rootPath = this.#rootPath;
 		methodOrPropertyDoc.line = methodOrPropertyNode.loc.start.line;
+		methodOrPropertyDoc.commentsDoc = this.#commentsDocBuilder.build (  methodOrPropertyNode.leadingComments );
 
-		if ( methodOrPropertyNode.leadingComments ) {
-			const comments = [];
-			methodOrPropertyNode.leadingComments.forEach (
-				comment => { comments.push ( comment?.value ); }
-			);
-			methodOrPropertyDoc.commentsDoc = this.#commentsDocBuilder.build ( comments );
-		}
-
-		if ( methodOrPropertyNode.params ) {
+		if ( methodOrPropertyNode?.params?.length ) {
 			methodOrPropertyDoc.params = [];
 			methodOrPropertyNode.params.forEach (
 				param => { methodOrPropertyDoc.params.push ( param?.name ); }
@@ -124,6 +117,7 @@ class ClassDocBuilder {
 	Build a ClassDoc object from an
 	<a href="https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md">ast node</a>
 	@param {Object} classDeclarationNode An ast node of type classDeclarationNode
+	@param {String} fileName The file name with the path since theConfig.srcDir
 	@return {ClassDoc} The created object
 	*/
 
@@ -151,13 +145,7 @@ class ClassDocBuilder {
 			classDoc.superClass = classDeclarationNode.superClass.name;
 		}
 
-		if ( classDeclarationNode.leadingComments ) {
-			const comments = [];
-			classDeclarationNode.leadingComments.forEach (
-				comment => { comments.push ( comment?.value ); }
-			);
-			classDoc.commentsDoc = this.#commentsDocBuilder.build ( comments );
-		}
+		classDoc.commentsDoc = this.#commentsDocBuilder.build ( classDeclarationNode.leadingComments );
 
 		// Adding methods and properties
 		classDeclarationNode.body.body.forEach (

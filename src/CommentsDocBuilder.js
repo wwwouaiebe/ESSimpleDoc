@@ -116,10 +116,10 @@ class CommentsDocBuilder {
 		let typeDescription = null;
 		switch ( words [ 0 ] ) {
 		case '@desc' :
-			this.#commentsDoc.desc = commentTag.replace ( '@desc ', '' );
+			this.#commentsDoc.desc = commentTag.replace ( '@desc ', '' ).trim( );
 			break;
 		case '@classdesc' :
-			this.#commentsDoc.desc = commentTag.replace ( '@classdesc ', '' );
+			this.#commentsDoc.desc = commentTag.replace ( '@classdesc ', '' ).trim ( );
 			break;
 		case '@type' :
 			if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
@@ -132,9 +132,11 @@ class CommentsDocBuilder {
 				typeDescription.type = this.#parseType ( words [ 1 ] );
 			}
 			typeDescription.name = words [ 2 ];
+			typeDescription.name = '' === typeDescription.name.trim ( ) ? null :typeDescription.name;
 			for ( let counter = 3; counter < words.length; counter ++ ) {
 				typeDescription.desc = ( typeDescription.desc ?? '' ) + words [ counter ] + ' ';
 			}
+			typeDescription.desc = '' === typeDescription.desc.trim ( ) ? null :typeDescription.desc;
 			Object.freeze ( typeDescription );
 			this.#commentsDoc.params = ( this.#commentsDoc.params ?? [] );
 			this.#commentsDoc.params.push ( typeDescription );
@@ -148,12 +150,13 @@ class CommentsDocBuilder {
 			for ( let counter = 2; counter < words.length; counter ++ ) {
 				typeDescription.desc = ( typeDescription.desc ?? '' ) + words [ counter ] + ' ';
 			}
+			typeDescription.desc = '' === typeDescription.desc.trim ( ) ? null :typeDescription.desc;
 			Object.freeze ( typeDescription );
 			this.#commentsDoc.returns = typeDescription;
 			break;
 		default :
 			if ( '@' !== words [ 0 ] [ 0 ] ) {
-				this.#commentsDoc.desc = commentTag;
+				this.#commentsDoc.desc = commentTag.trim ( );
 			}
 			break;
 		}
@@ -189,21 +192,24 @@ class CommentsDocBuilder {
 
 	/**
 	Build a CommentsDoc object from the comments found in the code before the class/method/properties/variable
-	@param {Array.<string>} comments The comments to use
+	@param {Array.<string>} leadingComments The leadingComments to use
 	@return {CommentsDoc} An object with the comments
 	*/
 
-	build ( comments ) {
+	build ( leadingComments ) {
+
+		if ( ! leadingComments ) {
+			return null;
+		}
+
+		const docLeadingComments = leadingComments.filter ( leadingComment => '*' === leadingComment.value [ 0 ] );
+
+		if ( 0 === docLeadingComments.length ) {
+			return null;
+		}
 
 		this.#commentsDoc = new CommentsDoc ( );
-
-		comments.forEach (
-			comment => {
-				if ( '*' === comment [ 0 ] ) {
-					this.#parseComment ( comment.substr ( 1 ) );
-				}
-			}
-		);
+		docLeadingComments.forEach ( docLeadingComment => this.#parseComment ( docLeadingComment.value.substr ( 1 ) ) );
 		return Object.freeze ( this.#commentsDoc );
 	}
 }

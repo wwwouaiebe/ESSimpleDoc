@@ -55,14 +55,7 @@ class VariableDocBuilder {
 		variableDoc.file = fileName;
 		variableDoc.rootPath = '';
 		variableDoc.line = variableDeclarationNode.loc.start.line;
-
-		if ( variableDeclarationNode.leadingComments ) {
-			const comments = [];
-			variableDeclarationNode.leadingComments.forEach (
-				comment => { comments.push ( comment?.value ); }
-			);
-			variableDoc.commentsDoc = new CommentsDocBuilder ( ).build ( comments );
-		}
+		variableDoc.commentsDoc = new CommentsDocBuilder ( ).build ( variableDeclarationNode.leadingComments );
 
 		return Object.freeze ( variableDoc );
 	}

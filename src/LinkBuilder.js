@@ -156,7 +156,8 @@ class LinkBuilder {
 
 	/**
 	Store a link to a source file
-	@param {ClassDoc} classDoc the doc with the class documentation
+	@param {String} fileName The file name
+	@param {String} path The path since theConfig.docDir, included file name
 	*/
 
 	setSourceLink ( fileName, path ) {
