@@ -31,9 +31,19 @@ Build the sources HTML pages
 
 class SourceHtmlBuilder {
 
+	/**
+	The constructor
+	*/
+
 	constructor ( ) {
 		Object.freeze ( this );
 	}
+
+	/**
+	Build the a source html file.
+	@param {String} fileContent The file content
+	@param {String} fileName The file name, including the path since theConfig.docDir
+	*/
 
 	build ( fileContent, fileName ) {
 
@@ -60,22 +70,31 @@ class SourceHtmlBuilder {
 
 		// body
 		let lineCounter = 0;
+
+		// splitting file into lines
 		fileContent.split ( /\r\n|\r|\n/ ).forEach (
 			line => {
 				lineCounter ++;
 				const strLineCounter = String ( lineCounter ).padStart ( 5, '_' );
+
 				const htmlLine = line
+
+					// replacing tabs and white space with nbsp
 					.replaceAll ( '\t', '&nbsp;&nbsp;&nbsp;&nbsp;' )
 					.replaceAll ( ' ', '&nbsp;' )
+
+					// replacing < and >
 					.replaceAll ( '<', '&lt;' )
 					.replaceAll ( '>', '&gt;' );
 
+				// Adding line number
 				html +=
 					`<div class="srcCode"><a id="L${strLineCounter}">${strLineCounter}</a>` +
 					`&nbsp;&nbsp;&nbsp;&nbsp;${htmlLine}</div>`;
 			}
 		);
 
+		// footer
 		html += navHtmlBuilder.footer;
 		html +=
 			'<script>document.getElementById ( new URL ( window.location' +

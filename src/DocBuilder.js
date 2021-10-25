@@ -46,42 +46,42 @@ class DocBuilder {
 	A SourceHtmlBuilder object used by the class
 	@type {SourceHtmlBuilder}
 	*/
-	
+
 	#sourceHtmlBuilder;
 
 	/**
 	A VariableDocBuilder object used by the class
 	@type {VariableDocBuilder}
 	*/
-	
+
 	#variableDocBuilder;
 
 	/**
 	A ClassDocBuilder object used by the class
 	@type {ClassDocBuilder}
 	*/
-	
+
 	#classDocBuilder;
 
 	/**
 	The generated ClassDoc objects
 	@type {Array.<ClassDoc>}
 	*/
-	
+
 	#classesDocs = [];
 
 	/**
 	The generated VariableDoc objects
 	@type {Array.<VariableDoc>}
 	*/
-	
+
 	#variablesDocs = [];
 
 	/**
 	The options for the babel/parser
 	@type {Object}
 	*/
-	
+
 	#parserOptions = {
 		allowAwaitOutsideFunction : true,
 		allowImportExportEverywhere : true,
@@ -107,18 +107,18 @@ class DocBuilder {
 	/**
 	The constructor
 	*/
-	
+
 	constructor ( ) {
 		Object.freeze ( this );
 		this.#sourceHtmlBuilder = new SourceHtmlBuilder ( );
 		this.#classDocBuilder = new ClassDocBuilder ( );
 		this.#variableDocBuilder = new VariableDocBuilder ( );
 	}
-	
+
 	/**
 	Build all the docs for a file
-	@param {Object} parserResult The root 
-	<a href="https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md">ast node</a> 
+	@param {Object} parserResult The root
+	<a href="https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md">ast node</a>
 	given by the babel/parser
 	@param {String} sourceFileName The source file name, including relative path since theConfig.srcDir
 	*/
@@ -139,7 +139,7 @@ class DocBuilder {
 			}
 		);
 	}
-	
+
 	/**
 	Build all the docs for the app and then build all the html files
 	@param {Array.<String>} sourceFilesList The source files names, including relative path since theConfig.srcDir
@@ -148,15 +148,16 @@ class DocBuilder {
 	buildFiles ( sourceFilesList ) {
 		sourceFilesList.forEach (
 			sourceFileName => {
+
 				// Reading the source
 				const fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
-				
+
 				// buiding docs for the source
-				this.#buildDocs ( 
-					babelParser.parse ( fileContent, this.#parserOptions ), 
-					sourceFileName 
+				this.#buildDocs (
+					babelParser.parse ( fileContent, this.#parserOptions ),
+					sourceFileName
 				);
-				
+
 				// buiding the links for the source
 				const htmlFileName = sourceFileName.replace ( '.js', 'js.html' );
 				theLinkBuilder.setSourceLink ( sourceFileName, htmlFileName );

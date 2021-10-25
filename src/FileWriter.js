@@ -30,29 +30,29 @@ Write a file, creating before all the needed directories.
 */
 
 class FileWriter {
-	
+
 	/**
 	A property to share the last created directory
 	@type {String}
 	*/
-	
+
 	#currentDir;
 
 	/**
 	The constructor
 	*/
-	
+
 	constructor ( ) {
 		Object.freeze ( this );
 	}
-	
+
 	/**
 	Creates all the directories in the dirs parameter, starting from theConfig.docDir
 	@param {Array.<String>} dirs The directories to create
 	*/
 
 	#createDirs ( dirs ) {
-		
+
 		this.#currentDir = theConfig.docDir;
 
 		dirs.forEach (
@@ -69,9 +69,9 @@ class FileWriter {
 			}
 		);
 	}
-	
+
 	/**
-	Write a file 
+	Write a file
 	@param {Array.<String>} dirs A list of directories to create. The file will be writed in the last created directory
 	@param {String} fileName The name of the file
 	@param {String} fileContent The content of the file

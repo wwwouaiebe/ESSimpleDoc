@@ -32,7 +32,7 @@ class Config {
 	The directory where the source files are. Coming from the --in parameter
 	@type {string}
 	*/
-	
+
 	srcDir
 
 	/**
@@ -57,20 +57,19 @@ class Config {
 	validate
 
 	/**
-	A flag indicating that the documentation must be opened in the browser immediately after 
+	A flag indicating that the documentation must be opened in the browser immediately after
 	the generation. Coming from the --launch parameter
 	@type {boolean}
 	*/
 
 	launch
-	
+
 	/**
 	The constructor
 	*/
 
 	constructor ( ) {
 	}
-	
 
 }
 

@@ -34,7 +34,7 @@ class ClassHtmlBuilder {
 
 	/**
 	The html with the class documentation
-	@type {string}
+	@type {String}
 	*/
 
 	#html;

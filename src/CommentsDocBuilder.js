@@ -84,20 +84,21 @@ class CommentsDocBuilder {
 		if ( '' === tmpType ) {
 			return null;
 		}
-		
+
 		let returnValue = '';
-		tmpType.trim( ).split ( ' ' ).forEach ( 
-			word => {
-				returnValue += 
-					( ['of', 'null', 'or'].indexOf ( word ) === -1 )
-					?
-					this.#capitalizeFirstLetter ( word )
-					:
-					word;
-				returnValue += ' ';
-			}
-		);
-		
+		tmpType.trim ( ).split ( ' ' )
+			.forEach (
+				word => {
+					returnValue +=
+					( -1 === [ 'of', 'null', 'or' ].indexOf ( word ) )
+						?
+						this.#capitalizeFirstLetter ( word )
+						:
+						word;
+					returnValue += ' ';
+				}
+			);
+
 		return returnValue.trimEnd ( );
 
 	}

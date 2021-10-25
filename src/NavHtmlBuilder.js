@@ -29,7 +29,7 @@ Build the nav and footer HTMLElements for all the HTML pages
 */
 
 class NavHtmlBuilder {
-	
+
 	/**
 	The constructor
 	*/
@@ -40,11 +40,11 @@ class NavHtmlBuilder {
 
 	/**
 	Build the nav html element for an html page
-	@param {string} rootPath The path between the file where the nav will be inserted and theConfig.docDir 
+	@param {string} rootPath The path between the file where the nav will be inserted and theConfig.docDir
 	( something like '../../../', depending of the folders tree )
-	@return {String} The nav html 
+	@return {String} The nav html
 	*/
-	
+
 	build ( rootPath ) {
 
 		let navHtml = '<nav><div id="sourcesNav">Sources</div><ul id="sourcesNavList">';
@@ -72,7 +72,7 @@ class NavHtmlBuilder {
 		navHtml += '</ul></nav>';
 		return navHtml;
 	}
-	
+
 	/**
 	The footer to be inserted in the html pages
 	@type {string} The fooder html

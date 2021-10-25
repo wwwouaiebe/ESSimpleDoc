@@ -26,14 +26,26 @@ import CommentsDocBuilder from './CommentsDocBuilder.js';
 import { VariableDoc } from './Docs.js';
 
 /**
-Build the doc object for a variable
+Build the variableDoc object for a variable
 */
 
 class VariableDocBuilder {
 
+	/**
+	The constructor
+	*/
+
 	constructor ( ) {
 		Object.freeze ( this );
 	}
+
+	/**
+	Build a VariableDoc object from an
+	<a href="https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md">ast node</a>
+	@param {Object} variableDeclarationNode An ast node of type VariableDeclaration
+	@param {String} fileName the file name in witch the variableDeclarationNnode was found, including path
+	@return {VariableDoc} The created object
+	*/
 
 	build ( variableDeclarationNode, fileName ) {
 

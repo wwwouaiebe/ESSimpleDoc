@@ -33,17 +33,27 @@ Build the HTML page for all the variables
 
 class VariablesHtmlBuilder {
 
+	/**
+	The html with the varables documentation
+	@type {String}
+	*/
+
 	#html = '';
+
+	/**
+	The constructor
+	*/
 
 	constructor ( ) {
 		Object.freeze ( this );
 	}
 
+	/**
+	Build the html var a variable
+	@param {VariableDoc} variableDoc The doc object of the variable
+	*/
+
 	#buildVariable ( variableDoc ) {
-		
-		if ( ! variableDoc.commentsDoc ) {
-			return;
-		}
 
 		// type
 		const typePostfix =
@@ -53,7 +63,6 @@ class VariablesHtmlBuilder {
 				:
 				'';
 
-		variableDoc.commentsDoc?.type ?? '';
 		this.#html +=
 			`<a id="${variableDoc.name}"></a><h3><span>${variableDoc?.kind ?? ''} </span>` +
 			`${variableDoc.name}<span>${typePostfix}</span></h3>`;
@@ -65,8 +74,7 @@ class VariablesHtmlBuilder {
 				theLinkBuilder.getDescLink ( variableDoc.commentsDoc.desc, '' )
 				:
 				' ...No description provided. Coming soon?';
-			
-			
+
 		this.#html += `<div>${desc}</div>`;
 
 		// source
@@ -75,23 +83,38 @@ class VariablesHtmlBuilder {
 		this.#html += `<div>Source : <a href="${sourceLink}"> file ${variableDoc.file} at line ${variableDoc.line}</a></div>`;
 	}
 
+	/**
+	Build the variables.html page
+	@param {Array.<VariableDoc>} variablesDoc the docs objects for all variables
+	*/
+
 	build ( variablesDocs ) {
 
 		const navHtmlBuilder = new NavHtmlBuilder ( );
+
+		// Sorting the docs
 		variablesDocs.sort ( ( first, second ) => first.name.localeCompare ( second.name ) );
+
+		// head
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			'<link type="text/css" rel="stylesheet" href="SimpleESDoc.css"></head><body>';
 
+		// nav
 		this.#html += navHtmlBuilder.build ( '' );
 
+		// header
 		this.#html += '<h1>Global variables</h1>';
+
+		// loop on variables
 		variablesDocs.forEach ( variableDoc => this.#buildVariable ( variableDoc ) );
 
+		// footer
 		this.#html += navHtmlBuilder.footer;
 
 		this.#html += '</body></html>';
 
+		// writting file
 		fs.writeFileSync ( theConfig.docDir + 'variables.html', this.#html );
 	}
 }
