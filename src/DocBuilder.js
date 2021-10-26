@@ -147,28 +147,31 @@ class DocBuilder {
 	*/
 
 	buildFiles ( sourceFilesList ) {
-		let fileContent = null;
 		let ast = null;
 		sourceFilesList.forEach (
 			sourceFileName => {
 				try {
+
 					// Reading the source
-					fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
+					const fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
 					ast = babelParser.parse ( fileContent, this.#parserOptions );
 				}
-				catch ( err ){
+				catch ( err ) {
 					console.error ( err );
+
 					/*
-					console.error ( 
+					console.error (
 						`\n\t\x1b[31mError\x1b[0m parsing file \x1b[31m${sourceFileName}\x1b[0m` +
-						` at line ${err.loc.line} column ${err.loc.column} : \n\t\t${err.message}\n` 
+						` at line ${err.loc.line} column ${err.loc.column} : \n\t\t${err.message}\n`
 					);
 					*/
+
 					process.exit ( 1 );
 				}
+
 				// buiding docs for the source
 				this.#buildDocs (
-					ast ,
+					ast,
 					sourceFileName
 				);
 

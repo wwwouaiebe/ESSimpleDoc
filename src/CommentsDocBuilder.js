@@ -116,7 +116,7 @@ class CommentsDocBuilder {
 		let typeDescription = null;
 		switch ( words [ 0 ] ) {
 		case '@desc' :
-			this.#commentsDoc.desc = commentTag.replace ( '@desc ', '' ).trim( );
+			this.#commentsDoc.desc = commentTag.replace ( '@desc ', '' ).trim ( );
 			break;
 		case '@classdesc' :
 			this.#commentsDoc.desc = commentTag.replace ( '@classdesc ', '' ).trim ( );
@@ -132,11 +132,11 @@ class CommentsDocBuilder {
 				typeDescription.type = this.#parseType ( words [ 1 ] );
 			}
 			typeDescription.name = words [ 2 ];
-			typeDescription.name = '' === typeDescription.name.trim ( ) ? null :typeDescription.name;
+			typeDescription.name = '' === typeDescription.name.trim ( ) ? null : typeDescription.name;
 			for ( let counter = 3; counter < words.length; counter ++ ) {
 				typeDescription.desc = ( typeDescription.desc ?? '' ) + words [ counter ] + ' ';
 			}
-			typeDescription.desc = '' === typeDescription.desc.trim ( ) ? null :typeDescription.desc;
+			typeDescription.desc = '' === typeDescription.desc.trim ( ) ? null : typeDescription.desc;
 			Object.freeze ( typeDescription );
 			this.#commentsDoc.params = ( this.#commentsDoc.params ?? [] );
 			this.#commentsDoc.params.push ( typeDescription );
@@ -150,7 +150,7 @@ class CommentsDocBuilder {
 			for ( let counter = 2; counter < words.length; counter ++ ) {
 				typeDescription.desc = ( typeDescription.desc ?? '' ) + words [ counter ] + ' ';
 			}
-			typeDescription.desc = '' === typeDescription.desc.trim ( ) ? null :typeDescription.desc;
+			typeDescription.desc = '' === typeDescription.desc.trim ( ) ? null : typeDescription.desc;
 			Object.freeze ( typeDescription );
 			this.#commentsDoc.returns = typeDescription;
 			break;
@@ -163,7 +163,7 @@ class CommentsDocBuilder {
 	}
 
 	/**
-	Parse a comment and extracts the @desc, @classdesc, @type, @param, @return, @returns JSDoc tags
+	Parse a comment and extracts the desc, classdesc, type, param, return, returns JSDoc tags
 	@param {string} comment The comment to parse
 	*/
 

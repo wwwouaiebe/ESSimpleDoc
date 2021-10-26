@@ -28,133 +28,200 @@ Validate the doc objects
 
 class docsValidator {
 
-	#errorsCounter = 0;
+	/**
+	A counter for the errors
+	@type {Number}
+	*/
 
-	#classNames = null;
-	
+	#errorsCounter;
+
+	/**
+	A counter for the warnings
+	@type {Number}
+	*/
+
+	#warningsCounter;
+
+	/**
+	A map to store the classes names
+	@type {Map.<String>}
+	*/
+
+	#classNames;
+
+	/**
+	The current class
+	@type {String}
+	*/
+
+	#currentClass;
+
+	/**
+	The rules to apply
+	@type {Object}
+	*/
+
 	#rules = {
-		classesRules :{
-			duplicateClassNname : {
+		classesRules : {
+			duplicateClassName : {
 				rule : classDoc => this.#classNames.get ( classDoc.name ),
-				errorLevel : 'error',
+				errorLevel : 'warning',
 				ruleMessage : 'Duplicate class name',
 				moreRule : classDoc => this.#classNames.set ( classDoc.name, classDoc.name )
 			}
 		},
-		communRules : {
-			missingDescription : {
+		commonRules : {
+			dontHaveDescription : {
 				rule : doc => ! doc?.commentsDoc?.desc || '' === doc.commentsDoc.desc,
 				errorLevel : 'error',
-				ruleMessage : 'Missing description',
-			},
-			missingDocumentation : {
-				rule : doc => !doc?.commentsDoc,
-				errorLevel : 'error',
-				ruleMessage : 'Missing documentation',
-			},
-			missingName : {
-				rule : doc => ! doc?.name || '' === doc?.name,
-				errorLevel : 'error',
-				ruleName : 'missingName'
+				ruleMessage : 'Missing description'
 			}
 		},
-		methodsOrPropertiesRules: {
+		methodsOrPropertiesRules : {
 			constructorHaveReturn : {
-				rule : methodOrPropertyDoc => 'constructor' === methodOrPropertyDoc.kind &&  methodOrPropertyDoc?.commentsDoc?.returns,
+				rule : methodOrPropertyDoc => 'constructor' === methodOrPropertyDoc.kind
+					&&
+					methodOrPropertyDoc?.commentsDoc?.returns,
 				errorLevel : 'warning',
-				ruleMessage : 'Constructor with @return tag',
+				ruleMessage : 'Constructor with @return tag'
+			},
+			getterDontHaveType : {
+				rule : methodOrPropertyDoc => 'get' === methodOrPropertyDoc.kind
+					&&
+					! methodOrPropertyDoc?.commentsDoc?.type,
+				errorLevel : 'error',
+				ruleMessage : 'Missing @type tag for getter'
 			},
 			getterHaveReturn : {
-				rule : methodOrPropertyDoc => 'get' === methodOrPropertyDoc.kind && methodOrPropertyDoc?.commentsDoc?.returns,
+				rule : methodOrPropertyDoc => 'get' === methodOrPropertyDoc.kind
+					&&
+					methodOrPropertyDoc?.commentsDoc?.returns,
 				errorLevel : 'warning',
-				ruleMessage : 'Getter with @return tag',
+				ruleMessage : 'Getter with @return tag'
 			},
-			getterMissingType : {
-				rule : methodOrPropertyDoc => 'get' === methodOrPropertyDoc.kind && ! methodOrPropertyDoc?.commentsDoc?.type,
-				errorLevel : 'error',
-				ruleMessage : 'Missing type for getter',
-			},
-			parametersMismatch : { 
+			parametersMismatch : {
 				rule : methodOrPropertyDoc => {
 					if ( 'method' !== methodOrPropertyDoc.isA ) {
+						return false;
+					}
+					if ( 'set' === methodOrPropertyDoc.kind ) {
 						return false;
 					}
 					if ( methodOrPropertyDoc.params && ! methodOrPropertyDoc?.commentsDoc?.params ) {
 						return true;
 					}
-					if ( ! methodOrPropertyDoc.params &&  methodOrPropertyDoc?.commentsDoc?.params ) {
+					if ( ! methodOrPropertyDoc.params && methodOrPropertyDoc?.commentsDoc?.params ) {
 						return true;
 					}
-					if ( ! methodOrPropertyDoc.params &&  !methodOrPropertyDoc?.commentsDoc?.params ) {
+					if ( ! methodOrPropertyDoc.params && ! methodOrPropertyDoc?.commentsDoc?.params ) {
 						return false;
 					}
-					
+
 					const codeParams = Array.from ( methodOrPropertyDoc.params );
 					codeParams.sort ( ( first, second ) => first.localeCompare ( second ) );
 
-					const commentsParams = Array.from ( methodOrPropertyDoc.commentsDoc.params , first => first.name );
+					const commentsParams = Array.from ( methodOrPropertyDoc.commentsDoc.params, first => first.name );
 					commentsParams.sort ( ( first, second ) => first.localeCompare ( second ) );
-					
+
 					if ( codeParams.length !== commentsParams.length ) {
-						return true
+						return true;
 					}
-					
+
 					let returnValue = true;
-					for ( let paramCounter = 0; paramCounter < codeParams.length; paramCounter++ ) {
+					for ( let paramCounter = 0; paramCounter < codeParams.length; paramCounter ++ ) {
+
+						/* eslint-disable-next-line no-bitwise */
 						returnValue &= codeParams [ paramCounter ] === commentsParams [ paramCounter ];
 					}
-					
-					return ! returnValue
+
+					return ! returnValue;
 				},
 				errorLevel : 'error',
-				ruleMessage : 'Mismatch in the parameters',
+				ruleMessage : 'Mismatch between the @param tags and parameters in the code'
+			},
+			propertyDontHaveType : {
+				rule : methodOrPropertyDoc => 'property' === methodOrPropertyDoc.isA
+					&&
+					! methodOrPropertyDoc?.commentsDoc?.type,
+				errorLevel : 'error',
+				ruleMessage : 'Missing @type for property'
 			},
 			propertyHaveParam : {
-				rule : methodOrPropertyDoc => 'property' === methodOrPropertyDoc.isA &&  methodOrPropertyDoc?.commentsDoc?.params,
+				rule : methodOrPropertyDoc => 'property' === methodOrPropertyDoc.isA
+					&&
+					methodOrPropertyDoc?.commentsDoc?.params,
 				errorLevel : 'warning',
-				ruleMessage : 'Property with @param tag',
+				ruleMessage : 'Property with @param tag'
 			},
 			propertyHaveReturn : {
-				rule : methodOrPropertyDoc => 'property' === methodOrPropertyDoc.isA &&  methodOrPropertyDoc?.commentsDoc?.returns,
+				rule : methodOrPropertyDoc => 'property' === methodOrPropertyDoc.isA
+					&&
+					methodOrPropertyDoc?.commentsDoc?.returns,
 				errorLevel : 'warning',
-				ruleMessage : 'Property with @return tag',
+				ruleMessage : 'Property with @return tag'
 			},
-			propertyMissingType : {
-				rule : methodOrPropertyDoc => 'property' === methodOrPropertyDoc.isA &&  ! methodOrPropertyDoc?.commentsDoc?.type,
+			returnDontHaveDescription : {
+				rule : methodOrPropertyDoc => methodOrPropertyDoc.commentsDoc
+					&&
+					methodOrPropertyDoc.commentsDoc.returns
+					&&
+					! methodOrPropertyDoc.commentsDoc.returns.desc,
 				errorLevel : 'error',
-				ruleMessage : 'Missing type for property',
+				ruleMessage : 'Missing description for @return tag'
 			},
-			returnMissingDescription : {
-				rule : methodOrPropertyDoc =>  methodOrPropertyDoc.commentsDoc && methodOrPropertyDoc.commentsDoc.returns && ! methodOrPropertyDoc.commentsDoc.returns.desc,
+			returnDontHaveType : {
+				rule : methodOrPropertyDoc => methodOrPropertyDoc.commentsDoc
+					&&
+					methodOrPropertyDoc.commentsDoc.returns
+					&&
+					! methodOrPropertyDoc.commentsDoc.returns.type,
 				errorLevel : 'error',
-				ruleMessage : 'Missing description for @return tag',
-			},
-			returnMissingType : {
-				rule : methodOrPropertyDoc =>  methodOrPropertyDoc.commentsDoc && methodOrPropertyDoc.commentsDoc.returns && ! methodOrPropertyDoc.commentsDoc.returns.type,
-				errorLevel : 'error',
-				ruleMessage : 'Missing type for @return tag',
+				ruleMessage : 'Missing type for @return tag'
 			},
 			setterHaveReturn : {
 				rule : methodOrPropertyDoc => 'set' === methodOrPropertyDoc.kind && methodOrPropertyDoc?.commentsDoc?.returns,
 				errorLevel : 'warning',
-				ruleMessage : 'Setter with @return tag',
+				ruleMessage : 'Setter with @return tag'
 			},
 			setterHaveType : {
 				rule : methodOrPropertyDoc => 'set' === methodOrPropertyDoc.kind && methodOrPropertyDoc?.commentsDoc?.type,
 				errorLevel : 'warning',
-				ruleMessage : 'Setter with @type tag',
+				ruleMessage : 'Setter with @type tag'
 			}
 		}
 	}
 
+	/**
+	Display an error or warning on the screen
+	@param {Object} rule The rule that have generated the error or warning
+	@param {VariableDoc|ClassDoc|MethodOrPropertyDoc} doc The Doc object for witch the error is generated
+	*/
+
 	#logFault ( rule, doc ) {
-		this.#errorsCounter ++;
+		let color = '';
+		if ( 'warning' === rule.errorLevel ) {
+			this.#warningsCounter ++;
+			color = '\x1b[36m';
+		}
+		else {
+			this.#errorsCounter ++;
+			color = '\x1b[31m';
+		}
+		const methodPrefix = doc.private ? '#' : '';
 		console.error (
-			`\t\x1b[31m${rule.errorLevel}\x1b[0m '${rule.ruleMessage}' for ${doc.name} in file \x1b[31m${doc.file}\x1b[0m at line \x1b[31m${doc.line}\x1b[0m)`
+			`\t${color}${rule.errorLevel}\x1b[0m '${rule.ruleMessage}' for ` +
+			`${this.#currentClass + methodPrefix + doc.name} in file ` +
+			`${color}${doc.file}\x1b[0m at line ${color}${doc.line}\x1b[0m)`
 		);
 	}
 
-	#validateRule ( rule, doc ) {
+	/**
+	Apply a rule on a Doc object
+	@param {Object} rule The rule that have tobe applied on the Doc Object
+	@param {VariableDoc|ClassDoc|MethodOrPropertyDoc} doc The Doc object to validate
+	*/
+
+	#validateDoc ( rule, doc ) {
 		if ( rule.rule ( doc ) ) {
 			this.#logFault ( rule, doc );
 		}
@@ -163,48 +230,78 @@ class docsValidator {
 		}
 	}
 
+	/**
+	Validate a VariableDoc object
+	@param {VariableDoc} variableDoc The Doc object to validate
+	*/
+
 	#validateVariableDoc ( variableDoc ) {
 		for ( const rule in this.#rules.commonRules ) {
-			this.#validateRule ( this.#rules.commonRules [ rule ], variableDoc );
+			this.#validateDoc ( this.#rules.commonRules [ rule ], variableDoc );
 		}
 	}
+
+	/**
+	Validate a MethodOrPropertyDoc object
+	@param {MethodOrPropertyDoc} methodOrPropertyDoc The Doc object to validate
+	*/
 
 	#validateMethodOrPropertyDoc ( methodOrPropertyDoc ) {
 		for ( const rule in this.#rules.commonRules ) {
-			this.#validateRule ( this.#rules.commonRules [ rule ], methodOrPropertyDoc );
+			this.#validateDoc ( this.#rules.commonRules [ rule ], methodOrPropertyDoc );
 		}
 		for ( const rule in this.#rules.methodsOrPropertiesRules ) {
-			this.#validateRule ( this.#rules.methodsOrPropertiesRules [ rule ], methodOrPropertyDoc );
+			this.#validateDoc ( this.#rules.methodsOrPropertiesRules [ rule ], methodOrPropertyDoc );
 		}
 	}
 
+	/**
+	Validate a ClassDoc object
+	@param {ClassDoc} classDoc The Doc object to validate
+	*/
+
 	#validateClassDoc ( classDoc ) {
+		this.#currentClass = classDoc.name + '.';
 		for ( const rule in this.#rules.commonRules ) {
-			this.#validateRule ( this.#rules.commonRules [ rule ], classDoc );
+			this.#validateDoc ( this.#rules.commonRules [ rule ], classDoc );
 		}
-		for ( const rule in this.#rules.classRules ) {
-			this.#validateRule ( this.#rules.classRules [ rule ], classDoc );
+		for ( const rule in this.#rules.classesRules ) {
+			this.#validateDoc ( this.#rules.classesRules [ rule ], classDoc );
 		}
 		if ( classDoc.methodsAndProperties ) {
-			classDoc.methodsAndProperties.forEach ( 
+			classDoc.methodsAndProperties.forEach (
 				methodOrPropertyDoc => this.#validateMethodOrPropertyDoc ( methodOrPropertyDoc )
 			);
 		}
-
+		this.#currentClass = '';
 	}
+
+	/**
+	The constructor
+	*/
 
 	constructor ( ) {
 		Object.freeze ( this );
 		this.#classNames = new Map ( );
 	}
 
+	/**
+	Validate the documentation
+	@param {Array.<ClassDoc>} classesDocs The classes Doc objects found in the documentation
+	@param {Array.<VariableDoc>} variablesDocs The variable Doc objects found in the documentation
+	*/
+
 	validate ( classesDocs, variablesDocs ) {
 		this.#classNames.clear ( );
-		
+		this.#errorsCounter = 0;
+		this.#warningsCounter = 0;
+		this.#currentClass = '';
+
 		classesDocs?.forEach ( classDoc => this.#validateClassDoc ( classDoc ) );
 		variablesDocs?.forEach ( variableDoc => this.#validateVariableDoc ( variableDoc ) );
 
 		console.error ( `${this.#errorsCounter} errors found` );
+		console.error ( `${this.#warningsCounter} warnings found` );
 	}
 
 }

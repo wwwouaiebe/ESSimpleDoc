@@ -143,7 +143,7 @@ class LinkBuilder {
 	/**
 	Get a link to a source file
 	@param {VariableDoc|MethodOrPropertyDoc|VariableDoc} doc The doc for witch the link to the source file must be created.
-	@return {?String } The link to the source file
+	@return {?String} The link to the source file
 	*/
 
 	getSourceLink ( doc ) {
@@ -265,7 +265,8 @@ class LinkBuilder {
 }
 
 /**
-@global
+The one and only one instance of LinkBuilder class
+@type {LinkBuilder}
 */
 
 const theLinkBuilder = new LinkBuilder ( );

@@ -80,7 +80,7 @@ class ClassDocBuilder {
 		methodOrPropertyDoc.file = this.#fileName;
 		methodOrPropertyDoc.rootPath = this.#rootPath;
 		methodOrPropertyDoc.line = methodOrPropertyNode.loc.start.line;
-		methodOrPropertyDoc.commentsDoc = this.#commentsDocBuilder.build (  methodOrPropertyNode.leadingComments );
+		methodOrPropertyDoc.commentsDoc = this.#commentsDocBuilder.build ( methodOrPropertyNode.leadingComments );
 
 		if ( methodOrPropertyNode?.params?.length ) {
 			methodOrPropertyDoc.params = [];

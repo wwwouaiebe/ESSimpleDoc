@@ -37,18 +37,19 @@ Start the app: read the arguments, set the config, create the source file list a
 class AppLoader {
 
 	/**
-	A const to use when exit the app due to a bad parameter
-	@type {number}
-	*/
-
-	#EXIT_BAD_PARAMETER;
-
-	/**
 	The source files names
 	@type {Array.<String>}
 	*/
 
 	#sourceFileNames;
+
+	/**
+	A const to use when exit the app due to a bad parameter
+	@type {number}
+	*/
+
+	// eslint-disable-next-line no-magic-numbers
+	get #EXIT_BAD_PARAMETER ( ) { return 9; }
 
 	/**
 	The constructor
@@ -58,8 +59,6 @@ class AppLoader {
 
 		Object.freeze ( this );
 
-		// eslint-disable-next-line no-magic-numbers
-		this.#EXIT_BAD_PARAMETER = 9;
 		this.#sourceFileNames = [];
 	}
 
@@ -233,7 +232,7 @@ class AppLoader {
 		console.error ( `Documentation generated in ${execTime} seconds in the folder \x1b[36m${theConfig.docDir}\x1b[0m` );
 		console.error ( '' );
 		if ( theConfig.launch ) {
-			/* eslint-disable-next-line camelcase */
+			console.error ( '... launching in the browser...' );
 			childProcess.exec ( theConfig.docDir + 'index.html' );
 		}
 	}
