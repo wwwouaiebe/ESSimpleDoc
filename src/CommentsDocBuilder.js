@@ -52,6 +52,9 @@ class CommentsDocBuilder {
 	*/
 
 	#capitalizeFirstLetter ( word ) {
+		if ( ! word || '' === word ) {
+			return word;
+		}
 		if ( 'null' === word.toLowerCase ( ) ) {
 			return 'null';
 		}
@@ -104,6 +107,39 @@ class CommentsDocBuilder {
 	}
 
 	/**
+	This method clean a string
+	@param {String} desc the string to clean
+	@return {?String} The cleaned string or null when the cleaned string is empty
+	*/
+	
+	#cleanDesc ( desc ) {
+		const tmpDesc = this.#capitalizeFirstLetter ( desc.trim ( ) );
+		return '' === tmpDesc ? null : tmpDesc;
+	}
+	
+	/**
+	This method build a TypeDescription from the words found in a comment tags
+	@param {Array.<String>} words The words used to build the TypeDescription
+	@param {boolean} haveName A flag indicating that words contains also a name to add in the TypeDescription
+	*/
+
+	#getTypeDescription ( words, haveName ) {
+		const typeDescription = new TypeDescription ( );
+		if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
+			typeDescription.type = this.#parseType ( words [ 1 ] );
+		}
+		if ( haveName ) {
+			typeDescription.name = words [ 2 ];
+			typeDescription.name = '' === typeDescription.name.trim ( ) ? null : typeDescription.name;
+		}
+		for ( let counter = haveName ? 3 : 2; counter < words.length; counter ++ ) {
+			typeDescription.desc = ( typeDescription.desc ?? '' ) + words [ counter ] + ' ';
+		}
+		typeDescription.desc = this.#cleanDesc ( typeDescription.desc );
+		return Object.freeze ( typeDescription );
+	}
+
+	/**
 	Parse a comment tag. A comment tag is a text starting at the beginning of a comment or starting with a @ char
 	and finishing just before the next @ char in the comment
 	@param {string} commentTag the comment tag to parse
@@ -113,13 +149,12 @@ class CommentsDocBuilder {
 
 		// Splitting the tag into words
 		const words = commentTag.split ( ' ' );
-		let typeDescription = null;
 		switch ( words [ 0 ] ) {
 		case '@desc' :
-			this.#commentsDoc.desc = commentTag.replace ( '@desc ', '' ).trim ( );
+			this.#commentsDoc.desc = this.#cleanDesc ( commentTag.replace ( '@desc ', '' ) );
 			break;
 		case '@classdesc' :
-			this.#commentsDoc.desc = commentTag.replace ( '@classdesc ', '' ).trim ( );
+			this.#commentsDoc.desc = this.#cleanDesc ( commentTag.replace ( '@classdesc ', '' ) );
 			break;
 		case '@type' :
 			if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
@@ -127,36 +162,16 @@ class CommentsDocBuilder {
 			}
 			break;
 		case '@param' :
-			typeDescription = new TypeDescription ( );
-			if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
-				typeDescription.type = this.#parseType ( words [ 1 ] );
-			}
-			typeDescription.name = words [ 2 ];
-			typeDescription.name = '' === typeDescription.name.trim ( ) ? null : typeDescription.name;
-			for ( let counter = 3; counter < words.length; counter ++ ) {
-				typeDescription.desc = ( typeDescription.desc ?? '' ) + words [ counter ] + ' ';
-			}
-			typeDescription.desc = '' === typeDescription.desc.trim ( ) ? null : typeDescription.desc;
-			Object.freeze ( typeDescription );
 			this.#commentsDoc.params = ( this.#commentsDoc.params ?? [] );
-			this.#commentsDoc.params.push ( typeDescription );
+			this.#commentsDoc.params.push ( this.#getTypeDescription ( words, true ) );
 			break;
 		case '@return' :
 		case '@returns' :
-			typeDescription = new TypeDescription ( );
-			if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
-				typeDescription.type = words [ 1 ].replace ( '{', '' ).replace ( '}', '' );
-			}
-			for ( let counter = 2; counter < words.length; counter ++ ) {
-				typeDescription.desc = ( typeDescription.desc ?? '' ) + words [ counter ] + ' ';
-			}
-			typeDescription.desc = '' === typeDescription.desc.trim ( ) ? null : typeDescription.desc;
-			Object.freeze ( typeDescription );
-			this.#commentsDoc.returns = typeDescription;
+			this.#commentsDoc.returns = this.#getTypeDescription ( words, false );
 			break;
 		default :
 			if ( '@' !== words [ 0 ] [ 0 ] ) {
-				this.#commentsDoc.desc = commentTag.trim ( );
+				this.#commentsDoc.desc = this.#cleanDesc ( commentTag );
 			}
 			break;
 		}
