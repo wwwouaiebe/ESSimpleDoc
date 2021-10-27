@@ -1,9 +1,11 @@
 {
   "type": "module",
   "name": "simpleesdoc",
+  "description": "A simple documentation generator for ES modules",
   "main": "index.js",
   "bin": "./index.js", 
-  "version": "1.0.0-dev",
+  "version": "1.0.0",
+  "keywords": ["documentation", "es", "module","simple"],
   "devDependencies": {
     "@babel/eslint-parser": "latest",
     "eslint": "latest",
@@ -13,5 +15,16 @@
   },
   "dependencies": {
     "@babel/parser": "latest"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wwwouaiebe/SimpleESDoc.git"
+  },
+   "engines": {
+    "node": ">=16.11.1"
+  },
+   "author": "wwwouaiebe",
+  "license": "GPL-3.0",
+  "sources": "https://github.com/wwwouaiebe/SimpleESDoc",
+  "homepage": "https://github.com/wwwouaiebe/SimpleESDoc#readme"
 }

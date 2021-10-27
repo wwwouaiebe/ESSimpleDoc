@@ -83,7 +83,8 @@ class LinkBuilder {
 			Number : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number',
 			String : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String',
 			Promise : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
-			Function : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function'
+			Function : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function',
+			HTMLElement: 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement'
 		}
 	);
 
@@ -222,6 +223,10 @@ class LinkBuilder {
 		const mdnLink = this.#mdnLinks [ type ];
 		if ( mdnLink ) {
 			return `<a href="${mdnLink}">${type}</a>`;
+		}
+		const variableLink = this.#variablesLinks.get ( type );
+		if ( variableLink ) {
+			return `<a href="${variableLink}">${type}</a>`;
 		}
 		return type;
 	}

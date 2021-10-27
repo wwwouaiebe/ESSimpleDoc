@@ -300,8 +300,8 @@ class docsValidator {
 		classesDocs?.forEach ( classDoc => this.#validateClassDoc ( classDoc ) );
 		variablesDocs?.forEach ( variableDoc => this.#validateVariableDoc ( variableDoc ) );
 
-		console.error ( `${this.#errorsCounter} errors found` );
-		console.error ( `${this.#warningsCounter} warnings found` );
+		console.error ( `\n\t${this.#errorsCounter} errors found` );
+		console.error ( `\n\t${this.#warningsCounter} warnings found` );
 	}
 
 }
