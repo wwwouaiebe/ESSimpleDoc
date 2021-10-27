@@ -111,12 +111,12 @@ class CommentsDocBuilder {
 	@param {String} desc the string to clean
 	@return {?String} The cleaned string or null when the cleaned string is empty
 	*/
-	
+
 	#cleanDesc ( desc ) {
 		const tmpDesc = this.#capitalizeFirstLetter ( desc.trim ( ) );
 		return '' === tmpDesc ? null : tmpDesc;
 	}
-	
+
 	/**
 	This method build a TypeDescription from the words found in a comment tags
 	@param {Array.<String>} words The words used to build the TypeDescription

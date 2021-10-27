@@ -1,15 +1,17 @@
 {
-   "type": "module",
-   "name": "simpleesdoc",
+  "type": "module",
+  "name": "simpleesdoc",
+  "main": "index.js",
+  "bin": "./index.js", 
   "version": "1.0.0-dev",
   "devDependencies": {
-    "@babel/eslint-parser": "^7.15.8",
-    "eslint": "^8.0.1",
-    "grunt": "^1.4.1",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-eslint": "^24.0.0"
+    "@babel/eslint-parser": "latest",
+    "eslint": "latest",
+    "grunt": "latest",
+    "grunt-contrib-copy": "latest",
+    "grunt-eslint": "latest"
   },
   "dependencies": {
-    "@babel/parser": "^7.15.8"
+    "@babel/parser": "latest"
   }
 }
