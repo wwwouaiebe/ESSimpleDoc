@@ -84,7 +84,7 @@ class LinkBuilder {
 			String : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String',
 			Promise : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
 			Function : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function',
-			HTMLElement: 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement'
+			HTMLElement : 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement'
 		}
 	);
 
@@ -216,9 +216,9 @@ class LinkBuilder {
 	*/
 
 	#getTypeLink ( type, rootPath ) {
-		if ( 'constructor' === type) {
+		if ( 'constructor' === type ) {
 			return type;
-		};
+		}
 		const classLink = this.#classesLinks.get ( type );
 		if ( classLink ) {
 			return `<a href="${rootPath + classLink}">${type}</a>`;

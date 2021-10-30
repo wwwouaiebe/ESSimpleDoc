@@ -180,9 +180,15 @@ class AppLoader {
 				if ( '--help' === arg ) {
 					console.error ( '\n\t\x1b[36m--help\x1b[0m : this help\n' );
 					console.error ( '\t\x1b[36m--in\x1b[0m : the path to the directory where the sources are located\n' );
-					console.error ( '\t\x1b[36m--out\x1b[0m : the path to the directory where the documentation have to be generated\n' );
+					console.error (
+						'\t\x1b[36m--out\x1b[0m : the path to the directory where' +
+						' the documentation have to be generated\n'
+					);
 					console.error ( '\t\x1b[36m--validate\x1b[0m : when present, the documentation is validated\n' );
-					console.error ( '\t\x1b[36m--launch\x1b[0m : when present, the documentation will be opened in the browser at the end of the process\n' );
+					console.error (
+						'\t\x1b[36m--launch\x1b[0m : when present, the documentation will' +
+						' be opened in the browser at the end of the process\n'
+					);
 					process.exit ( 0 );
 				}
 			}

@@ -33,6 +33,13 @@ Build the html page for a class
 class ClassHtmlBuilder {
 
 	/**
+	The name of the class currently treated
+	@type {String}
+	*/
+
+	#className;
+
+	/**
 	The html with the class documentation
 	@type {String}
 	*/
@@ -142,6 +149,10 @@ class ClassHtmlBuilder {
 		// # flag
 		const namePrefix = methodOrPropertyDoc.private ? '#' : '';
 
+		// method name
+		const methodName =
+			'constructor' === methodOrPropertyDoc.name ? `<span>new</span> ${this.#className}` : methodOrPropertyDoc.name;
+
 		// params
 		const paramsPostfix =
 			'method' === methodOrPropertyDoc.isA && 0 === getSetPrefix.length
@@ -164,8 +175,7 @@ class ClassHtmlBuilder {
 		this.#html += `<div class="${cssClassName}">`;
 		this.#html +=
 			`<h3>${readOnlyPrefix}${asyncPrefix}${staticPrefix}${getSetPrefix}${namePrefix}` +
-			`${methodOrPropertyDoc.name}` +
-			`${paramsPostfix}${typePostfix}</h3>`;
+			`${methodName}${paramsPostfix}${typePostfix}</h3>`;
 	}
 
 	/**
@@ -254,8 +264,11 @@ class ClassHtmlBuilder {
 
 	build ( classDoc ) {
 
-		// saving rootPath
+		// saving rootPath...
 		this.#rootPath = classDoc.rootPath;
+
+		// ... and className
+		this.#className = classDoc.name;
 
 		// start html build
 		this.#html =
