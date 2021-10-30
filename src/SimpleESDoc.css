@@ -72,7 +72,13 @@ nav > div
 
 nav > div ~ ul 
 {
-	display : none;
+	position : absolute;
+	top : 1.5cm;
+	left : 1cm;
+	width: 0;
+	/*height: 0;*/
+	transform : scale(0);
+	transform-origin: top left;
 }
 
 nav > div ~ ul > li
@@ -81,15 +87,11 @@ nav > div ~ ul > li
 	padding-right : 0.5cm;
 }
 
-
 nav > div#sourcesNav:hover ~ ul#sourcesNavList,
 nav > div#variablesNav:hover ~ ul#variablesNavList,
 nav > div#classesNav:hover ~ ul#classesNavList,
 nav > div ~ ul:hover
 {
-	position : absolute;
-	top : 1.5cm;
-	left : 1cm;
 	width: calc(100vw - 2cm);
 	display : block;
 	padding : 1cm;
@@ -97,6 +99,9 @@ nav > div ~ ul:hover
 	background-color : lightgrey;
 	border-bottom-style : solid;
 	border-bottom-width : 0.1mm;
+	transform : scale(1);
+	transform-origin: top left;
+	transition: transform 0.5s ease-out;
 }
 
 h1 

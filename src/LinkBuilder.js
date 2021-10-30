@@ -216,6 +216,9 @@ class LinkBuilder {
 	*/
 
 	#getTypeLink ( type, rootPath ) {
+		if ( 'constructor' === type) {
+			return type;
+		};
 		const classLink = this.#classesLinks.get ( type );
 		if ( classLink ) {
 			return `<a href="${rootPath + classLink}">${type}</a>`;
