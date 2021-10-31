@@ -189,12 +189,19 @@ class ClassHtmlBuilder {
 		this.#buildMethodOrPropertyHeader ( methodOrPropertyDoc );
 
 		// description
-		const desc =
+		let desc =
 			methodOrPropertyDoc?.commentsDoc?.desc
 				?
 				theLinkBuilder.getDescLink ( methodOrPropertyDoc.commentsDoc.desc, this.#rootPath )
 				:
 				' ...No description provided. Coming soon?';
+
+		if ( 'set' === methodOrPropertyDoc.kind ) {
+			const getter = this.#methodsOrPropertiesDoc.find (
+				method => 'get' === method.kind && methodOrPropertyDoc.name === method.name
+			);
+			desc = getter && getter?.commentsDoc?.desc ? '' /* theLinkBuilder.getDescLink ( getter.commentsDoc.desc)*/ : desc;
+		}
 
 		this.#html += `<div>${desc}</div>`;
 

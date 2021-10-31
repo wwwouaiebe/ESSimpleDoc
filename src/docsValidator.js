@@ -54,7 +54,7 @@ class docsValidator {
 	@type {String}
 	*/
 
-	#currentClass;
+	#currentClassDoc;
 
 	/**
 	The rules to apply
@@ -72,7 +72,7 @@ class docsValidator {
 		},
 		commonRules : {
 			dontHaveDescription : {
-				rule : doc => ! doc?.commentsDoc?.desc || '' === doc.commentsDoc.desc,
+				rule : doc => ! doc?.commentsDoc?.desc && 'set' !== doc.kind,
 				errorLevel : 'error',
 				ruleMessage : 'Missing description'
 			}
@@ -187,7 +187,45 @@ class docsValidator {
 				rule : methodOrPropertyDoc => 'set' === methodOrPropertyDoc.kind && methodOrPropertyDoc?.commentsDoc?.type,
 				errorLevel : 'warning',
 				ruleMessage : 'Setter with @type tag'
+			},
+			setterHaveGetterAndDoc : {
+				rule : methodOrPropertyDoc => {
+					if ( 'set' !== methodOrPropertyDoc.kind ) {
+						return false;
+					}
+					const getter = this.#currentClassDoc.methodsAndProperties.find (
+						methodOrProperty => 'get' === methodOrProperty.kind &&
+							methodOrPropertyDoc.name === methodOrProperty.name &&
+							methodOrPropertyDoc.commentsDoc
+					);
+					if ( getter ) {
+						return true;
+					}
+
+					return false;
+				},
+				errorLevel : 'error',
+				ruleMessage : 'Getter and Setter have documentation'
+			},
+			setterDontHaveGetterAndDesc : {
+				rule : methodOrPropertyDoc => {
+					if ( 'set' !== methodOrPropertyDoc.kind ) {
+						return false;
+					}
+					const getter = this.#currentClassDoc.methodsAndProperties.find (
+						methodOrProperty => 'get' === methodOrProperty.kind &&
+							methodOrPropertyDoc.name === methodOrProperty.name
+					);
+					if ( ! getter && ! methodOrPropertyDoc?.commentsDoc?.desc ) {
+						return true;
+					}
+
+					return false;
+				},
+				errorLevel : 'error',
+				ruleMessage : 'Setter don\'t have getter and don\'t have description'
 			}
+
 		}
 	}
 
@@ -207,10 +245,11 @@ class docsValidator {
 			this.#errorsCounter ++;
 			color = '\x1b[31m';
 		}
+		const className = this?.#currentClassDoc?.name ? this.#currentClassDoc.name + '.' : '';
 		const methodPrefix = doc.private ? '#' : '';
 		console.error (
 			`\t${color}${rule.errorLevel}\x1b[0m '${rule.ruleMessage}' for ` +
-			`${this.#currentClass + methodPrefix + doc.name} in file ` +
+			`${className + methodPrefix + doc.name} in file ` +
 			`${color}${doc.file}\x1b[0m at line ${color}${doc.line}\x1b[0m)`
 		);
 	}
@@ -261,7 +300,7 @@ class docsValidator {
 	*/
 
 	#validateClassDoc ( classDoc ) {
-		this.#currentClass = classDoc.name + '.';
+		this.#currentClassDoc = classDoc;
 		for ( const rule in this.#rules.commonRules ) {
 			this.#validateDoc ( this.#rules.commonRules [ rule ], classDoc );
 		}
@@ -273,7 +312,7 @@ class docsValidator {
 				methodOrPropertyDoc => this.#validateMethodOrPropertyDoc ( methodOrPropertyDoc )
 			);
 		}
-		this.#currentClass = '';
+		this.#currentClassDoc = null;
 	}
 
 	/**
@@ -295,7 +334,7 @@ class docsValidator {
 		this.#classNames.clear ( );
 		this.#errorsCounter = 0;
 		this.#warningsCounter = 0;
-		this.#currentClass = '';
+		this.#currentClassDoc = null;
 
 		classesDocs?.forEach ( classDoc => this.#validateClassDoc ( classDoc ) );
 		variablesDocs?.forEach ( variableDoc => this.#validateVariableDoc ( variableDoc ) );
