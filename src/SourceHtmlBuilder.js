@@ -31,6 +31,38 @@ Build the sources HTML pages
 
 class SourceHtmlBuilder {
 
+	#commentCounter = 0;
+
+	#countWords ( text, word ) {
+		let counter = 0;
+		let position = text.indexOf ( word );
+
+		while (-1 !== position) {
+			counter ++;
+			position = text.indexOf ( word, position + 1 );
+		}			
+		
+		return counter;
+	}
+
+	#parseLine ( line ) {
+		let parsedLine = line;
+		if ( 0 !== this.#commentCounter ) {
+			parsedLine = '<span class="codeComments">' + parsedLine;
+		}
+		this.#commentCounter = this.#commentCounter +
+			this.#countWords ( parsedLine, '/*' ) -
+			this.#countWords ( parsedLine, '*/' );
+		parsedLine = parsedLine.replaceAll ( '/*' , '<span class="codeComments">/*' ).replaceAll ( '*/' , '*/</span>' );
+		if ( -1 !== parsedLine.indexOf ( '//') ) {
+			parsedLine = parsedLine.replace ( '//', '<span class="codeComments">//' ) + '</span>';
+		}
+		if ( 0 !== this.#commentCounter ) {
+			parsedLine = parsedLine + '</span>';
+		}
+		return parsedLine;
+	}
+
 	/**
 	The constructor
 	*/
@@ -80,17 +112,16 @@ class SourceHtmlBuilder {
 				const strLineCounter = String ( lineCounter ).padStart ( 5, '_' );
 
 				const htmlLine = line
-
-					// replacing tabs and white space with nbsp
-					.replaceAll ( '\t', '&nbsp;&nbsp;&nbsp;&nbsp;' )
-					.replaceAll ( ' ', '&nbsp;' )
-
+					.replaceAll ( '\t', '    ' )
+					
 					// replacing < and >
-					.replaceAll ( '<', '&lt;' )
-					.replaceAll ( '>', '&gt;' );
-
+					.replaceAll ( /\u003c/g, '&lt;' )
+					.replaceAll ( /\u003e/g, '&gt;' )
+					.replaceAll ( /\u0022/g, '&quot;' )
+					.replaceAll ( /\u0027/g, '&apos;' )
+					
 				html +=
-					`<tr><td><a id="L${strLineCounter}">${lineCounter}</a></td><td>${htmlLine}</td></tr>`;
+					`<tr><td><a id="L${strLineCounter}">${lineCounter}</a></td><td><pre>${this.#parseLine ( htmlLine )}</pre></td></tr>`;
 			}
 		);
 
