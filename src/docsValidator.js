@@ -239,7 +239,7 @@ class docsValidator {
 		let color = '';
 		if ( 'warning' === rule.errorLevel ) {
 			this.#warningsCounter ++;
-			color = '\x1b[36m';
+			color = '\x1b[96m';
 		}
 		else {
 			this.#errorsCounter ++;

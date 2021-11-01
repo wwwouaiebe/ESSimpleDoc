@@ -29,6 +29,20 @@ Build the nav and footer HTMLElements for all the HTML pages
 */
 
 class NavHtmlBuilder {
+	
+	/**
+	The path between the html file and theConfig.docDir ( something like '../../../', depending of the folders tree )
+	@type {String}
+	*/
+
+	#rootPath;
+
+	/**
+	The navigation html string
+	@type {String}
+	*/
+	
+	#navHtml;
 
 	/**
 	The constructor
@@ -36,6 +50,24 @@ class NavHtmlBuilder {
 
 	constructor ( ) {
 		Object.freeze ( this );
+	}
+	
+	/**
+	Add the li html elements to the nav html string for files, variables and classes
+	@param {Array.<Array.<String>>} links The links to add
+	*/
+	
+	#buildList ( links ) {
+		let firstLetter = '';
+		links.forEach (
+			link => {
+				if ( firstLetter !== link [ 0 ] [ 0 ].toUpperCase ( ) ) {
+					firstLetter = link [ 0 ] [ 0 ].toUpperCase ( );
+					this.#navHtml += `<li class="navLetter">${firstLetter}</li>`;
+				}
+				this.#navHtml += `<li><a href="${this.#rootPath + link [ 1 ]}">${link [ 0 ]}</a> </li>`;
+			}
+		);
 	}
 
 	/**
@@ -46,31 +78,28 @@ class NavHtmlBuilder {
 	*/
 
 	build ( rootPath ) {
+		
+		this.#rootPath = rootPath;
+		
+		this.#navHtml = '<nav>';
+		
+		this.#navHtml +='<div id="sourcesNav">Sources</div><ul id="sourcesNavList">';
+		this.#buildList ( theLinkBuilder.sourcesLinks );
+		this.#navHtml += '</ul>';
 
-		let navHtml = '<nav><div id="sourcesNav">Sources</div><ul id="sourcesNavList">';
-		theLinkBuilder.sourcesLinks.forEach (
-			sourceLink => {
-				navHtml += `<li><a href="${rootPath + sourceLink [ 1 ]}">${sourceLink [ 0 ]}</a> </li>`;
-			}
-		);
-		navHtml += '</ul>';
+		this.#navHtml += '<div id="variablesNav">Globals</div><ul id="variablesNavList">';
+		this.#buildList ( theLinkBuilder.variablesLinks );
+		this.#navHtml += '</ul>';
 
-		navHtml += '<div id="variablesNav">Globals</div><ul id="variablesNavList">';
-		theLinkBuilder.variablesLinks.forEach (
-			variableLink => {
-				navHtml += `<li><a href="${rootPath + variableLink [ 1 ]}">${variableLink [ 0 ]}</a> </li>`;
-			}
-		);
-		navHtml += '</ul>';
-
-		navHtml += '<div id="classesNav">Classes</div><ul id="classesNavList">';
-		theLinkBuilder.classesLinks.forEach (
-			classLink => {
-				navHtml += `<li><a href="${rootPath + classLink [ 1 ]}">${classLink [ 0 ]}</a> </li>`;
-			}
-		);
-		navHtml += '</ul><div id="showPrivateNav" title="Show or hide private properties and methods">#</div></nav>';
-		return navHtml;
+		this.#navHtml += '<div id="classesNav">Classes</div><ul id="classesNavList">';
+		this.#buildList ( theLinkBuilder.classesLinks );
+		this.#navHtml += '</ul>';
+		
+		this.#navHtml += '<div id="showPrivateNav" title="Show or hide private properties and methods">#</div>';
+		
+		this.#navHtml += '</nav>';
+		
+		return this.#navHtml;
 	}
 
 	/**

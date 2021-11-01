@@ -116,6 +116,13 @@ nav > div ~ ul > li
 	padding-right : 0.5cm;
 }
 
+nav  > div ~ ul > li.navLetter
+{
+	display : block;
+	padding-top : 3mm;
+	padding-bottom : 3mm;
+}
+
 nav > div#sourcesNav:hover ~ ul#sourcesNavList,
 nav > div#variablesNav:hover ~ ul#variablesNavList,
 nav > div#classesNav:hover ~ ul#classesNavList,
@@ -132,6 +139,7 @@ nav > div ~ ul:hover
 	transform-origin: top left;
 	transition: transform 0.5s ease-out;
 }
+
 
 h1 
 {
