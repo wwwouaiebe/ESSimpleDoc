@@ -218,12 +218,26 @@ table.srcCode tr > td:first-child
 	padding-right: 1cm;
 }
 
-.codeComments
+.codeComments,
+.codeComments > .jsKeyword,
+.codeComments > .classLink,
+.codeComments > .variableLink
 {
 	color : green;
 	font-weight: normal;
 }
+.jsKeyword {
+	color : blue;
+}
 
+.classLink {
+	color: red;
+}
+
+.variableLink
+{
+	color: darkred;
+}
 .hash,
 .hash ~ td
 {
