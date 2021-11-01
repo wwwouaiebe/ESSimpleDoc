@@ -25,6 +25,7 @@ ul
 }
 
 /*end reset*/
+
 body
 {
 	font-family: sans-serif;
@@ -34,6 +35,7 @@ body
 	margin-left : auto;
 	margin-right : auto;
 }
+
 nav
 {
 	position : absolute;
@@ -51,23 +53,50 @@ nav > div
 	height: 1.5cm;
 	width: 3cm;
 	text-align: center;
+	border-style: solid;
+	border-width: 0.5mm;
+	cursor: pointer;
 }
+
 #sourcesNav 
 {
 	background-color : blue;
+	border-color : blue;
 	left : 1cm;
 }
 
 #variablesNav 
 {
 	background-color : green;
+	border-color : green;
 	left : 4cm;	
 }
 
 #classesNav
 {
 	background-color : red;
+	border-color : red;
 	left : 7cm;
+}
+
+#showPrivateNav
+{
+	color : black;
+	left : 10cm;
+	width: 2cm;
+	display: none;
+}
+
+body.havePrivateButton #showPrivateNav {
+	display: inherit;
+}
+
+#showPrivateNav::before {
+	content : "✔️"
+}
+
+body.showPrivate #showPrivateNav::before {
+	content : "❌"
 }
 
 nav > div ~ ul 
@@ -168,18 +197,14 @@ th
 
 .private 
 {
-	//display: none;
+	display: none;
 }
 
-div.private 
+body.showPrivate .private 
 {
-	margin-left : 0;
+	display : inherit;
 }
 
-div.public 
-{
-	margin-left : 0;
-}
 div.srcCode 
 {
 	margin-left : 1cm;

@@ -69,7 +69,7 @@ class NavHtmlBuilder {
 				navHtml += `<li><a href="${rootPath + classLink [ 1 ]}">${classLink [ 0 ]}</a> </li>`;
 			}
 		);
-		navHtml += '</ul></nav>';
+		navHtml += '</ul><div id="showPrivateNav" title="Show or hide private properties and methods">#</div></nav>';
 		return navHtml;
 	}
 
