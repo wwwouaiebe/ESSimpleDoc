@@ -177,22 +177,44 @@ table
 	margin-left : 6cm;
 }
 
-table
+table.params
 {
 	table-layout:auto;
 	border-collapse: collapse;
 }
 
-th,
-td
+table.params tr > th,
+table.params tr > td
  {
   border: 1px solid;
   padding : 0.1cm;
 }
 
-th
+table.params tr > th
 {
 	background-color: lightgray;
+}
+
+table.srcCode {
+	font-family : monospace;
+	margin-left : 0;
+	border-style:solid;
+	border-width: 0.5mm;
+	width: 100%;
+	padding: 0.5cm;
+}
+
+table.srcCode tr > td:first-child
+{
+	color : gray;
+	text-align: right;
+	padding-right: 1cm;
+}
+
+.hash,
+.hash ~ td
+{
+	background-color : yellow;
 }
 
 .private 
@@ -205,17 +227,6 @@ body.showPrivate .private
 	display : inherit;
 }
 
-div.srcCode 
-{
-	margin-left : 1cm;
-	font-family : monospace;
-	overflow: clip;
-}
-
-.hash
-{
-	background-color : yellow;
-}
 footer
 {
 	margin-top : 1cm;

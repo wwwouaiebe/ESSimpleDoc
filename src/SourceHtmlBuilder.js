@@ -68,6 +68,8 @@ class SourceHtmlBuilder {
 
 		html += `<h1>File : ${fileName}</h1>`;
 
+		html += '<table class="srcCode">';
+
 		// body
 		let lineCounter = 0;
 
@@ -87,12 +89,12 @@ class SourceHtmlBuilder {
 					.replaceAll ( '<', '&lt;' )
 					.replaceAll ( '>', '&gt;' );
 
-				// Adding line number
 				html +=
-					`<div class="srcCode"><a id="L${strLineCounter}">${strLineCounter}</a>` +
-					`&nbsp;&nbsp;&nbsp;&nbsp;${htmlLine}</div>`;
+					`<tr><td><a id="L${strLineCounter}">${lineCounter}</a></td><td>${htmlLine}</td></tr>`;
 			}
 		);
+
+		html += '</table>';
 
 		// footer
 		html += navHtmlBuilder.footer;

@@ -77,7 +77,7 @@ class ClassHtmlBuilder {
 
 	#buildParamsTable ( methodOrPropertyDoc ) {
 		this.#html += '<h4>Parameters</h4>';
-		this.#html += '<table><tr><th>Name</th> <th>Type</th> <th>Description</th></tr>';
+		this.#html += '<table class="params"><tr><th>Name</th> <th>Type</th> <th>Description</th></tr>';
 		methodOrPropertyDoc.params.forEach (
 			param => {
 				const paramDoc = methodOrPropertyDoc?.commentsDoc?.params?.find ( first => first.name === param );
@@ -280,7 +280,8 @@ class ClassHtmlBuilder {
 		// start html build
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}SimpleESDoc.css"></head><body class='havePrivateButton'>`;
+			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}SimpleESDoc.css"></head>` +
+			'<body class=\'havePrivateButton\'>';
 
 		// <nav> tag build
 		const navHtmlBuilder = new NavHtmlBuilder ( );
@@ -385,9 +386,11 @@ class ClassHtmlBuilder {
 
 		// footer
 		this.#html += navHtmlBuilder.footer;
-		this.#html += '<script>' +
-		`document.getElementById('showPrivateNav').addEventListener('click',()=>document.body.classList.toggle('showPrivate'))` +
-		'</script>';
+		this.#html +=
+			'<script>' +
+			'document.getElementById(\'showPrivateNav\')' +
+			'.addEventListener(\'click\',()=>document.body.classList.toggle(\'showPrivate\'))' +
+			'</script>';
 		this.#html += '</body></html>';
 
 		// writting html to file
