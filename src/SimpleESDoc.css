@@ -62,27 +62,34 @@ nav > div
 {
 	background-color : blue;
 	border-color : blue;
-	left : 1cm;
+	left : 1.5cm;
+}
+
+#homeNav
+{
+	color : black;
+	left:0;
+	width: 1.5cm;
 }
 
 #variablesNav 
 {
 	background-color : green;
 	border-color : green;
-	left : 4cm;	
+	left : 4.5cm;	
 }
 
 #classesNav
 {
 	background-color : red;
 	border-color : red;
-	left : 7cm;
+	left : 7.5cm;
 }
 
 #showPrivateNav
 {
 	color : black;
-	left : 10cm;
+	left : 10.5cm;
 	width: 2cm;
 	display: none;
 }

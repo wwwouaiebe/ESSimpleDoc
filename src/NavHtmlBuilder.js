@@ -83,6 +83,8 @@ class NavHtmlBuilder {
 		
 		this.#navHtml = '<nav>';
 		
+		this.#navHtml += `<div id="homeNav"><a href="${this.#rootPath+'index.html'}">🏠</a></div>`;
+		
 		this.#navHtml +='<div id="sourcesNav">Sources</div><ul id="sourcesNavList">';
 		this.#buildList ( theLinkBuilder.sourcesLinks );
 		this.#navHtml += '</ul>';
