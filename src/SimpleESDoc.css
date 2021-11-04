@@ -38,7 +38,7 @@ body
 
 nav
 {
-	position : absolute;
+	position : fixed;
 	top : 0;
 	left : 0;
 }
@@ -48,10 +48,10 @@ nav > div
 	position : absolute;
 	top : 0;
 	margin-left : 0;
-	padding: 0.5cm;
+	padding: 0.25cm;
 	color : white;
-	height: 1.5cm;
-	width: 3cm;
+	height: 1cm;
+	width: 2cm;
 	text-align: center;
 	border-style: solid;
 	border-width: 0.5mm;
@@ -62,34 +62,34 @@ nav > div
 {
 	background-color : blue;
 	border-color : blue;
-	left : 1.5cm;
+	left : 1cm;
 }
 
 #homeNav
 {
 	color : black;
 	left:0;
-	width: 1.5cm;
+	width: 1cm;
 }
 
 #variablesNav 
 {
 	background-color : green;
 	border-color : green;
-	left : 4.5cm;	
+	left : 3cm;	
 }
 
 #classesNav
 {
 	background-color : red;
 	border-color : red;
-	left : 7.5cm;
+	left : 5cm;
 }
 
 #showPrivateNav
 {
 	color : black;
-	left : 10.5cm;
+	left : 7cm;
 	width: 2cm;
 	display: none;
 }
@@ -109,10 +109,11 @@ body.showPrivate #showPrivateNav::before {
 nav > div ~ ul 
 {
 	position : absolute;
-	top : 1.5cm;
+	top : 1cm;
 	left : 1cm;
 	width: 0;
-	/*height: 0;*/
+	max-height: 80vh;
+	overflow: scroll;
 	transform : scale(0);
 	transform-origin: top left;
 }
@@ -126,8 +127,13 @@ nav > div ~ ul > li
 nav  > div ~ ul > li.navLetter
 {
 	display : block;
-	padding-top : 3mm;
-	padding-bottom : 3mm;
+	margin-top : 3mm;
+	margin-bottom : 3mm;
+	padding-top : 1mm;
+	padding-bottom : 1mm;
+	padding-left : 1cm;
+	background-color: gray;
+	color: white;
 }
 
 nav > div#sourcesNav:hover ~ ul#sourcesNavList,
