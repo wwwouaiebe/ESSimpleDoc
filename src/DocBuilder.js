@@ -129,10 +129,20 @@ class DocBuilder {
 			astNode => {
 				switch ( astNode.type ) {
 				case 'ClassDeclaration' :
-					this.#classesDocs.push ( this.#classDocBuilder.build ( astNode, sourceFileName ) );
+					{
+						const classDoc = this.#classDocBuilder.build ( astNode, sourceFileName );
+						if ( ! classDoc?.commentsDoc?.ignore ) {
+							this.#classesDocs.push ( classDoc );
+						}
+					}
 					break;
 				case 'VariableDeclaration' :
-					this.#variablesDocs.push ( this.#variableDocBuilder.build ( astNode, sourceFileName ) );
+					{
+						const variableDoc = this.#variableDocBuilder.build ( astNode, sourceFileName );
+						if ( ! variableDoc?.commentsDoc?.ignore ) {
+							this.#variablesDocs.push ( variableDoc );
+						}
+					}
 					break;
 				default :
 					break;

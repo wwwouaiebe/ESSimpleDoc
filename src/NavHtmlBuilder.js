@@ -29,7 +29,7 @@ Build the nav and footer HTMLElements for all the HTML pages
 */
 
 class NavHtmlBuilder {
-	
+
 	/**
 	The path between the html file and theConfig.docDir ( something like '../../../', depending of the folders tree )
 	@type {String}
@@ -41,7 +41,7 @@ class NavHtmlBuilder {
 	The navigation html string
 	@type {String}
 	*/
-	
+
 	#navHtml;
 
 	/**
@@ -51,12 +51,12 @@ class NavHtmlBuilder {
 	constructor ( ) {
 		Object.freeze ( this );
 	}
-	
+
 	/**
 	Add the li html elements to the nav html string for files, variables and classes
 	@param {Array.<Array.<String>>} links The links to add
 	*/
-	
+
 	#buildList ( links ) {
 		let firstLetter = '';
 		links.forEach (
@@ -78,14 +78,14 @@ class NavHtmlBuilder {
 	*/
 
 	build ( rootPath ) {
-		
+
 		this.#rootPath = rootPath;
-		
+
 		this.#navHtml = '<nav>';
-		
-		this.#navHtml += `<div id="homeNav"><a href="${this.#rootPath+'index.html'}">🏠</a></div>`;
-		
-		this.#navHtml +='<div id="sourcesNav">Sources</div><ul id="sourcesNavList">';
+
+		this.#navHtml += `<div id="homeNav"><a href="${this.#rootPath + 'index.html'}">🏠</a></div>`;
+
+		this.#navHtml += '<div id="sourcesNav">Sources</div><ul id="sourcesNavList">';
 		this.#buildList ( theLinkBuilder.sourcesLinks );
 		this.#navHtml += '</ul>';
 
@@ -96,11 +96,11 @@ class NavHtmlBuilder {
 		this.#navHtml += '<div id="classesNav">Classes</div><ul id="classesNavList">';
 		this.#buildList ( theLinkBuilder.classesLinks );
 		this.#navHtml += '</ul>';
-		
+
 		this.#navHtml += '<div id="showPrivateNav" title="Show or hide private properties and methods">#</div>';
-		
+
 		this.#navHtml += '</nav>';
-		
+
 		return this.#navHtml;
 	}
 

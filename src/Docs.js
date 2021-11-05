@@ -198,6 +198,13 @@ class CommentsDoc {
 	returns = null;
 
 	/**
+	A flag indicating that the class/method/property/variable have to be ignored
+	@type {Boolean}
+	*/
+
+	ignore = null;
+
+	/**
 	The constructor
 	*/
 

@@ -151,7 +151,7 @@ class ClassDocBuilder {
 		classDeclarationNode.body.body.forEach (
 			methodOrPropertyNode => {
 				const methodOrPropertyDoc = this.#buildMethodOrPropertyDoc ( methodOrPropertyNode, this.#fileName );
-				if ( methodOrPropertyDoc.isA ) {
+				if ( methodOrPropertyDoc.isA && ! methodOrPropertyDoc?.commentsDoc?.ignore ) {
 					classDoc.methodsAndProperties = ( classDoc.methodsAndProperties ?? [] );
 					classDoc.methodsAndProperties.push ( methodOrPropertyDoc );
 				}

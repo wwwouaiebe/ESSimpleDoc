@@ -169,6 +169,9 @@ class CommentsDocBuilder {
 		case '@returns' :
 			this.#commentsDoc.returns = this.#getTypeDescription ( words, false );
 			break;
+		case '@ignore' :
+			this.#commentsDoc.ignore = true;
+			break;
 		default :
 			if ( '@' !== words [ 0 ] [ 0 ] ) {
 				this.#commentsDoc.desc = this.#cleanDesc ( commentTag );
