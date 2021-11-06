@@ -1,6 +1,6 @@
 
 /**
-GetterHaveReturn test class. This class must return 1 error
+GetterHaveReturn test class. This class must return 1 warning
 */
 
 class GetterHaveReturn {

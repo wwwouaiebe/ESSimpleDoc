@@ -1,5 +1,5 @@
 /**
-PropertyHaveReturn test class. This class must return 1 error
+PropertyHaveReturn test class. This class must return 1 warning
 */
 
 
@@ -7,15 +7,15 @@ class PropertyHaveReturn {
 
 	/**
 	Property have return
-	@type {number}
-	@return {number} Bad return
+	@type {Number}
+	@return {Number} Bad return
 	*/
 
 	propertyHaveReturn;
 
 	/**
 	Property don't have return
-	@type {number}
+	@type {Number}
 	*/
 
 	propertyDontHaveReturn;	

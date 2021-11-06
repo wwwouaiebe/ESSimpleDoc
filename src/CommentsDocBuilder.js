@@ -113,29 +113,45 @@ class CommentsDocBuilder {
 	*/
 
 	#cleanDesc ( desc ) {
-		const tmpDesc = this.#capitalizeFirstLetter ( desc );
-		return '' === tmpDesc ? null : tmpDesc;
+		return this.#capitalizeFirstLetter ( desc );
 	}
 
 	/**
 	This method build a TypeDescription from the words found in a comment tags
-	@param {Array.<String>} words The words used to build the TypeDescription
-	@param {boolean} haveName A flag indicating that words contains also a name to add in the TypeDescription
+	@param {String} commentTag The comment tag
+	@param {boolean} haveName A flag indicating that commentTag contains also a name to add in the TypeDescription
 	*/
 
-	#getTypeDescription ( words, haveName ) {
+	#getTypeDescription ( commentTag, haveName ) {
+		
 		const typeDescription = new TypeDescription ( );
-		if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
-			typeDescription.type = this.#parseType ( words [ 1 ] );
+
+		// removing tag and spaces or newline
+		let tmpCommentTag = commentTag.replace ( /@[a-z]*[ |\n]/, '' );
+
+		//Searching type
+		const type = commentTag.match ( /{.*}/ );
+		if ( type ) {
+			typeDescription.type = this.#parseType ( type [ 0 ] );
+			
+			// removing type and spaces or newline
+			tmpCommentTag = commentTag.substring ( commentTag.indexOf ( '}' ) + 1 ).replace ( /^[ |\n]/, '' );
 		}
 		if ( haveName ) {
-			typeDescription.name = words [ 2 ];
-			typeDescription.name = '' === typeDescription.name.trim ( ) ? null : typeDescription.name;
+			if ( tmpCommentTag.match ( /[a-zA-Z0-9]*[ |\n]/ ) ) {
+				typeDescription.name = tmpCommentTag.match ( /[a-zA-Z0-9]*[ |\n]/ ) [ 0 ].replace ( /[ |\n]/, '' );
+				
+				// removing name and spaces or newline
+				tmpCommentTag = tmpCommentTag.replace ( /[a-zA-Z0-9]*[ |\n]/, '' );
+			}
+			else {
+				typeDescription.name = tmpCommentTag;
+				tmpCommentTag = '';
+			}
 		}
-		for ( let counter = haveName ? 3 : 2; counter < words.length; counter ++ ) {
-			typeDescription.desc = ( typeDescription.desc ?? '' ) + words [ counter ] + ' ';
-		}
-		typeDescription.desc = this.#cleanDesc ( typeDescription.desc );
+
+		typeDescription.desc = this.#cleanDesc ( tmpCommentTag ).replace ( /[ |\n]$/, '' );
+		console.log ( typeDescription );
 		return Object.freeze ( typeDescription );
 	}
 
@@ -146,38 +162,35 @@ class CommentsDocBuilder {
 	*/
 
 	#parseCommentTag ( commentTag ) {
-		
 		if ( ! commentTag.startsWith ( '@' ) ) {
 			this.#commentsDoc.desc = this.#cleanDesc ( commentTag );
 			return;
 		}
-		else if ( commentTag.startsWith ( '@desc ' ) ) {
-			this.#commentsDoc.desc = this.#cleanDesc ( commentTag.replace ( '@desc ', '' ) );
-			return;
-		}
-		else if ( commentTag.startsWith ( '@classdesc ' ) ) {
-			this.#commentsDoc.desc = this.#cleanDesc ( commentTag.replace ( '@classdesc ', '' ) );
-			return;
-		}
-				
-		// Splitting the tag into words
-		const words = commentTag.replaceAll ( '\n', '' ).split ( ' ' );
-		switch ( words [ 0 ] ) {
+
+		const tag = commentTag.match ( /@[a-z]*/ ) [ 0 ];
+
+		switch ( tag ) {
+		case '@desc' :
+		case '@classdesc' :
+			this.#commentsDoc.desc = this.#cleanDesc ( commentTag.replace ( /@[a-z]*[\s|\n]/, '' ) );
+			break;
 		case '@type' :
-			if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
-				this.#commentsDoc.type = this.#parseType ( words [ 1 ] );
+			{
+				const type = commentTag.match ( /{.*}/ );
+				if ( type ) {
+					this.#commentsDoc.type = this.#parseType ( type [ 0 ] );
+				}
 			}
 			break;
 		case '@param' :
 			this.#commentsDoc.params = ( this.#commentsDoc.params ?? [] );
-			this.#commentsDoc.params.push ( this.#getTypeDescription ( words, true ) );
+			this.#commentsDoc.params.push ( this.#getTypeDescription ( commentTag, true ) );
 			break;
 		case '@return' :
 		case '@returns' :
-			this.#commentsDoc.returns = this.#getTypeDescription ( words, false );
+			this.#commentsDoc.returns = this.#getTypeDescription ( commentTag, false );
 			break;
 		case '@ignore' :
-			console.log ( 'ignore' );
 			this.#commentsDoc.ignore = true;
 			break;
 		default :
@@ -186,34 +199,28 @@ class CommentsDocBuilder {
 	}
 
 	/**
-	Parse a comment and extracts the desc, classdesc, type, param, return, returns JSDoc tags
+	Parse a comment and extracts the desc, classdesc, type, param, return, returns, ignore tags
 	@param {string} comment The comment to parse
 	*/
 
 	#parseComment ( comment ) {
 
 		// replacing Windows and Mac EOL with Unix EOL, tab with spaces and @ with a strange text surely not used
-		let tmpComment = comment
-			.replaceAll ( '\r\n', '\n' )
-			.replaceAll ( '\r', '\n' )
-			.replaceAll ( '\t', ' ' )
-			.replaceAll ( '@', '§§§@' );
+		// then spliting the comments at the strange text, so the comment is splitted, preserving the @
+		comment
+			.replaceAll ( '\r\n', '\n' ) // eol windows
+			.replaceAll ( '\r', '\n' ) // eol mac
+			.replaceAll ( '\t', ' ' ) // tab
+			.replaceAll ( /[ ]+/g, ' ' ) // multiple spaces
+			.replaceAll ( /[ ]*[\n][ ]*/g, '\n' ) // spaces + eol + spaces
+			.replaceAll ( '@', '§§§@' )
+			.replace ( /^\n/, '' )
+			.split ( '§§§' )
+			.forEach (
 
-		// removing multiple spaces
-		while ( tmpComment.includes ( '  ' ) ) {
-			tmpComment = tmpComment.replaceAll ( '  ', ' ' );
-		}
-		
-		// trim
-		tmpComment = tmpComment.trim ( );
-
-		// spliting the comments at the strange text, so the comment is splitted, preserving the @
-		tmpComment.split ( '§§§' ).forEach (
-
-			// and parsing each result
-			commentTag => { this.#parseCommentTag ( commentTag ); }
-		);
-
+				// and parsing each result
+				commentTag => { this.#parseCommentTag ( commentTag ); }
+			);
 	}
 
 	/**

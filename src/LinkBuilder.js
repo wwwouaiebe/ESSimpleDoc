@@ -22,6 +22,8 @@ Changes:
 Doc reviewed 20211021
 */
 
+import { marked } from 'marked';
+
 /**
 Store all the links  created from the source document and get the links completed with the path for others classes
 */
@@ -268,7 +270,7 @@ class LinkBuilder {
 		desc.split ( ' ' ).forEach (
 			word => returnDesc += this.#getTypeLink ( word, rootPath ) + ' '
 		);
-		return returnDesc.trimEnd ( );
+		return marked.parse ( returnDesc.trimEnd ( ) );
 	}
 }
 

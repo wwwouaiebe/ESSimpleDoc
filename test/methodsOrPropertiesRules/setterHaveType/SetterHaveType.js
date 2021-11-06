@@ -1,12 +1,12 @@
 /**
-SetterHaveType test class. This class must return 1 error
+SetterHaveType test class. This class must return 1 warning
 */
 
 class SetterHaveType { 
 
 	/**
 	Setter have type tag
-	@type {number}
+	@type {Number}
 	*/
 	
 	set setterHaveType ( param ) { console.log ( param );}

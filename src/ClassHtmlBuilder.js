@@ -82,7 +82,7 @@ class ClassHtmlBuilder {
 			param => {
 				const paramDoc = methodOrPropertyDoc?.commentsDoc?.params?.find ( first => first.name === param );
 				const paramType = paramDoc ? theLinkBuilder.getTypeLinks ( paramDoc.type, this.#rootPath ) : '';
-				const paramDesc = paramDoc ? paramDoc.desc : '';
+				const paramDesc = theLinkBuilder.getDescLink ( paramDoc ? paramDoc.desc : '', this.#rootPath );
 				this.#html += `<tr><td>${param}</td> <td>${paramType}</td> <td>${paramDesc}</td></tr>`;
 			}
 		);

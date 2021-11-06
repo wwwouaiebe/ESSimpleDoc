@@ -136,21 +136,21 @@ class TypeDescription {
 	@type {String}
 	*/
 
-	name = null;
+	name = '';
 
 	/**
 	The type of the param or return
 	@type {?String}
 	*/
 
-	type = null;
+	type = '';
 
 	/**
 	The description of the param or return
 	@type {?String}
 	*/
 
-	desc = null;
+	desc = '';
 
 	/**
 	The constructor

@@ -1,5 +1,5 @@
 /**
-ReturnDontHaveType test class. This class must return 4 errors
+ReturnDontHaveType test class. This class must return 4 errors 'Missing type for @return tag' and 3 errors 'Missing description for @return tag'
 */
 
 class ReturnDontHaveType {

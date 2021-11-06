@@ -1,13 +1,13 @@
 
 /**
-ConstructorHaveReturn test class. This class must return 1 error
+ConstructorHaveReturn test class. This class must return 1 warning
 */
 
 class ConstructorHaveReturn {
 	
 	/**
 	Constructor have return
-	@return {string} A constructor with a return value
+	@return {String} A constructor with a return value
 	*/
 	
 	constructor ( ) { }

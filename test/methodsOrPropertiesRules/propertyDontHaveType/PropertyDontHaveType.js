@@ -12,7 +12,7 @@ class PropertyDontHaveType {
 	
 	/**
 	Property have type
-	@type {number}
+	@type {Number}
 	*/
 	
 	propertyHaveType;

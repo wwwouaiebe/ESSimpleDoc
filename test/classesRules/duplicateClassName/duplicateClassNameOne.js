@@ -1,5 +1,5 @@
 /**
-Duplicate class name   This class must return 1 error
+Duplicate class name. This test must return 1 warning
 */
 
 class duplicateClassName {
