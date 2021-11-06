@@ -113,7 +113,7 @@ class CommentsDocBuilder {
 	*/
 
 	#cleanDesc ( desc ) {
-		const tmpDesc = this.#capitalizeFirstLetter ( desc.trim ( ) );
+		const tmpDesc = this.#capitalizeFirstLetter ( desc );
 		return '' === tmpDesc ? null : tmpDesc;
 	}
 
@@ -146,16 +146,23 @@ class CommentsDocBuilder {
 	*/
 
 	#parseCommentTag ( commentTag ) {
-
-		// Splitting the tag into words
-		const words = commentTag.split ( ' ' );
-		switch ( words [ 0 ] ) {
-		case '@desc' :
+		
+		if ( ! commentTag.startsWith ( '@' ) ) {
+			this.#commentsDoc.desc = this.#cleanDesc ( commentTag );
+			return;
+		}
+		else if ( commentTag.startsWith ( '@desc ' ) ) {
 			this.#commentsDoc.desc = this.#cleanDesc ( commentTag.replace ( '@desc ', '' ) );
-			break;
-		case '@classdesc' :
+			return;
+		}
+		else if ( commentTag.startsWith ( '@classdesc ' ) ) {
 			this.#commentsDoc.desc = this.#cleanDesc ( commentTag.replace ( '@classdesc ', '' ) );
-			break;
+			return;
+		}
+				
+		// Splitting the tag into words
+		const words = commentTag.replaceAll ( '\n', '' ).split ( ' ' );
+		switch ( words [ 0 ] ) {
 		case '@type' :
 			if ( '{' === words [ 1 ] [ 0 ] && words [ 1 ].endsWith ( '}' ) ) {
 				this.#commentsDoc.type = this.#parseType ( words [ 1 ] );
@@ -170,12 +177,10 @@ class CommentsDocBuilder {
 			this.#commentsDoc.returns = this.#getTypeDescription ( words, false );
 			break;
 		case '@ignore' :
+			console.log ( 'ignore' );
 			this.#commentsDoc.ignore = true;
 			break;
 		default :
-			if ( '@' !== words [ 0 ] [ 0 ] ) {
-				this.#commentsDoc.desc = this.#cleanDesc ( commentTag );
-			}
 			break;
 		}
 	}
@@ -187,17 +192,20 @@ class CommentsDocBuilder {
 
 	#parseComment ( comment ) {
 
-		// replacing \n \r and \t with space and @ with a strange text surely not used
+		// replacing Windows and Mac EOL with Unix EOL, tab with spaces and @ with a strange text surely not used
 		let tmpComment = comment
-			.replaceAll ( '\r', ' ' )
+			.replaceAll ( '\r\n', '\n' )
+			.replaceAll ( '\r', '\n' )
 			.replaceAll ( '\t', ' ' )
-			.replaceAll ( '\n', ' ' )
 			.replaceAll ( '@', '§§§@' );
 
 		// removing multiple spaces
 		while ( tmpComment.includes ( '  ' ) ) {
 			tmpComment = tmpComment.replaceAll ( '  ', ' ' );
 		}
+		
+		// trim
+		tmpComment = tmpComment.trim ( );
 
 		// spliting the comments at the strange text, so the comment is splitted, preserving the @
 		tmpComment.split ( '§§§' ).forEach (
@@ -220,6 +228,7 @@ class CommentsDocBuilder {
 			return null;
 		}
 
+		// Filtering on comments starting with *
 		const docLeadingComments = leadingComments.filter ( leadingComment => '*' === leadingComment.value [ 0 ] );
 
 		if ( 0 === docLeadingComments.length ) {

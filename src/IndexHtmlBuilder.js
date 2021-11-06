@@ -25,6 +25,7 @@ Doc reviewed 20211021
 import fs from 'fs';
 import theConfig from './Config.js';
 import NavHtmlBuilder from './NavHtmlBuilder.js';
+import { marked } from 'marked';
 
 /**
 Build the index.html home page
@@ -57,10 +58,10 @@ class IndexHtmlBuilder {
 		html += navHtmlBuilder.build ( '' );
 
 		// reading the content of the indexUserContent.html file
-		if ( fs.existsSync ( theConfig.srcDir + 'indexUserContent.html' ) ) {
+		if ( fs.existsSync ( theConfig.srcDir + 'index.md' ) ) {
 
 			// and adding to the html
-			html += fs.readFileSync ( theConfig.srcDir + 'indexUserContent.html' );
+			html += marked.parse ( fs.readFileSync ( theConfig.srcDir + 'index.md', 'utf8' ) );
 		}
 		else {
 
