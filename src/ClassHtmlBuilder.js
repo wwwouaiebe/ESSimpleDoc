@@ -25,6 +25,7 @@ Doc reviewed 20211021
 import FileWriter from './FileWriter.js';
 import theLinkBuilder from './LinkBuilder.js';
 import NavHtmlBuilder from './NavHtmlBuilder.js';
+import { marked } from 'marked';
 
 /**
 Build the html page for a class
@@ -210,6 +211,11 @@ class ClassHtmlBuilder {
 
 		this.#html += `<div>${desc}</div>`;
 
+		// sample
+		if ( methodOrPropertyDoc?.commentsDoc?.sample ) {
+			this.#html += `<div>${marked.parse ( methodOrPropertyDoc?.commentsDoc?.sample )}</div>`;
+		}
+
 		// source
 		const sourceLink = theLinkBuilder.getSourceLink ( methodOrPropertyDoc );
 		this.#html +=
@@ -320,6 +326,11 @@ class ClassHtmlBuilder {
 				' ...No description provided. Coming soon?';
 
 		this.#html += `<div>${desc}</div>`;
+
+		// sample
+		if ( classDoc?.commentsDoc?.sample ) {
+			this.#html += `<div>${marked.parse ( classDoc?.commentsDoc?.sample )}</div>`;
+		}
 
 		// class source
 		const sourceLink = theLinkBuilder.getSourceLink ( classDoc );

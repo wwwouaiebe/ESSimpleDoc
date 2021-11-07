@@ -22,6 +22,8 @@ Changes:
 Doc reviewed 20211021
 */
 
+import theLinkBuilder from './LinkBuilder.js';
+
 /**
 Validate the doc objects
 */
@@ -75,6 +77,53 @@ class docsValidator {
 				rule : doc => ! doc?.commentsDoc?.desc && 'set' !== doc.kind,
 				errorLevel : 'error',
 				ruleMessage : 'Missing description'
+			},
+			unknownType : {
+				rule : doc => {
+					if ( ! doc?.commentsDoc ) {
+						return false;
+					}
+					let returnValue = false;
+					const types = [];
+					if ( doc?.commentsDoc?.type ) {
+						types.push ( doc.commentsDoc.type );
+					}
+					if ( doc?.commentsDoc?.returns?.type ) {
+						types.push ( doc.commentsDoc.returns.type );
+					}
+					if ( doc?.commentsDoc?.params ) {
+						doc.commentsDoc.params.forEach (
+							param => {
+								if ( param?.type ) {
+									types.push ( param.type );
+								}
+							}
+						);
+					}
+					types.forEach (
+						type => {
+							type.split ( ' ' ).forEach (
+								word => {
+									if (
+										'or' !== word
+										&&
+										'of' !== word
+										&&
+										'null' !== word
+										&&
+										! theLinkBuilder.isKnownType ( word )
+									) {
+										returnValue = true;
+										console.log ( '-' + word + '-' );
+									}
+								}
+							);
+						}
+					);
+					return returnValue;
+				},
+				errorLevel : 'warning',
+				ruleMessage : 'Unknown type'
 			}
 		},
 		methodsOrPropertiesRules : {

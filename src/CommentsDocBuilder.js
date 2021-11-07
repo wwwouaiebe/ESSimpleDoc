@@ -52,17 +52,14 @@ class CommentsDocBuilder {
 	*/
 
 	#capitalizeFirstLetter ( text ) {
-		
+
 		switch ( text.toLowerCase ( ) ) {
-			case '':
-				return text;
-				break;
-			case 'null':
-				return 'null';
-				break;
-			default :
-				return text [ 0 ].toUpperCase ( ) + text.substring ( 1 );
-				break;
+		case '' :
+			return text;
+		case 'null' :
+			return 'null';
+		default :
+			return text [ 0 ].toUpperCase ( ) + text.substring ( 1 );
 		}
 	}
 
@@ -172,6 +169,9 @@ class CommentsDocBuilder {
 		case '@desc' :
 		case '@classdesc' :
 			this.#commentsDoc.desc = this.#capitalizeFirstLetter ( commentTag.replace ( /@[a-z]*[\s|\n]/, '' ) );
+			break;
+		case '@sample' :
+			this.#commentsDoc.sample = commentTag.replace ( /@[a-z]*[\s|\n]/, '' );
 			break;
 		case '@type' :
 			{

@@ -177,6 +177,13 @@ class CommentsDoc {
 	desc = null;
 
 	/**
+	The sample of the commented class/method/property/variable
+	@type {?String}
+	*/
+
+	sample = null;
+
+	/**
 	The type of the commented variable
 	@type {?String}
 	*/
@@ -185,7 +192,7 @@ class CommentsDoc {
 
 	/**
 	The params of the commented method
-	@type {?Array.<>}
+	@type {?Array.<TypeDescription>}
 	*/
 
 	params = null;

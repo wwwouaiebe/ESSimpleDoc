@@ -80,13 +80,40 @@ class LinkBuilder {
 	#mdnLinks = Object.freeze (
 		{
 			Array : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array',
-			Map : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map',
+			ArrayBuffer : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer',
 			Boolean : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean',
-			Number : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number',
-			String : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String',
-			Promise : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
+			CryptoKey : 'https://developer.mozilla.org/en-US/docs/Web/API/CryptoKey',
+			Error : 'https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Error',
 			Function : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function',
-			HTMLElement : 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement'
+			Map : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map',
+			Number : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number',
+			//Object : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object',
+			Promise : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
+			String : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String',
+			Uint8Array : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array',
+			Class : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/class',
+			Event : 'https://developer.mozilla.org/en-US/docs/Web/API/Event',
+			GeolocationPosition : 'https://developer.mozilla.org/fr/docs/Web/API/GeolocationPosition',
+			GeolocationPositionError : 'https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError',
+			IDBFactory : 'https://developer.mozilla.org/en-US/docs/Web/API/IDBFactory',
+			HTMLElement : 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement',
+			SVGElement : 'https://developer.mozilla.org/en-US/docs/Web/API/SVGElement',
+			LeafletObject : 'https://leafletjs.com/reference.html',
+			OsmElement : 'https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL',
+			APIKey : 'APIKey',
+			GeoCoderAddress : 'GeoCoderAddress',
+			LatLngDistance : 'LatLngDistance',
+			LatLngElevOnRoute : 'LatLngElevOnRoute',
+			LayerToolbarButtonData : 'LayerToolbarButtonData',
+			NoteData : 'NoteData',
+			NoteDialogCfgFileContent : 'NoteDialogCfgFileContent',
+			NoteDialogToolbarButton : 'NoteDialogToolbarButton',
+			NoteDialogToolbarSelectOption : 'NoteDialogToolbarSelectOption',
+			NoteLeafletObjects : 'NoteLeafletObjects',
+			PointCoordinates : 'PointCoordinates',
+			PrintView : 'PrintView',
+			SelectOptionsData : 'SelectOptionsData',
+			Translation : 'Translation',
 		}
 	);
 
@@ -234,6 +261,10 @@ class LinkBuilder {
 			return `<a href="${variableLink}">${type}</a>`;
 		}
 		return type;
+	}
+
+	isKnownType ( type ) {
+		return this.#classesLinks.get ( type ) || this.#mdnLinks [ type ];
 	}
 
 	/**
