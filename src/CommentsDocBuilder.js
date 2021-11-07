@@ -46,19 +46,13 @@ class CommentsDocBuilder {
 	}
 
 	/**
-	Set to uppercase the first letter of a word
-	@param {String} word The word to capitalize
-	@return {String} The capitalized word
+	Set to uppercase the first letter of a text
+	@param {String} text The text to capitalize
+	@return {String} The capitalized text
 	*/
 
-	#capitalizeFirstLetter ( word ) {
-		if ( ! word || '' === word ) {
-			return word;
-		}
-		if ( 'null' === word.toLowerCase ( ) ) {
-			return 'null';
-		}
-		return word [ 0 ].toUpperCase ( ) + word.substr ( 1 );
+	#capitalizeFirstLetter ( text ) {
+		return 'null' === text.toLowerCase ( ) ? 'null' : text [ 0 ].toUpperCase ( ) + text.substring ( 1 );
 	}
 
 	/**
@@ -107,51 +101,46 @@ class CommentsDocBuilder {
 	}
 
 	/**
-	This method clean a string
-	@param {String} desc the string to clean
-	@return {?String} The cleaned string or null when the cleaned string is empty
-	*/
-
-	#cleanDesc ( desc ) {
-		return this.#capitalizeFirstLetter ( desc );
-	}
-
-	/**
 	This method build a TypeDescription from the words found in a comment tags
 	@param {String} commentTag The comment tag
 	@param {boolean} haveName A flag indicating that commentTag contains also a name to add in the TypeDescription
 	*/
 
 	#getTypeDescription ( commentTag, haveName ) {
-		
+
 		const typeDescription = new TypeDescription ( );
 
-		// removing tag and spaces or newline
-		let tmpCommentTag = commentTag.replace ( /@[a-z]*[ |\n]/, '' );
+		// removing tag and spaces or newline. Spaces and newline must be in a separate replace!
 
-		//Searching type
+		let tmpCommentTag = commentTag.replace ( /@[a-z]*/, '' ).replace ( /^[ |\n]/, '' );
+
+		// Searching type
 		const type = commentTag.match ( /{.*}/ );
 		if ( type ) {
 			typeDescription.type = this.#parseType ( type [ 0 ] );
-			
+
 			// removing type and spaces or newline
 			tmpCommentTag = commentTag.substring ( commentTag.indexOf ( '}' ) + 1 ).replace ( /^[ |\n]/, '' );
 		}
 		if ( haveName ) {
-			if ( tmpCommentTag.match ( /[a-zA-Z0-9]*[ |\n]/ ) ) {
-				typeDescription.name = tmpCommentTag.match ( /[a-zA-Z0-9]*[ |\n]/ ) [ 0 ].replace ( /[ |\n]/, '' );
-				
+			if ( tmpCommentTag.match ( /^[a-zA-Z0-9]*/ ) ) {
+				typeDescription.name = tmpCommentTag.match ( /^[a-zA-Z0-9]*/ ) [ 0 ];
+				typeDescription.name = typeDescription.name.replace ( /[ |\n]/, '' );
+				if ( '' === typeDescription.name ) {
+					typeDescription.name = null;
+				}
+
 				// removing name and spaces or newline
-				tmpCommentTag = tmpCommentTag.replace ( /[a-zA-Z0-9]*[ |\n]/, '' );
-			}
-			else {
-				typeDescription.name = tmpCommentTag;
-				tmpCommentTag = '';
+				tmpCommentTag = tmpCommentTag.replace ( /^[a-zA-Z0-9]*/, '' ).replace ( /^[ |\n]/, '' );
 			}
 		}
 
-		typeDescription.desc = this.#cleanDesc ( tmpCommentTag ).replace ( /[ |\n]$/, '' );
-		console.log ( typeDescription );
+		// removing space and newline at the end
+		tmpCommentTag = tmpCommentTag.replace ( /[ |\n]$/, '' );
+		if ( '' !== tmpCommentTag ) {
+			typeDescription.desc = this.#capitalizeFirstLetter ( tmpCommentTag );
+		}
+
 		return Object.freeze ( typeDescription );
 	}
 
@@ -163,7 +152,7 @@ class CommentsDocBuilder {
 
 	#parseCommentTag ( commentTag ) {
 		if ( ! commentTag.startsWith ( '@' ) ) {
-			this.#commentsDoc.desc = this.#cleanDesc ( commentTag );
+			this.#commentsDoc.desc = this.#capitalizeFirstLetter ( commentTag );
 			return;
 		}
 
@@ -172,7 +161,7 @@ class CommentsDocBuilder {
 		switch ( tag ) {
 		case '@desc' :
 		case '@classdesc' :
-			this.#commentsDoc.desc = this.#cleanDesc ( commentTag.replace ( /@[a-z]*[\s|\n]/, '' ) );
+			this.#commentsDoc.desc = this.#capitalizeFirstLetter ( commentTag.replace ( /@[a-z]*[\s|\n]/, '' ) );
 			break;
 		case '@type' :
 			{

@@ -81,8 +81,13 @@ class ClassHtmlBuilder {
 		methodOrPropertyDoc.params.forEach (
 			param => {
 				const paramDoc = methodOrPropertyDoc?.commentsDoc?.params?.find ( first => first.name === param );
-				const paramType = paramDoc ? theLinkBuilder.getTypeLinks ( paramDoc.type, this.#rootPath ) : '';
-				const paramDesc = theLinkBuilder.getDescLink ( paramDoc ? paramDoc.desc : '', this.#rootPath );
+				const paramType = paramDoc?.type ? theLinkBuilder.getTypeLinks ( paramDoc.type, this.#rootPath ) : '???';
+				const paramDesc =
+					paramDoc?.desc
+						?
+						theLinkBuilder.getDescLink ( paramDoc.desc, this.#rootPath )
+						:
+						' ...No description provided. Coming soon?';
 				this.#html += `<tr><td>${param}</td> <td>${paramType}</td> <td>${paramDesc}</td></tr>`;
 			}
 		);
@@ -226,17 +231,26 @@ class ClassHtmlBuilder {
 
 		// returns
 		if (
-			methodOrPropertyDoc?.commentsDoc?.returns?.type &&
-			methodOrPropertyDoc?.commentsDoc?.returns?.desc &&
-			(
-				'' !== methodOrPropertyDoc.commentsDoc.returns.type
-				||
-				'' !== methodOrPropertyDoc.commentsDoc.returns.desc
-			)
+			methodOrPropertyDoc?.commentsDoc?.returns
+			&&
+			'method' === methodOrPropertyDoc.isA
+			&&
+			'set' !== methodOrPropertyDoc.kind
+			&&
+			'get' !== methodOrPropertyDoc.kind
+			&&
+			'constructor' !== methodOrPropertyDoc.kind
 		) {
 			const returnType =
-				theLinkBuilder.getTypeLinks ( methodOrPropertyDoc.commentsDoc.returns.type, this.#rootPath );
-			this.#html += `<h4>Returns</h4><div>${methodOrPropertyDoc.commentsDoc.returns.desc}</div>` +
+				methodOrPropertyDoc.commentsDoc?.returns?.type
+					?
+					theLinkBuilder.getTypeLinks ( methodOrPropertyDoc.commentsDoc.returns.type, this.#rootPath )
+					:
+					'???';
+
+			const returnDesc = methodOrPropertyDoc?.commentsDoc?.returns?.desc ?? ' ...No description provided. Coming soon?';
+
+			this.#html += `<h4>Returns</h4><div>${returnDesc}</div>` +
 				`<div>Type : ${returnType}</div>`;
 		}
 
