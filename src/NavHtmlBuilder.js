@@ -72,7 +72,7 @@ class NavHtmlBuilder {
 
 	/**
 	Build the nav html element for an html page
-	@param {string} rootPath The path between the file where the nav will be inserted and theConfig.docDir
+	@param {String} rootPath The path between the file where the nav will be inserted and theConfig.docDir
 	( something like '../../../', depending of the folders tree )
 	@return {String} The nav html
 	*/
@@ -106,7 +106,7 @@ class NavHtmlBuilder {
 
 	/**
 	The footer to be inserted in the html pages
-	@type {string} The fooder html
+	@type {String} The fooder html
 	*/
 
 	get footer ( ) {

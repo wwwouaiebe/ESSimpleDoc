@@ -87,7 +87,7 @@ class LinkBuilder {
 			Function : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function',
 			Map : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map',
 			Number : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number',
-			//Object : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object',
+			Object : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object',
 			Promise : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
 			String : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String',
 			Uint8Array : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array',
@@ -113,7 +113,7 @@ class LinkBuilder {
 			PointCoordinates : 'PointCoordinates',
 			PrintView : 'PrintView',
 			SelectOptionsData : 'SelectOptionsData',
-			Translation : 'Translation',
+			Translation : 'Translation'
 		}
 	);
 
@@ -131,7 +131,7 @@ class LinkBuilder {
 	/**
 	Get the html link to a class file
 	@param {String} className The name of the class for witch the link must be created
-	@param {string} rootPath The path between the file where the link will be inserted and theConfig.docDir
+	@param {String} rootPath The path between the file where the link will be inserted and theConfig.docDir
 	( something like '../../../', depending of the folders tree )
 	@return {String} An html string with the link or the className when the link is not found
 	*/
@@ -238,7 +238,7 @@ class LinkBuilder {
 	/**
 	Get the link to a type
 	@param {String} type The type for witch the link must be created. Must be a single word
-	@param {string} rootPath The path between the file where the link will be inserted and theConfig.docDir
+	@param {String} rootPath The path between the file where the link will be inserted and theConfig.docDir
 	( something like '../../../', depending of the folders tree )
 	@return {String} The link to the type. We search first in the classes links, then in the mdn links. If nothing
 	found, the type without html link is returned.
@@ -263,14 +263,21 @@ class LinkBuilder {
 		return type;
 	}
 
+	/**
+	Verify that a given type is a known type ( = present in the @classesLinks map
+	or the mdnLinks object
+	@param {String} type The type to verify
+	@return {Boolean} True when the type is known
+	*/
+
 	isKnownType ( type ) {
-		return this.#classesLinks.get ( type ) || this.#mdnLinks [ type ];
+		return Boolean ( this.#classesLinks.get ( type ) || this.#mdnLinks [ type ] );
 	}
 
 	/**
 	Get the links to a type
 	@param {String} type The types for witch the link must be created. Can be multiple word
-	@param {string} rootPath The path between the file where the link will be inserted and theConfig.docDir
+	@param {String} rootPath The path between the file where the link will be inserted and theConfig.docDir
 	( something like '../../../', depending of the folders tree )
 	@return {String} The html links to the types. We search first in the classes links, then in the mdn links. If nothing
 	found, the types without html link is returned.
@@ -291,7 +298,7 @@ class LinkBuilder {
 	/**
 	Add links to a description
 	@param {String} desc The description to complete with links
-	@param {string} rootPath The path between the file where the link will be inserted and theConfig.docDir
+	@param {String} rootPath The path between the file where the link will be inserted and theConfig.docDir
 	( something like '../../../', depending of the folders tree )
 	@return {String} The description completed with html links
 	*/

@@ -194,9 +194,16 @@ h1, h2, h3, h4, h5, h6 {
 
 div,
 table
- {
+{
 	margin-left : 6cm;
 }
+
+div.public,
+div.private
+{
+	margin-left : 0;
+}
+	
 
 table.params
 {

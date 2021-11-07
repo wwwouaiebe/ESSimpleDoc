@@ -45,7 +45,7 @@ class AppLoader {
 
 	/**
 	A const to use when exit the app due to a bad parameter
-	@type {number}
+	@type {Number}
 	*/
 
 	// eslint-disable-next-line no-magic-numbers

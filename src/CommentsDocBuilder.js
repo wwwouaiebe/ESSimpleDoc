@@ -64,13 +64,13 @@ class CommentsDocBuilder {
 	}
 
 	/**
-	Parse a JSdoc type tag ( the value into {} for a @type, @param, @return or @returns JSDoc tags.
+	Parse a type tag ( the value into {} for a type, param, return or returns tags.
 	Remove the { } < > ! and space chars from the type, replace the . char with ' of ',
 	replace the ? char with 'null or ', replace the | char with ' or ' and finally capitalize the first letter
-	of the types, so '{number}' is parsed to 'Number', '{?string}' is parsed to 'null or String',
-	'Array.<number>' is parsed to 'Array of Number', {string|number} is parsed to 'String or Number'
-	@param {string} type The type tag to parse
-	@return {string} The parsed type
+	of the types, so '{Number}' is parsed to 'Number', '{?String}' is parsed to 'null or String',
+	'Array.<Number>' is parsed to 'Array of Number', {String|Number} is parsed to 'String or Number'
+	@param {String} type The type tag to parse
+	@return {String} The parsed type
 	*/
 
 	#parseType ( type ) {
@@ -154,7 +154,7 @@ class CommentsDocBuilder {
 	/**
 	Parse a comment tag. A comment tag is a text starting at the beginning of a comment or starting with a @ char
 	and finishing just before the next @ char in the comment
-	@param {string} commentTag the comment tag to parse
+	@param {String} commentTag the comment tag to parse
 	*/
 
 	#parseCommentTag ( commentTag ) {
@@ -199,7 +199,7 @@ class CommentsDocBuilder {
 
 	/**
 	Parse a comment and extracts the desc, classdesc, type, param, return, returns, ignore tags
-	@param {string} comment The comment to parse
+	@param {String} comment The comment to parse
 	*/
 
 	#parseComment ( comment ) {
@@ -224,7 +224,7 @@ class CommentsDocBuilder {
 
 	/**
 	Build a CommentsDoc object from the comments found in the code before the class/method/properties/variable
-	@param {Array.<string>} leadingComments The leadingComments to use
+	@param {Array.<String>} leadingComments The leadingComments to use
 	@return {CommentsDoc} An object with the comments
 	*/
 

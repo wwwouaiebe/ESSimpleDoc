@@ -30,21 +30,21 @@ class Config {
 
 	/**
 	The directory where the source files are. Coming from the --in parameter
-	@type {string}
+	@type {String}
 	*/
 
 	srcDir
 
 	/**
 	The directory where the documentation files will be installed. Coming from the --out parameter
-	@type {string}
+	@type {String}
 	*/
 
 	docDir
 
 	/**
 	The directory where the app is installed. Coming from the app parameter
-	@type {string}
+	@type {String}
 	*/
 
 	appDir
