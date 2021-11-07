@@ -52,7 +52,18 @@ class CommentsDocBuilder {
 	*/
 
 	#capitalizeFirstLetter ( text ) {
-		return 'null' === text.toLowerCase ( ) ? 'null' : text [ 0 ].toUpperCase ( ) + text.substring ( 1 );
+		
+		switch ( text.toLowerCase ( ) ) {
+			case '':
+				return text;
+				break;
+			case 'null':
+				return 'null';
+				break;
+			default :
+				return text [ 0 ].toUpperCase ( ) + text.substring ( 1 );
+				break;
+		}
 	}
 
 	/**
@@ -71,7 +82,7 @@ class CommentsDocBuilder {
 				.replaceAll ( '{', '' )
 				.replaceAll ( '}', '' )
 				.replaceAll ( ' ', '' )
-				.replaceAll ( '.<', ' of ' )
+				.replaceAll ( '.', ' of ' )
 				.replaceAll ( '<', '' )
 				.replaceAll ( '>', '' )
 				.replaceAll ( '!', '' )
@@ -97,7 +108,6 @@ class CommentsDocBuilder {
 			);
 
 		return returnValue.trimEnd ( );
-
 	}
 
 	/**
