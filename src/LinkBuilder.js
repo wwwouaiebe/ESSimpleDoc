@@ -100,6 +100,7 @@ class LinkBuilder {
 			SVGElement : 'https://developer.mozilla.org/en-US/docs/Web/API/SVGElement',
 			LeafletObject : 'https://leafletjs.com/reference.html',
 			OsmElement : 'https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL',
+			JsonObject : 'https://www.json.org/json-en.html',
 			APIKey : 'APIKey',
 			GeoCoderAddress : 'GeoCoderAddress',
 			LatLngDistance : 'LatLngDistance',
