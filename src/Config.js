@@ -65,6 +65,14 @@ class Config {
 	launch
 
 	/**
+	A flag indicating that the source files must have colors for the js keywords and links for 
+	global variables and types. Coming from the --noSourcesColor parameter
+	@type {boolean}
+	*/
+
+	noSourcesColor
+
+	/**
 	The constructor
 	*/
 

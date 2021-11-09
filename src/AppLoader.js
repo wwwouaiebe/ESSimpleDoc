@@ -177,6 +177,12 @@ class AppLoader {
 				if ( '--launch' === arg ) {
 					theConfig.launch = true;
 				}
+				
+				// noSourcesColor boolean argument
+				if ( '--noSourcesColor' === arg ) {
+					theConfig.noSourcesColor = true;
+				}
+
 				if ( '--help' === arg ) {
 					console.error ( '\n\t\x1b[36m--help\x1b[0m : this help\n' );
 					console.error ( '\t\x1b[36m--in\x1b[0m : the path to the directory where the sources are located\n' );
@@ -188,6 +194,10 @@ class AppLoader {
 					console.error (
 						'\t\x1b[36m--launch\x1b[0m : when present, the documentation will' +
 						' be opened in the browser at the end of the process\n'
+					);
+					console.error (
+						'\t\x1b[36m--noSourcesColor\x1b[0m : when present, the sources files will' +
+						' not have colors for JS keywords and links for types\n'
 					);
 					process.exit ( 0 );
 				}

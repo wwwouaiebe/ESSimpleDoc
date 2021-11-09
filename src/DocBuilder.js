@@ -111,7 +111,6 @@ class DocBuilder {
 
 	constructor ( ) {
 		Object.freeze ( this );
-		this.#sourceHtmlBuilder = new SourceHtmlBuilder ( );
 		this.#classDocBuilder = new ClassDocBuilder ( );
 		this.#variableDocBuilder = new VariableDocBuilder ( );
 	}
@@ -167,14 +166,12 @@ class DocBuilder {
 					ast = babelParser.parse ( fileContent, this.#parserOptions );
 				}
 				catch ( err ) {
-					console.error ( err );
+					//console.error ( err );
 
-					/*
 					console.error (
 						`\n\t\x1b[31mError\x1b[0m parsing file \x1b[31m${sourceFileName}\x1b[0m` +
 						` at line ${err.loc.line} column ${err.loc.column} : \n\t\t${err.message}\n`
 					);
-					*/
 
 					process.exit ( 1 );
 				}
@@ -204,14 +201,19 @@ class DocBuilder {
 		// Building classes html files
 		const classHtmlBuilder = new ClassHtmlBuilder ( );
 		this.#classesDocs.forEach ( classDoc => classHtmlBuilder.build ( classDoc ) );
+		
+		console. error ( `\n\tCreated ${classHtmlBuilder.classesCounter} class files` );
 
 		// Building sources html files
+		const sourceHtmlBuilder = new SourceHtmlBuilder ( );
 		sourceFilesList.forEach (
 			sourceFileName => {
 				const fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
-				this.#sourceHtmlBuilder.build ( fileContent, sourceFileName );
+				sourceHtmlBuilder.build ( fileContent, sourceFileName );
 			}
 		);
+
+		console. error ( `\n\tCreated ${sourceHtmlBuilder.sourcesCounter} source files` );
 
 		// Building the variables html file
 		new VariablesHtmlBuilder ( ).build ( this.#variablesDocs );

@@ -32,6 +32,13 @@ Build the html page for a class
 */
 
 class ClassHtmlBuilder {
+	
+	/** 
+	A classes files counter
+	@type {Number}
+	*/
+
+	#classesCounter;
 
 	/**
 	The name of the class currently treated
@@ -67,6 +74,7 @@ class ClassHtmlBuilder {
 
 	constructor ( ) {
 		Object.freeze ( this );
+		this.#classesCounter = 0;
 	}
 
 	/**
@@ -284,12 +292,20 @@ class ClassHtmlBuilder {
 		);
 	}
 
+	/** 
+	A classes files counter
+	@type {Number}
+	*/
+
+	get classesCounter ( ) { return this.#classesCounter; }
 	/**
 	Build the html for a complete class
 	@param {ClassDoc} classDoc The object with the class documentation
 	*/
 
 	build ( classDoc ) {
+		
+		this.#classesCounter ++
 
 		// saving rootPath...
 		this.#rootPath = classDoc.rootPath;
