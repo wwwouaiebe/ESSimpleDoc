@@ -102,13 +102,7 @@ class LinkBuilder {
 			OsmElement : 'https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL',
 			JsonObject : 'https://www.json.org/json-en.html',
 			APIKey : 'APIKey',
-			LatLngDistance : 'LatLngDistance',
-			LatLngElevOnRoute : 'LatLngElevOnRoute',
-			LayerToolbarButtonData : 'LayerToolbarButtonData',
 			NoteData : 'NoteData',
-			PointCoordinates : 'PointCoordinates',
-			PrintView : 'PrintView',
-			SelectOptionsData : 'SelectOptionsData',
 			Translation : 'Translation'
 		}
 	);
