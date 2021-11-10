@@ -177,7 +177,7 @@ class AppLoader {
 				if ( '--launch' === arg ) {
 					theConfig.launch = true;
 				}
-				
+
 				// noSourcesColor boolean argument
 				if ( '--noSourcesColor' === arg ) {
 					theConfig.noSourcesColor = true;

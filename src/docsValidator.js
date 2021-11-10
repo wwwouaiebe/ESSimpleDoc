@@ -114,7 +114,6 @@ class docsValidator {
 										! theLinkBuilder.isKnownType ( word )
 									) {
 										returnValue = true;
-										console.log ( '-' + word + '-' );
 									}
 								}
 							);

@@ -33,12 +33,13 @@ Build the sources HTML pages
 
 class SourceHtmlBuilder {
 
-	/** 
+	/**
 	A sources files counter
 	@type {Number}
 	*/
-	
+
 	#sourcesCounter;
+
 	/**
 	A list with JS keyword that will be colored in blue in the sources files
 	@type {Array.<String>}
@@ -187,13 +188,13 @@ class SourceHtmlBuilder {
 		Object.freeze ( this );
 		this.#sourcesCounter = 0;
 	}
-	
-	/** 
+
+	/**
 	A sources files counter
 	@type {Number}
 	*/
 
-	get sourcesCounter ( ) { return this.#sourcesCounter;}
+	get sourcesCounter ( ) { return this.#sourcesCounter; }
 
 	/**
 	Build the  source html file.
@@ -202,8 +203,8 @@ class SourceHtmlBuilder {
 	*/
 
 	build ( fileContent, fileName ) {
-		
-		this.#sourcesCounter ++
+
+		this.#sourcesCounter ++;
 
 		// Computing rootPath, htmlFilePath and dirs
 		// dirs is an array with all the folders between theConfig.docDir and the htmlFile
@@ -241,6 +242,7 @@ class SourceHtmlBuilder {
 			this.#setClassesLinks ( );
 			this.#setVariablesLinks ( );
 		}
+
 		// creating the file content
 		let lineCounter = 0;
 		this.#commentCounter = 0;

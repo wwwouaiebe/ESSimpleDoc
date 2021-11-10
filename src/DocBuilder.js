@@ -166,7 +166,8 @@ class DocBuilder {
 					ast = babelParser.parse ( fileContent, this.#parserOptions );
 				}
 				catch ( err ) {
-					//console.error ( err );
+
+					// console.error ( err );
 
 					console.error (
 						`\n\t\x1b[31mError\x1b[0m parsing file \x1b[31m${sourceFileName}\x1b[0m` +
@@ -201,7 +202,7 @@ class DocBuilder {
 		// Building classes html files
 		const classHtmlBuilder = new ClassHtmlBuilder ( );
 		this.#classesDocs.forEach ( classDoc => classHtmlBuilder.build ( classDoc ) );
-		
+
 		console. error ( `\n\tCreated ${classHtmlBuilder.classesCounter} class files` );
 
 		// Building sources html files
