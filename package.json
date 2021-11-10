@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "simpleesdoc",
+  "name": "essimpledoc",
   "description": "A simple documentation generator for ES modules",
   "main": "index.js",
   "bin": "./index.js",
@@ -20,17 +20,17 @@
   },
   "dependencies": {
     "@babel/parser": "latest",
-    "marked": "^4.0.0"
+    "marked": "latest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wwwouaiebe/SimpleESDoc.git"
+    "url": "git+https://github.com/wwwouaiebe/ESSimpleDoc.git"
   },
   "engines": {
     "node": ">=16.11.1"
   },
   "author": "wwwouaiebe",
   "license": "GPL-3.0",
-  "sources": "https://github.com/wwwouaiebe/SimpleESDoc",
-  "homepage": "https://github.com/wwwouaiebe/SimpleESDoc#readme"
+  "sources": "https://github.com/wwwouaiebe/ESSimpleDoc",
+  "homepage": "https://github.com/wwwouaiebe/ESSimpleDoc#readme"
 }

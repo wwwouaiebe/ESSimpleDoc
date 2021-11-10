@@ -243,7 +243,7 @@ class AppLoader {
 		this.#cleanOldFiles ( );
 
 		// copy the css file in the documentation directory
-		fs.copyFileSync ( theConfig.appDir + 'SimpleESDoc.css', theConfig.docDir + 'SimpleESDoc.css' );
+		fs.copyFileSync ( theConfig.appDir + 'ESSimpleDoc.css', theConfig.docDir + 'ESSimpleDoc.css' );
 
 		// starting the build
 		new DocBuilder ( ).buildFiles ( this.#sourceFileNames );

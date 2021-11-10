@@ -1,4 +1,4 @@
-# SimpleESDoc
+# ESSimpleDoc
 
 Coming soon...
 

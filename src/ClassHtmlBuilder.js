@@ -317,7 +317,7 @@ class ClassHtmlBuilder {
 		// start html build
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}SimpleESDoc.css"></head>` +
+			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}ESSimpleDoc.css"></head>` +
 			'<body class=\'havePrivateButton\'>';
 
 		// <nav> tag build

@@ -111,8 +111,8 @@ class NavHtmlBuilder {
 
 	get footer ( ) {
 		return '<footer>Documentation generated with ' +
-			'<a href="https://github.com/wwwouaiebe/SimpleESDoc" target="_blank" rel="noopener noreferrer">' +
-			'SimpleESDoc</a></footer>';
+			'<a href="https://github.com/wwwouaiebe/ESSimpleDoc" target="_blank" rel="noopener noreferrer">' +
+			'ESSimpleDoc</a></footer>';
 	}
 }
 

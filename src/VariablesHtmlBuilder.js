@@ -98,7 +98,7 @@ class VariablesHtmlBuilder {
 		// head
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-			'<link type="text/css" rel="stylesheet" href="SimpleESDoc.css"></head><body>';
+			'<link type="text/css" rel="stylesheet" href="ESSimpleDoc.css"></head><body>';
 
 		// nav
 		this.#html += navHtmlBuilder.build ( '' );
