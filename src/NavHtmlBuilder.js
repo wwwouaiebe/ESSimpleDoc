@@ -56,7 +56,7 @@ class NavHtmlBuilder {
 	}
 
 	/**
-	Add the li html elements to the nav html string for files, variables and classes
+	Add the li html elements to the nav html string for variables and classes
 	@param {Array.<Array.<String>>} links The links to add
 	*/
 
@@ -69,6 +69,26 @@ class NavHtmlBuilder {
 					this.#navHtml += `<li class="navLetter">${firstLetter}</li>`;
 				}
 				this.#navHtml += `<li><a href="${this.#rootPath + link [ 1 ]}">${link [ 0 ]}</a> </li>`;
+			}
+		);
+	}
+
+	/**
+	Add the li html elements to the nav html string for source files
+	@param {Array.<Array.<String>>} links The links to add
+	*/
+
+	#buildSourcesList ( links ) {
+		let path = '';
+		links.forEach (
+			link => {
+				const filePath = link [ 0 ].substr ( 0, link [ 0 ].lastIndexOf ( '/' ) );
+				const fileName = link [ 0 ].substr ( link [ 0 ].lastIndexOf ( '/' ) + 1 );
+				if ( path !== filePath ) {
+					path = filePath;
+					this.#navHtml += `<li class="navLetter">${filePath}</li>`;
+				}
+				this.#navHtml += `<li><a href="${this.#rootPath + link [ 1 ]}">${fileName}</a> </li>`;
 			}
 		);
 	}
@@ -89,7 +109,7 @@ class NavHtmlBuilder {
 		this.#navHtml += `<div id="homeNav"><a href="${this.#rootPath + 'index.html'}">🏠</a></div>`;
 
 		this.#navHtml += '<div id="sourcesNav">Sources</div><ul id="sourcesNavList">';
-		this.#buildList ( theLinkBuilder.sourcesLinks );
+		this.#buildSourcesList ( theLinkBuilder.sourcesLinks );
 		this.#navHtml += '</ul>';
 
 		this.#navHtml += '<div id="variablesNav">Globals</div><ul id="variablesNavList">';
