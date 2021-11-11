@@ -1,5 +1,5 @@
 /*
-Copyright - 2017 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
+Copyright - 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
 
 This  program is free software;
 you can redistribute it and/or modify it under the terms of the
@@ -19,15 +19,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
-Doc reviewed 20211021
+Doc reviewed 20211111
 */
 
 import CommentsDocBuilder from './CommentsDocBuilder.js';
 import { MethodOrPropertyDoc, ClassDoc } from './Docs.js';
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 Build a ClassDoc object for a class
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class ClassDocBuilder {
 
@@ -39,7 +41,7 @@ class ClassDocBuilder {
 	#rootPath;
 
 	/**
-	The file name in witch the current class is declared
+	The file name ( with the path since theConfig.srcDir ) in witch the current class is declared
 	@type {String}
 	*/
 
@@ -63,9 +65,9 @@ class ClassDocBuilder {
 
 	/**
 	Build a MethodOrPropertyDoc object from an
-	<a href="https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md">ast node</a>
-	@param {Object} methodOrPropertyNode An ast node of type
-	ClassPrivateProperty, ClassProperty, ClassPrivateMethod or ClassMethod
+	[ast node](https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md)
+	@param {Object} methodOrPropertyNode An ast node of type **ClassPrivateProperty**, **ClassProperty**,
+	**ClassPrivateMethod** or **ClassMethod**
 	@return {MethodOrPropertyDoc} The created object
 	*/
 
@@ -74,13 +76,13 @@ class ClassDocBuilder {
 		const methodOrPropertyDoc = new MethodOrPropertyDoc ( );
 
 		methodOrPropertyDoc.name = methodOrPropertyNode?.key?.name || methodOrPropertyNode?.key?.id?.name;
-		methodOrPropertyDoc.static = methodOrPropertyNode.static;
-		methodOrPropertyDoc.async = methodOrPropertyNode.async;
+		methodOrPropertyDoc.static = methodOrPropertyNode?.static;
+		methodOrPropertyDoc.async = methodOrPropertyNode?.async;
 		methodOrPropertyDoc.kind = methodOrPropertyNode?.kind;
 		methodOrPropertyDoc.file = this.#fileName;
 		methodOrPropertyDoc.rootPath = this.#rootPath;
-		methodOrPropertyDoc.line = methodOrPropertyNode.loc.start.line;
-		methodOrPropertyDoc.commentsDoc = this.#commentsDocBuilder.build ( methodOrPropertyNode.leadingComments );
+		methodOrPropertyDoc.line = methodOrPropertyNode?.loc?.start?.line;
+		methodOrPropertyDoc.commentsDoc = this.#commentsDocBuilder.build ( methodOrPropertyNode?.leadingComments );
 
 		if ( methodOrPropertyNode?.params?.length ) {
 			methodOrPropertyDoc.params = [];
@@ -114,8 +116,7 @@ class ClassDocBuilder {
 	}
 
 	/**
-	Build a ClassDoc object from an
-	<a href="https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md">ast node</a>
+	Build a ClassDoc object from an [ast node](https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md)
 	@param {Object} classDeclarationNode An ast node of type classDeclarationNode
 	@param {String} fileName The file name with the path since theConfig.srcDir
 	@return {ClassDoc} The created object
@@ -167,10 +168,4 @@ class ClassDocBuilder {
 
 export default ClassDocBuilder;
 
-/*
-@------------------------------------------------------------------------------------------------------------------------------
-
-end of file
-
-@------------------------------------------------------------------------------------------------------------------------------
-*/
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

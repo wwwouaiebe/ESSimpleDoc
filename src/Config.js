@@ -1,5 +1,5 @@
 /*
-Copyright - 2017 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
+Copyright - 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
 
 This  program is free software;
 you can redistribute it and/or modify it under the terms of the
@@ -19,12 +19,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
-Doc reviewed 20211021
+Doc reviewed 20211111
 */
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 A simple container to store the app configuration
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class Config {
 
@@ -33,28 +35,28 @@ class Config {
 	@type {String}
 	*/
 
-	srcDir
+	srcDir;
 
 	/**
 	The directory where the documentation files will be installed. Coming from the --out parameter
 	@type {String}
 	*/
 
-	docDir
+	docDir;
 
 	/**
 	The directory where the app is installed. Coming from the app parameter
 	@type {String}
 	*/
 
-	appDir
+	appDir;
 
 	/**
 	A flag indicating the validation must be done. Coming from the --validate parameter
 	@type {boolean}
 	*/
 
-	validate
+	validate;
 
 	/**
 	A flag indicating that the documentation must be opened in the browser immediately after
@@ -62,37 +64,39 @@ class Config {
 	@type {boolean}
 	*/
 
-	launch
+	launch;
 
 	/**
-	A flag indicating that the source files must have colors for the js keywords and links for
+	A flag indicating that the source files must not have colors for the js keywords and links for
 	global variables and types. Coming from the --noSourcesColor parameter
 	@type {boolean}
 	*/
 
-	noSourcesColor
+	noSourcesColor;
 
 	/**
 	The constructor
 	*/
 
 	constructor ( ) {
+		this.srcDir = '';
+		this.docDir = '';
+		this.appDir = '';
+		this.validate = false;
+		this.launch = false;
+		this.noSourcesColor = false;
 	}
 
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 The one and only one instance of Config class. Notice that the object will be froozen directly after reading the parameters
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 const theConfig = new Config;
 
 export default theConfig;
 
-/*
-@------------------------------------------------------------------------------------------------------------------------------
-
-end of file
-
-@------------------------------------------------------------------------------------------------------------------------------
-*/
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

@@ -1,5 +1,5 @@
 /*
-Copyright - 2017 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
+Copyright - 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
 
 This  program is free software;
 you can redistribute it and/or modify it under the terms of the
@@ -19,25 +19,26 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
-Doc reviewed 20211021
+Doc reviewed 20211111
 */
 
 import fs from 'fs';
 import process from 'process';
-
 import childProcess from 'child_process';
 
 import DocBuilder from './DocBuilder.js';
 import theConfig from './Config.js';
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 Start the app: read the arguments, set the config, create the source file list and remove the old documentation if any.
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class AppLoader {
 
 	/**
-	The source files names
+	The source files names, included the path since theConfig.srcDir
 	@type {Array.<String>}
 	*/
 
@@ -49,22 +50,21 @@ class AppLoader {
 	*/
 
 	// eslint-disable-next-line no-magic-numbers
-	get #EXIT_BAD_PARAMETER ( ) { return 9; }
+	static get #EXIT_BAD_PARAMETER ( ) { return 9; }
 
 	/**
 	The constructor
 	*/
 
 	constructor ( ) {
-
 		Object.freeze ( this );
-
 		this.#sourceFileNames = [];
 	}
 
 	/**
-	Read recursively the contains of a directory and store all the js files found in this.#sourceFileNames
-	@param {String} dir The directory to read. It's a relative path, starting at source directory
+	Read **recursively** the contains of a directory and store all the js files found in the #sourceFileNames property
+	@param {String} dir The directory to read. It's a relative path, starting at theConfig.srcDir ( the path
+	given in the --in parameter )
 	*/
 
 	#readDir ( dir ) {
@@ -79,7 +79,6 @@ class AppLoader {
 				// Searching the stat of the file/directory
 				const lstat = fs.lstatSync ( theConfig.srcDir + dir + fileName );
 
-				// It's a directory. Reading this recursively
 				if ( lstat.isDirectory ( ) ) {
 
 					// It's a directory. Reading this recursively
@@ -87,7 +86,7 @@ class AppLoader {
 				}
 				else if ( lstat.isFile ( ) ) {
 
-					// it's a file. Adding to the files list with the relative path  if the extension is 'js'
+					// it's a file. Adding to the files list with the relative path, if the extension is 'js'
 					if ( 'js' === fileName.split ( '.' ).reverse ( )[ 0 ] ) {
 						this.#sourceFileNames.push ( dir + fileName );
 					}
@@ -141,13 +140,13 @@ class AppLoader {
 					case '--in' :
 
 						// It's the 'in' parameter. We verify that the given directory exists
-						// and We complete the path to have an absolute path
+						// and we complete the path to have an absolute path
 						if ( fs.existsSync ( argContent [ 1 ] ) ) {
 							theConfig.srcDir = fs.realpathSync ( argContent [ 1 ] ) + '\\';
 						}
 						else {
 							console.error ( 'Invalid path for the --in parameter\x1b[31m%s\x1b[0m', argContent [ 1 ] );
-							process.exit ( this.#EXIT_BAD_PARAMETER );
+							process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
 						}
 						break;
 					case '--out' :
@@ -160,7 +159,7 @@ class AppLoader {
 
 							// Invalid directory given by user
 							console.error ( 'Invalid path for the --out parameter\x1b[31m%s\x1b[0m ', argContent [ 1 ] );
-							process.exit ( this.#EXIT_BAD_PARAMETER );
+							process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
 						}
 						break;
 					default :
@@ -183,6 +182,7 @@ class AppLoader {
 					theConfig.noSourcesColor = true;
 				}
 
+				// help
 				if ( '--help' === arg ) {
 					console.error ( '\n\t\x1b[36m--help\x1b[0m : this help\n' );
 					console.error ( '\t\x1b[36m--in\x1b[0m : the path to the directory where the sources are located\n' );
@@ -204,6 +204,7 @@ class AppLoader {
 			}
 		);
 
+		// saving the working folder
 		theConfig.appDir = process.argv [ 1 ].substr ( 0, process.argv [ 1 ].lastIndexOf ( '\\' ) + 1 );
 
 		// the config is now frozen
@@ -212,13 +213,13 @@ class AppLoader {
 		// stop the app if we don't have a source directory
 		if ( ! theConfig.srcDir ) {
 			console.error ( 'Invalid or missing \x1b[31m--in\x1b[0m parameter' );
-			process.exit ( this.#EXIT_BAD_PARAMETER );
+			process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
 		}
 
 		// stop the app if we don't have a document directory
 		if ( ! theConfig.docDir ) {
 			console.error ( 'Invalid or missing \x1b[31m--out\x1b[0m parameter' );
-			process.exit ( this.#EXIT_BAD_PARAMETER );
+			process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
 		}
 	}
 
@@ -263,10 +264,4 @@ class AppLoader {
 
 export default AppLoader;
 
-/*
-@------------------------------------------------------------------------------------------------------------------------------
-
-end of file
-
-@------------------------------------------------------------------------------------------------------------------------------
-*/
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

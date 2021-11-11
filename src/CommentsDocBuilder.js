@@ -1,5 +1,5 @@
 /*
-Copyright - 2017 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
+Copyright - 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
 
 This  program is free software;
 you can redistribute it and/or modify it under the terms of the
@@ -25,7 +25,7 @@ Doc reviewed 20211021
 import { TypeDescription, CommentsDoc } from './Docs.js';
 
 /**
-Build a CommentsDoc object from the comments of a class, a method, a property or a variable
+Build a CommentsDoc object from the leading comments of a class, method, property or variable
 */
 
 class CommentsDocBuilder {
@@ -108,7 +108,7 @@ class CommentsDocBuilder {
 	}
 
 	/**
-	This method build a TypeDescription from the words found in a comment tags
+	This method build a TypeDescription object from the contains of a comment tags
 	@param {String} commentTag The comment tag
 	@param {boolean} haveName A flag indicating that commentTag contains also a name to add in the TypeDescription
 	*/
@@ -118,7 +118,6 @@ class CommentsDocBuilder {
 		const typeDescription = new TypeDescription ( );
 
 		// removing tag and spaces or newline. Spaces and newline must be in a separate replace!
-
 		let tmpCommentTag = commentTag.replace ( /@[a-z]*/, '' ).replace ( /^[ |\n]/, '' );
 
 		// Searching type
@@ -129,6 +128,8 @@ class CommentsDocBuilder {
 			// removing type and spaces or newline
 			tmpCommentTag = commentTag.substring ( commentTag.indexOf ( '}' ) + 1 ).replace ( /^[ |\n]/, '' );
 		}
+
+		// Searching name
 		if ( haveName ) {
 			if ( tmpCommentTag.match ( /^[a-zA-Z0-9]*/ ) ) {
 				typeDescription.name = tmpCommentTag.match ( /^[a-zA-Z0-9]*/ ) [ 0 ];
@@ -142,6 +143,7 @@ class CommentsDocBuilder {
 			}
 		}
 
+		// Searching desscription
 		// removing space and newline at the end
 		tmpCommentTag = tmpCommentTag.replace ( /[ |\n]$/, '' );
 		if ( '' !== tmpCommentTag ) {
@@ -152,17 +154,20 @@ class CommentsDocBuilder {
 	}
 
 	/**
-	Parse a comment tag. A comment tag is a text starting at the beginning of a comment or starting with a @ char
-	and finishing just before the next @ char in the comment
+	Parse a comment tag. A comment tag is a text starting at the beginning of a comment, just after the &#47;&#42;&#42;
+	or starting with a 	&#64; char and finishing just before the next &#64; char in the comment or just before the &#42;&#47;
 	@param {String} commentTag the comment tag to parse
 	*/
 
 	#parseCommentTag ( commentTag ) {
+
+		// no @ char at the beginning. It's a desc...
 		if ( ! commentTag.startsWith ( '@' ) ) {
 			this.#commentsDoc.desc = this.#capitalizeFirstLetter ( commentTag );
 			return;
 		}
 
+		// searching the @ tag
 		const tag = commentTag.match ( /@[a-z]*/ ) [ 0 ];
 
 		switch ( tag ) {
@@ -198,22 +203,23 @@ class CommentsDocBuilder {
 	}
 
 	/**
-	Parse a comment and extracts the desc, classdesc, type, param, return, returns, ignore tags
+	Parse a leading comment and extracts the &#64;desc, &#64;classdesc, &#64;sample,&#64;type, &#64;param,
+	&#64;return, &#64;returns, &#64;ignore tags
 	@param {String} comment The comment to parse
 	*/
 
-	#parseComment ( comment ) {
+	#parseLeadingComment ( leadingComment ) {
 
 		// replacing Windows and Mac EOL with Unix EOL, tab with spaces and @ with a strange text surely not used
 		// then spliting the comments at the strange text, so the comment is splitted, preserving the @
-		comment
+		leadingComment
 			.replaceAll ( '\r\n', '\n' ) // eol windows
 			.replaceAll ( '\r', '\n' ) // eol mac
 			.replaceAll ( '\t', ' ' ) // tab
 			.replaceAll ( /[ ]+/g, ' ' ) // multiple spaces
 			.replaceAll ( /[ ]*[\n][ ]*/g, '\n' ) // spaces + eol + spaces
-			.replaceAll ( '@', '§§§@' )
-			.replace ( /^\n/, '' )
+			.replaceAll ( '@', '§§§@' ) // strange text
+			.replace ( /^\n/, '' ) // eol at the beginning
 			.split ( '§§§' )
 			.forEach (
 
@@ -223,7 +229,7 @@ class CommentsDocBuilder {
 	}
 
 	/**
-	Build a CommentsDoc object from the comments found in the code before the class/method/properties/variable
+	Build a CommentsDoc object from the leading comments found in the code before the class/method/properties/variable
 	@param {Array.<String>} leadingComments The leadingComments to use
 	@return {CommentsDoc} An object with the comments
 	*/
@@ -242,7 +248,7 @@ class CommentsDocBuilder {
 		}
 
 		this.#commentsDoc = new CommentsDoc ( );
-		docLeadingComments.forEach ( docLeadingComment => this.#parseComment ( docLeadingComment.value.substr ( 1 ) ) );
+		docLeadingComments.forEach ( docLeadingComment => this.#parseLeadingComment ( docLeadingComment.value.substr ( 1 ) ) );
 		return Object.freeze ( this.#commentsDoc );
 	}
 }
