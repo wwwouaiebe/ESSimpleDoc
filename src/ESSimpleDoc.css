@@ -1,5 +1,31 @@
-/* This file is shared between the DotClear themes OUAIE and ANTHISNES -->*/
+/*
+Copyright - 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
+
+This  program is free software;
+you can redistribute it and/or modify it under the terms of the
+GNU General Public License as published by the Free Software Foundation;
+either version 3 of the License, or any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/*
+Changes:
+	- v1.0.0:
+		- created
+Doc reviewed 20211111
+*/
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /* start reset */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 html, body, div, span, object,
 h1, h2, h3, h4, h5, h6, p,
@@ -19,12 +45,10 @@ body
 {
 	line-height: 1.2;
 }
-ul
-{
-	/*list-style: none;*/
-}
 
-/*end reset*/
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* body */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 body
 {
@@ -35,6 +59,10 @@ body
 	margin-left : auto;
 	margin-right : auto;
 }
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* Navigation */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 nav
 {
@@ -153,6 +181,9 @@ nav > div ~ ul:hover
 	transition: transform 0.5s ease-out;
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* Heading */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 h1 
 {
@@ -192,11 +223,19 @@ h1, h2, h3, h4, h5, h6 {
 	margin-bottom: 1em;
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* div and tables */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
 div,
 table
 {
 	margin-left : 6cm;
 }
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* private or public div */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 div.public,
 div.private
@@ -204,6 +243,9 @@ div.private
 	margin-left : 0;
 }
 	
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* params tables */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 table.params
 {
@@ -222,6 +264,10 @@ table.params tr > th
 {
 	background-color: lightgray;
 }
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* sources. Sources are displayed in a table */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 table.srcCode {
 	font-family : monospace;
@@ -246,6 +292,8 @@ table.srcCode tr > td:first-child
 	padding-right: 1cm;
 }
 
+/* code comments in green */
+
 .codeComments,
 .codeComments > .jsKeyword,
 .codeComments > .classLink,
@@ -254,23 +302,37 @@ table.srcCode tr > td:first-child
 	color : green;
 	font-weight: normal;
 }
+
+/* JS keywords in blue*/ 
+
 .jsKeyword {
 	color : blue;
 }
+
+/* classes links in red */
 
 .classLink {
 	color: red;
 }
 
+/* variables links in dark red */
+
 .variableLink
 {
 	color: darkred;
 }
+
+/* marker on the line */
+
 .hash,
 .hash ~ td
 {
 	background-color : yellow;
 }
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* Hide private */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 .private 
 {
@@ -282,6 +344,10 @@ body.showPrivate .private
 	display : inherit;
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* Footer */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
 footer
 {
 	margin-top : 1cm;
@@ -292,3 +358,5 @@ footer
 	border-bottom-style : solid;
 	border-bottom-width : 0.1mm;
 }
+
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

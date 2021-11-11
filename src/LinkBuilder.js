@@ -19,14 +19,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
-Doc reviewed 20211021
+Doc reviewed 20211111
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 import { marked } from 'marked';
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 Store all the links  created from the source document and get the links completed with the path for others classes
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class LinkBuilder {
 
@@ -89,6 +92,7 @@ class LinkBuilder {
 			Number : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number',
 			Object : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object',
 			Promise : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
+			RegExp : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp',
 			String : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String',
 			Uint8Array : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array',
 			Class : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/class',
@@ -308,10 +312,4 @@ const theLinkBuilder = new LinkBuilder ( );
 
 export default theLinkBuilder;
 
-/*
-@------------------------------------------------------------------------------------------------------------------------------
-
-end of file
-
-@------------------------------------------------------------------------------------------------------------------------------
-*/
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

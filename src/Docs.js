@@ -1,6 +1,33 @@
+/*
+Copyright - 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
+
+This  program is free software;
+you can redistribute it and/or modify it under the terms of the
+GNU General Public License as published by the Free Software Foundation;
+either version 3 of the License, or any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/*
+Changes:
+	- v1.0.0:
+		- created
+Doc reviewed 20211111
+*/
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 Base class with properties needed to build the html files for classes/methods/properties/variables
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class VariableDoc {
 
@@ -47,9 +74,11 @@ class VariableDoc {
 
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 A class with properties needed to build the html files for methods/properties
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class MethodOrPropertyDoc extends VariableDoc {
 
@@ -96,9 +125,11 @@ class MethodOrPropertyDoc extends VariableDoc {
 	params = null;
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 A class with properties needed to build the html files for classes
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class ClassDoc extends VariableDoc {
 
@@ -125,9 +156,11 @@ class ClassDoc extends VariableDoc {
 	}
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
-A class with properties to document params and returns
+A class with properties to document params, type and returns
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class TypeDescription {
 
@@ -162,10 +195,12 @@ class TypeDescription {
 
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 A class with properties found in the comments and needed to build the html files for
 classes/methods/properties/variables
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class CommentsDoc {
 
@@ -222,3 +257,5 @@ class CommentsDoc {
 }
 
 export { VariableDoc, MethodOrPropertyDoc, ClassDoc, TypeDescription, CommentsDoc };
+
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

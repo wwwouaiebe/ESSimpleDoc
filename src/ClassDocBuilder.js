@@ -21,6 +21,7 @@ Changes:
 		- created
 Doc reviewed 20211111
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 import CommentsDocBuilder from './CommentsDocBuilder.js';
 import { MethodOrPropertyDoc, ClassDoc } from './Docs.js';

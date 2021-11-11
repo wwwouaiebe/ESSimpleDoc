@@ -19,15 +19,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
-Doc reviewed 20211021
+Doc reviewed 20211111
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 import CommentsDocBuilder from './CommentsDocBuilder.js';
 import { VariableDoc } from './Docs.js';
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 Build the variableDoc object for a variable
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class VariableDocBuilder {
 
@@ -41,7 +44,7 @@ class VariableDocBuilder {
 
 	/**
 	Build a VariableDoc object from an
-	<a href="https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md">ast node</a>
+	[ast node](https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md)
 	@param {Object} variableDeclarationNode An ast node of type VariableDeclaration
 	@param {String} fileName the file name in witch the variableDeclarationNnode was found, including path
 	@return {VariableDoc} The created object
@@ -63,10 +66,4 @@ class VariableDocBuilder {
 
 export default VariableDocBuilder;
 
-/*
-@------------------------------------------------------------------------------------------------------------------------------
-
-end of file
-
-@------------------------------------------------------------------------------------------------------------------------------
-*/
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

@@ -19,8 +19,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
-Doc reviewed 20211021
+Doc reviewed 20211111
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 import process from 'process';
 import fs from 'fs';
@@ -36,10 +37,12 @@ import theLinkBuilder from './LinkBuilder.js';
 import DocsValidator from './DocsValidator.js';
 import IndexHtmlBuilder from './IndexHtmlBuilder.js';
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 Build the complete documentation: generate AST from the source files, then extracting doc objects from AST
 and finally buid HTML pages from the doc objects.
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class DocBuilder {
 
@@ -118,8 +121,7 @@ class DocBuilder {
 	/**
 	Build all the docs for a file
 	@param {Object} parserResult The root
-	<a href="https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md">ast node</a>
-	given by the babel/parser
+	[ast node](https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md) given by the babel/parser
 	@param {String} sourceFileName The source file name, including relative path since theConfig.srcDir
 	*/
 
@@ -166,9 +168,6 @@ class DocBuilder {
 					ast = babelParser.parse ( fileContent, this.#parserOptions );
 				}
 				catch ( err ) {
-
-					// console.error ( err );
-
 					console.error (
 						`\n\t\x1b[31mError\x1b[0m parsing file \x1b[31m${sourceFileName}\x1b[0m` +
 						` at line ${err.loc.line} column ${err.loc.column} : \n\t\t${err.message}\n`
@@ -178,10 +177,7 @@ class DocBuilder {
 				}
 
 				// buiding docs for the source
-				this.#buildDocs (
-					ast,
-					sourceFileName
-				);
+				this.#buildDocs ( ast, sourceFileName );
 
 				// buiding the links for the source
 				const htmlFileName = sourceFileName.replace ( '.js', 'js.html' );
@@ -214,7 +210,7 @@ class DocBuilder {
 			}
 		);
 
-		console. error ( `\n\tCreated ${sourceHtmlBuilder.sourcesCounter} source files` );
+		console.error ( `\n\tCreated ${sourceHtmlBuilder.sourcesCounter} source files` );
 
 		// Building the variables html file
 		new VariablesHtmlBuilder ( ).build ( this.#variablesDocs );
@@ -222,28 +218,8 @@ class DocBuilder {
 		// Building the index.html file
 		new IndexHtmlBuilder ( ).build ( );
 	}
-
-	/**
-	The generated ClassDoc objects
-	@type {Array.<ClassDoc>}
-	*/
-
-	get classesDocs ( ) { return this.#classesDocs; }
-
-	/**
-	The generated VariableDoc objects
-	@type {Array.<VariableDoc>}
-	*/
-
-	get variablesDocs ( ) { return this.#variablesDocs; }
 }
 
 export default DocBuilder;
 
-/*
-@------------------------------------------------------------------------------------------------------------------------------
-
-end of file
-
-@------------------------------------------------------------------------------------------------------------------------------
-*/
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

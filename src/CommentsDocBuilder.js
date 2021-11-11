@@ -19,14 +19,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
-Doc reviewed 20211021
+Doc reviewed 20211111
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 import { TypeDescription, CommentsDoc } from './Docs.js';
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 Build a CommentsDoc object from the leading comments of a class, method, property or variable
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class CommentsDocBuilder {
 
@@ -38,11 +41,84 @@ class CommentsDocBuilder {
 	#commentsDoc;
 
 	/**
+	A RegExp to find the &#64;desc, &#64;classdesc, &#64;sample,&#64;type, &#64;param,
+	&#64;return, &#64;returns, &#64;ignore tags
+	@type {RegExp}
+	*/
+
+	#tagRegExp;
+
+	/**
+	A RegExp to find space or new line at the beginning of the string
+	@type {RegExp}
+	*/
+
+	#beginSpaceNewlineRegExp;
+
+	/**
+	A RegExp to find space or new line in the string
+	@type {RegExp}
+	*/
+
+	#spaceNewlineRegExp;
+
+	/**
+	A RegExp to find space or new line at the end of the string
+	@type {RegExp}
+	*/
+
+	#endSpaceNewlineRegExp;
+
+	/**
+	A RegExp to find multiple spaces
+	@type {RegExp}
+	*/
+
+	#multipleSpacesRegExp;
+
+	/**
+	A RegExp to find multiple spaces + newline +multiple spaces
+	@type {RegExp}
+	*/
+
+	#spaceNewlineSpaceRegExp;
+
+	/**
+	A RegExp to find a new line at the beginning of the string
+	@type {RegExp}
+	*/
+
+	#beginNewLineRegExp;
+
+	/**
+	A RegExp to find a type in the string ( a string starting with { and ending with }
+	@type {RegExp}
+	*/
+
+	#typeRegExp;
+
+	/**
+	A RegExp to find a name the string ( the first word with only chars and numbers
+	@type {RegExp}
+	*/
+
+	#nameRegExp;
+
+	/**
 	The constructor
 	*/
 
 	constructor ( ) {
 		Object.freeze ( this );
+		this.#tagRegExp = RegExp ( '@[a-z]*' );
+		this.#beginSpaceNewlineRegExp = RegExp ( '^[ |\\n]' );
+		this.#spaceNewlineRegExp = RegExp ( '[ |\\n]' );
+		this.#endSpaceNewlineRegExp = RegExp ( '[ |\\n]$' );
+		this.#multipleSpacesRegExp = RegExp ( '[ ]+', 'g' );
+		this.#spaceNewlineSpaceRegExp = RegExp ( '[ ]*[\\n][ ]*', 'g' );
+		this.#beginNewLineRegExp = RegExp ( '^\\n' );
+		this.#typeRegExp = RegExp ( '{.*}' );
+		this.#nameRegExp = RegExp ( '^[a-zA-Z0-9]*' );
 	}
 
 	/**
@@ -118,34 +194,37 @@ class CommentsDocBuilder {
 		const typeDescription = new TypeDescription ( );
 
 		// removing tag and spaces or newline. Spaces and newline must be in a separate replace!
-		let tmpCommentTag = commentTag.replace ( /@[a-z]*/, '' ).replace ( /^[ |\n]/, '' );
+		let tmpCommentTag =
+			commentTag.replace ( this.#tagRegExp, '' )
+				.replace ( this.#beginSpaceNewlineRegExp, '' );
 
 		// Searching type
-		const type = commentTag.match ( /{.*}/ );
+		const type = commentTag.match ( this.#typeRegExp );
 		if ( type ) {
 			typeDescription.type = this.#parseType ( type [ 0 ] );
 
 			// removing type and spaces or newline
-			tmpCommentTag = commentTag.substring ( commentTag.indexOf ( '}' ) + 1 ).replace ( /^[ |\n]/, '' );
+			tmpCommentTag =
+				commentTag.substring ( commentTag.indexOf ( '}' ) + 1 ).replace ( this.#beginSpaceNewlineRegExp, '' );
 		}
 
 		// Searching name
 		if ( haveName ) {
-			if ( tmpCommentTag.match ( /^[a-zA-Z0-9]*/ ) ) {
-				typeDescription.name = tmpCommentTag.match ( /^[a-zA-Z0-9]*/ ) [ 0 ];
-				typeDescription.name = typeDescription.name.replace ( /[ |\n]/, '' );
+			if ( tmpCommentTag.match ( this.#nameRegExp ) ) {
+				typeDescription.name = tmpCommentTag.match ( this.#nameRegExp ) [ 0 ];
+				typeDescription.name = typeDescription.name.replace ( this.#spaceNewlineRegExp, '' );
 				if ( '' === typeDescription.name ) {
 					typeDescription.name = null;
 				}
 
 				// removing name and spaces or newline
-				tmpCommentTag = tmpCommentTag.replace ( /^[a-zA-Z0-9]*/, '' ).replace ( /^[ |\n]/, '' );
+				tmpCommentTag = tmpCommentTag.replace ( this.#nameRegExp, '' ).replace ( this.#beginSpaceNewlineRegExp, '' );
 			}
 		}
 
 		// Searching desscription
 		// removing space and newline at the end
-		tmpCommentTag = tmpCommentTag.replace ( /[ |\n]$/, '' );
+		tmpCommentTag = tmpCommentTag.replace ( this.#endSpaceNewlineRegExp, '' );
 		if ( '' !== tmpCommentTag ) {
 			typeDescription.desc = this.#capitalizeFirstLetter ( tmpCommentTag );
 		}
@@ -168,19 +247,22 @@ class CommentsDocBuilder {
 		}
 
 		// searching the @ tag
-		const tag = commentTag.match ( /@[a-z]*/ ) [ 0 ];
+		const tag = commentTag.match ( this.#tagRegExp ) [ 0 ];
 
 		switch ( tag ) {
 		case '@desc' :
 		case '@classdesc' :
-			this.#commentsDoc.desc = this.#capitalizeFirstLetter ( commentTag.replace ( /@[a-z]*[\s|\n]/, '' ) );
+			this.#commentsDoc.desc = this.#capitalizeFirstLetter (
+				commentTag.replace ( this.#tagRegExp, '' ).replace ( this.#endSpaceNewlineRegExp, '' )
+			);
 			break;
 		case '@sample' :
-			this.#commentsDoc.sample = commentTag.replace ( /@[a-z]*[\s|\n]/, '' );
+			this.#commentsDoc.sample =
+				commentTag.replace ( this.#tagRegExp, '' ).replace ( this.#endSpaceNewlineRegExp, '' );
 			break;
 		case '@type' :
 			{
-				const type = commentTag.match ( /{.*}/ );
+				const type = commentTag.match ( this.#typeRegExp );
 				if ( type ) {
 					this.#commentsDoc.type = this.#parseType ( type [ 0 ] );
 				}
@@ -205,7 +287,7 @@ class CommentsDocBuilder {
 	/**
 	Parse a leading comment and extracts the &#64;desc, &#64;classdesc, &#64;sample,&#64;type, &#64;param,
 	&#64;return, &#64;returns, &#64;ignore tags
-	@param {String} comment The comment to parse
+	@param {String} leadingComment The comment to parse
 	*/
 
 	#parseLeadingComment ( leadingComment ) {
@@ -216,10 +298,10 @@ class CommentsDocBuilder {
 			.replaceAll ( '\r\n', '\n' ) // eol windows
 			.replaceAll ( '\r', '\n' ) // eol mac
 			.replaceAll ( '\t', ' ' ) // tab
-			.replaceAll ( /[ ]+/g, ' ' ) // multiple spaces
-			.replaceAll ( /[ ]*[\n][ ]*/g, '\n' ) // spaces + eol + spaces
+			.replaceAll ( this.#multipleSpacesRegExp, ' ' ) // multiple spaces
+			.replaceAll ( this.#spaceNewlineSpaceRegExp, '\n' ) // spaces + eol + spaces
 			.replaceAll ( '@', '§§§@' ) // strange text
-			.replace ( /^\n/, '' ) // eol at the beginning
+			.replace ( this.#beginNewLineRegExp, '' ) // eol at the beginning
 			.split ( '§§§' )
 			.forEach (
 
@@ -255,10 +337,4 @@ class CommentsDocBuilder {
 
 export default CommentsDocBuilder;
 
-/*
-@------------------------------------------------------------------------------------------------------------------------------
-
-end of file
-
-@------------------------------------------------------------------------------------------------------------------------------
-*/
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

@@ -19,17 +19,20 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
-Doc reviewed 20211021
+Doc reviewed 20211111
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 import FileWriter from './FileWriter.js';
 import theLinkBuilder from './LinkBuilder.js';
 import NavHtmlBuilder from './NavHtmlBuilder.js';
 import { marked } from 'marked';
 
+/* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 Build the html page for a class
 */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 class ClassHtmlBuilder {
 
@@ -214,7 +217,7 @@ class ClassHtmlBuilder {
 			const getter = this.#methodsOrPropertiesDoc.find (
 				method => 'get' === method.kind && methodOrPropertyDoc.name === method.name
 			);
-			desc = getter && getter?.commentsDoc?.desc ? '' /* theLinkBuilder.getDescLink ( getter.commentsDoc.desc)*/ : desc;
+			desc = getter && getter?.commentsDoc?.desc ? '' : desc;
 		}
 
 		this.#html += `<div>${desc}</div>`;
@@ -444,10 +447,4 @@ class ClassHtmlBuilder {
 
 export default ClassHtmlBuilder;
 
-/*
-@------------------------------------------------------------------------------------------------------------------------------
-
-end of file
-
-@------------------------------------------------------------------------------------------------------------------------------
-*/
+/* --- End of file --------------------------------------------------------------------------------------------------------- */
