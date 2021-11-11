@@ -206,7 +206,9 @@ class AppLoader {
 		);
 
 		// saving the working folder
-		theConfig.appDir = process.argv [ 1 ].substr ( 0, process.argv [ 1 ].lastIndexOf ( '\\' ) + 1 );
+		theConfig.appDir = fs.realpathSync (
+			process.argv [ 1 ].substr ( 0, process.argv [ 1 ].lastIndexOf ( '\\' ) + 1 ) + '..\\src'
+		) + '\\';
 
 		// the config is now frozen
 		Object.freeze ( theConfig );

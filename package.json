@@ -2,8 +2,10 @@
   "type": "module",
   "name": "essimpledoc",
   "description": "A simple documentation generator for ES modules",
-  "main": "index.js",
-  "bin": "./index.js",
+  "main": "bin/index.js",
+  "bin": {
+    "essimpledoc": "./bin/index.js"
+  },
   "version": "1.0.0",
   "keywords": [
     "documentation",
