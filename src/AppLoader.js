@@ -125,120 +125,129 @@ class AppLoader {
 	}
 
 	/**
-	Complete theConfig object from the app parameters
+	Show the help on the screen
 	*/
 
-	#createConfig ( ) {
+	#showHelp ( ) {
+		console.error ( '\n\t\x1b[36m--help\x1b[0m : this help\n' );
+		console.error ( '\t\x1b[36m--in\x1b[0m : the path to the directory where the sources are located\n' );
+		console.error (
+			'\t\x1b[36m--out\x1b[0m : the path to the directory where' +
+			' the documentation have to be generated\n'
+		);
+		console.error ( '\t\x1b[36m--validate\x1b[0m : when present, the documentation is validated\n' );
+		console.error (
+			'\t\x1b[36m--launch\x1b[0m : when present, the documentation will' +
+			' be opened in the browser at the end of the process\n'
+		);
+		console.error (
+			'\t\x1b[36m--noSourcesColor\x1b[0m : when present, the sources files will' +
+			' not have colors for JS keywords and links for types\n'
+		);
+		process.exit ( 0 );
+	}
 
-		// Loop on tha app parameters
-		process.argv.forEach (
-			arg => {
+	/**
+	Validate a path:
+	- Verify that the path exists on the computer
+	- verify that the path is a directory
+	- complete the path with a \
+	@param {String} path The path to validate
+	@param {Boolean} expectDir A flag asserting that the path must be a directory
+	*/
 
-				// splitting the arguments at the = char
-				const argContent = arg.split ( '=' );
-				if ( argContent [ 1 ] ) {
+	#validatePath ( path, expectDir ) {
+		let returnPath = path;
+		if ( '' === returnPath ) {
+			console.error ( 'Invalid or missing \x1b[31m--in or out\x1b[0m parameter' );
+			process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
+		}
+		try {
+			const lstat = fs.lstatSync ( returnPath );
+			if ( lstat.isDirectory ( ) ) {
+				returnPath = fs.realpathSync ( returnPath ) + '\\';
+			}
+			else if ( lstat.isFile ( ) ) {
+				if ( expectDir ) {
+					throw new Error ( 'Expedcting dir' );
+				}
+				returnPath = fs.realpathSync (
+					returnPath.substr ( 0, returnPath.lastIndexOf ( '\\' ) + 1 ) + '..\\src'
+				) + '\\';
+			}
+		}
+		catch {
+			console.error ( 'Invalid path for the --in or --out parameter\x1b[31m%s\x1b[0m ', returnPath );
+			process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
+		}
+
+		return returnPath;
+	}
+
+	/**
+	Complete theConfig object from the app parameters
+	@param {?Object} options The options for the app
+	*/
+
+	#createConfig ( options ) {
+
+		if ( options ) {
+			console.error ( 'todo' );
+		}
+		else {
+			process.argv.forEach (
+				arg => {
+					const argContent = arg.split ( '=' );
 					switch ( argContent [ 0 ] ) {
 					case '--in' :
-
-						// It's the 'in' parameter. We verify that the given directory exists
-						// and we complete the path to have an absolute path
-						if ( fs.existsSync ( argContent [ 1 ] ) ) {
-							theConfig.srcDir = fs.realpathSync ( argContent [ 1 ] ) + '\\';
-						}
-						else {
-							console.error ( 'Invalid path for the --in parameter\x1b[31m%s\x1b[0m', argContent [ 1 ] );
-							process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
-						}
+						theConfig.srcDir = argContent [ 1 ] || theConfig.srcDir;
 						break;
 					case '--out' :
-
-						// It's the 'out' parameter. We complete the path to have an absolute path
-						try {
-							theConfig.docDir = fs.realpathSync ( argContent [ 1 ] ) + '\\';
-						}
-						catch {
-
-							// Invalid directory given by user
-							console.error ( 'Invalid path for the --out parameter\x1b[31m%s\x1b[0m ', argContent [ 1 ] );
-							process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
-						}
+						theConfig.docDir = argContent [ 1 ] || theConfig.docDir;
+						break;
+					case '--validate' :
+						theConfig.validate = true;
+						break;
+					case '--launch' :
+						theConfig.launch = true;
+						break;
+					case '--noSourcesColor' :
+						theConfig.noSourcesColor = true;
+						break;
+					case '--help' :
+						this.#showHelp ( );
 						break;
 					default :
 						break;
 					}
 				}
+			);
+			theConfig.appDir = process.argv [ 1 ];
+		}
 
-				// validate boolean argument
-				if ( '--validate' === arg ) {
-					theConfig.validate = true;
-				}
-
-				// launch boolean argument
-				if ( '--launch' === arg ) {
-					theConfig.launch = true;
-				}
-
-				// noSourcesColor boolean argument
-				if ( '--noSourcesColor' === arg ) {
-					theConfig.noSourcesColor = true;
-				}
-
-				// help
-				if ( '--help' === arg ) {
-					console.error ( '\n\t\x1b[36m--help\x1b[0m : this help\n' );
-					console.error ( '\t\x1b[36m--in\x1b[0m : the path to the directory where the sources are located\n' );
-					console.error (
-						'\t\x1b[36m--out\x1b[0m : the path to the directory where' +
-						' the documentation have to be generated\n'
-					);
-					console.error ( '\t\x1b[36m--validate\x1b[0m : when present, the documentation is validated\n' );
-					console.error (
-						'\t\x1b[36m--launch\x1b[0m : when present, the documentation will' +
-						' be opened in the browser at the end of the process\n'
-					);
-					console.error (
-						'\t\x1b[36m--noSourcesColor\x1b[0m : when present, the sources files will' +
-						' not have colors for JS keywords and links for types\n'
-					);
-					process.exit ( 0 );
-				}
-			}
-		);
-
-		// saving the working folder
-		theConfig.appDir = fs.realpathSync (
-			process.argv [ 1 ].substr ( 0, process.argv [ 1 ].lastIndexOf ( '\\' ) + 1 ) + '..\\src'
-		) + '\\';
+		theConfig.srcDir = this.#validatePath ( theConfig.srcDir, true );
+		theConfig.docDir = this.#validatePath ( theConfig.docDir, true );
+		theConfig.appDir = this.#validatePath ( theConfig.appDir, false );
 
 		// the config is now frozen
 		Object.freeze ( theConfig );
-
-		// stop the app if we don't have a source directory
-		if ( ! theConfig.srcDir ) {
-			console.error ( 'Invalid or missing \x1b[31m--in\x1b[0m parameter' );
-			process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
-		}
-
-		// stop the app if we don't have a document directory
-		if ( ! theConfig.docDir ) {
-			console.error ( 'Invalid or missing \x1b[31m--out\x1b[0m parameter' );
-			process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
-		}
 	}
 
 	/**
 	Load the app, searching all the needed infos to run the app correctly
+	@param {?Object} options The options for the app
 	*/
 
-	loadApp ( ) {
+	loadApp ( options ) {
 
 		// start time
 		const startTime = process.hrtime.bigint ( );
-		console.clear ( );
-		console.error ( 'Starting...' );
 
 		// config
-		this.#createConfig ( );
+		this.#createConfig ( options );
+
+		// console.clear ( );
+		console.error ( 'Starting ESSimpleDoc...' );
 
 		// source files list
 		this.#readDir ( '' );
