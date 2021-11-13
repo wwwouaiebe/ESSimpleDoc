@@ -78,7 +78,7 @@ class IndexHtmlBuilder {
 		html += '</body></html>';
 
 		// writing file
-		fs.writeFileSync ( theConfig.docDir + 'index.html', html );
+		fs.writeFileSync ( theConfig.destDir + 'index.html', html );
 	}
 }
 

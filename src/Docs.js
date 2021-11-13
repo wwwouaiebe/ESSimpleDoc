@@ -39,14 +39,14 @@ class VariableDoc {
 	name = null;
 
 	/**
-	The path between the html file and theConfig.docDir ( something like '../../../', depending of the folders tree )
+	The path between the html file and theConfig.destDir ( something like '../../../', depending of the folders tree )
 	@type {?String}
 	*/
 
 	rootPath = null;
 
 	/**
-	The file name in witch the class/method/property/variable is declared, including path since theConfig.docDir
+	The file name in witch the class/method/property/variable is declared, including path since theConfig.destDir
 	@type {?String}
 	*/
 

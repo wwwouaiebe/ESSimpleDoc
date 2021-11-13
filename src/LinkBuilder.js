@@ -122,7 +122,7 @@ class LinkBuilder {
 	/**
 	Get the html link to a class file
 	@param {String} className The name of the class for witch the link must be created
-	@param {String} rootPath The path between the file where the link will be inserted and theConfig.docDir
+	@param {String} rootPath The path between the file where the link will be inserted and theConfig.destDir
 	( something like '../../../', depending of the folders tree )
 	@return {String} An html string with the link or the className when the link is not found
 	*/
@@ -178,7 +178,7 @@ class LinkBuilder {
 	/**
 	Store a link to a source file
 	@param {String} fileName The file name
-	@param {String} path The path since theConfig.docDir, included file name
+	@param {String} path The path since theConfig.destDir, included file name
 	*/
 
 	setSourceLink ( fileName, path ) {
@@ -187,7 +187,7 @@ class LinkBuilder {
 
 	/**
 	Get all the sources links. Each subAray contains the source file name and the path
-	between theConfig.docDir  and the source file, included file name
+	between theConfig.destDir  and the source file, included file name
 	@type {Array.<Array.<String>>}
 	*/
 
@@ -229,7 +229,7 @@ class LinkBuilder {
 	/**
 	Get the link to a type
 	@param {String} type The type for witch the link must be created. Must be a single word
-	@param {String} rootPath The path between the file where the link will be inserted and theConfig.docDir
+	@param {String} rootPath The path between the file where the link will be inserted and theConfig.destDir
 	( something like '../../../', depending of the folders tree )
 	@return {String} The link to the type. We search first in the classes links, then in the mdn links. If nothing
 	found, the type without html link is returned.
@@ -268,7 +268,7 @@ class LinkBuilder {
 	/**
 	Get the links to a type
 	@param {String} type The types for witch the link must be created. Can be multiple word
-	@param {String} rootPath The path between the file where the link will be inserted and theConfig.docDir
+	@param {String} rootPath The path between the file where the link will be inserted and theConfig.destDir
 	( something like '../../../', depending of the folders tree )
 	@return {String} The html links to the types. We search first in the classes links, then in the mdn links. If nothing
 	found, the types without html link is returned.
@@ -289,7 +289,7 @@ class LinkBuilder {
 	/**
 	Add links to a description
 	@param {String} desc The description to complete with links
-	@param {String} rootPath The path between the file where the link will be inserted and theConfig.docDir
+	@param {String} rootPath The path between the file where the link will be inserted and theConfig.destDir
 	( something like '../../../', depending of the folders tree )
 	@return {String} The description completed with html links
 	*/

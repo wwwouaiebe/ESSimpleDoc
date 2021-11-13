@@ -118,7 +118,7 @@ class VariablesHtmlBuilder {
 		this.#html += '</body></html>';
 
 		// writting file
-		fs.writeFileSync ( theConfig.docDir + 'variables.html', this.#html );
+		fs.writeFileSync ( theConfig.destDir + 'variables.html', this.#html );
 	}
 }
 

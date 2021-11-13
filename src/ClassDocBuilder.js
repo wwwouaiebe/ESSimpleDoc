@@ -35,7 +35,7 @@ Build a ClassDoc object for a class
 class ClassDocBuilder {
 
 	/**
-	The path between the html file and theConfig.docDir ( something like '../../../', depending of the folders tree )
+	The path between the html file and theConfig.destDir ( something like '../../../', depending of the folders tree )
 	@type {String}
 	*/
 

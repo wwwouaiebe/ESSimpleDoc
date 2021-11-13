@@ -75,7 +75,7 @@ class SourceHtmlBuilder {
 	}
 
 	/**
-	The path between the html file and theConfig.docDir ( something like '../../../', depending of the folders tree )
+	The path between the html file and theConfig.destDir ( something like '../../../', depending of the folders tree )
 	@type {String}
 	*/
 
@@ -202,7 +202,7 @@ class SourceHtmlBuilder {
 	/**
 	Build the  source html file.
 	@param {String} fileContent The file content
-	@param {String} fileName The file name, including the path since theConfig.docDir
+	@param {String} fileName The file name, including the path since theConfig.destDir
 	*/
 
 	build ( fileContent, fileName ) {
@@ -210,9 +210,9 @@ class SourceHtmlBuilder {
 		this.#sourcesCounter ++;
 
 		// Computing rootPath, htmlFilePath and dirs
-		// dirs is an array with all the folders between theConfig.docDir and the htmlFile
-		// rootPath is the path between the htmlFile and theConfig.docDir
-		// htmlFilePath is the path between theConfig.docDir and the htmlFile
+		// dirs is an array with all the folders between theConfig.destDir and the htmlFile
+		// rootPath is the path between the htmlFile and theConfig.destDir
+		// htmlFilePath is the path between theConfig.destDir and the htmlFile
 		const dirs = fileName.split ( '/' );
 		const htmlFileName = dirs.pop ( ).split ( '.' ) [ 0 ] + 'js.html';
 		this.#rootPath = '';

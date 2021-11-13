@@ -34,7 +34,7 @@ Build the nav and footer HTMLElements for all the HTML pages
 class NavHtmlBuilder {
 
 	/**
-	The path between the html file and theConfig.docDir ( something like '../../../', depending of the folders tree )
+	The path between the html file and theConfig.destDir ( something like '../../../', depending of the folders tree )
 	@type {String}
 	*/
 
@@ -95,7 +95,7 @@ class NavHtmlBuilder {
 
 	/**
 	Build the nav html element for an html page
-	@param {String} rootPath The path between the file where the nav will be inserted and theConfig.docDir
+	@param {String} rootPath The path between the file where the nav will be inserted and theConfig.destDir
 	( something like '../../../', depending of the folders tree )
 	@return {String} The nav html
 	*/

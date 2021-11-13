@@ -65,7 +65,7 @@ class AppLoader {
 	/**
 	Read **recursively** the contains of a directory and store all the js files found in the #sourceFileNames property
 	@param {String} dir The directory to read. It's a relative path, starting at theConfig.srcDir ( the path
-	given in the --in parameter )
+	given in the --src parameter )
 	*/
 
 	#readDir ( dir ) {
@@ -105,7 +105,7 @@ class AppLoader {
 
 			// Removing the complete documentation directory
 			fs.rmSync (
-				theConfig.docDir,
+				theConfig.destDir,
 				{ recursive : true, force : true },
 				err => {
 					if ( err ) {
@@ -115,12 +115,12 @@ class AppLoader {
 			);
 
 			// and then recreating
-			fs.mkdirSync ( theConfig.docDir );
+			fs.mkdirSync ( theConfig.destDir );
 		}
 		catch {
 
 			// Sometime the cleaning fails due to opened files
-			console.error ( `\x1b[31mNot possible to clean the ${theConfig.docDir} folder\x1b[0m` );
+			console.error ( `\x1b[31mNot possible to clean the ${theConfig.destDir} folder\x1b[0m` );
 		}
 	}
 
@@ -130,9 +130,9 @@ class AppLoader {
 
 	#showHelp ( ) {
 		console.error ( '\n\t\x1b[36m--help\x1b[0m : this help\n' );
-		console.error ( '\t\x1b[36m--in\x1b[0m : the path to the directory where the sources are located\n' );
+		console.error ( '\t\x1b[36m--src\x1b[0m : the path to the directory where the sources are located\n' );
 		console.error (
-			'\t\x1b[36m--out\x1b[0m : the path to the directory where' +
+			'\t\x1b[36m--dest\x1b[0m : the path to the directory where' +
 			' the documentation have to be generated\n'
 		);
 		console.error ( '\t\x1b[36m--validate\x1b[0m : when present, the documentation is validated\n' );
@@ -159,25 +159,25 @@ class AppLoader {
 	#validatePath ( path, expectDir ) {
 		let returnPath = path;
 		if ( '' === returnPath ) {
-			console.error ( 'Invalid or missing \x1b[31m--in or out\x1b[0m parameter' );
+			console.error ( 'Invalid or missing \x1b[31m--src or out\x1b[0m parameter' );
 			process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
 		}
 		try {
 			const lstat = fs.lstatSync ( returnPath );
 			if ( lstat.isDirectory ( ) ) {
-				returnPath = fs.realpathSync ( returnPath ) + '\\';
+				returnPath = fs.realpathSync ( returnPath ) + '/';
 			}
 			else if ( lstat.isFile ( ) ) {
 				if ( expectDir ) {
 					throw new Error ( 'Expedcting dir' );
 				}
 				returnPath = fs.realpathSync (
-					returnPath.substr ( 0, returnPath.lastIndexOf ( '\\' ) + 1 ) + '..\\src'
+					returnPath.substr ( 0, returnPath.lastIndexOf ( '/' ) + 1 ) + '../src'
 				) + '\\';
 			}
 		}
 		catch {
-			console.error ( 'Invalid path for the --in or --out parameter\x1b[31m%s\x1b[0m ', returnPath );
+			console.error ( 'Invalid path for the --src or --dest parameter\x1b[31m%s\x1b[0m ', returnPath );
 			process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
 		}
 
@@ -193,8 +193,8 @@ class AppLoader {
 
 		if ( options ) {
 			theConfig.srcDir = options.src;
-			theConfig.docDir = options.dest;
-			theConfig.appDir = process.cwd ( ) + '\\node_modules\\essimpledoc\\src';
+			theConfig.destDir = options.dest;
+			theConfig.appDir = process.cwd ( ) + '/node_modules/essimpledoc/src';
 			if ( options.launch ) {
 				theConfig.launch = true;
 			}
@@ -210,11 +210,11 @@ class AppLoader {
 				arg => {
 					const argContent = arg.split ( '=' );
 					switch ( argContent [ 0 ] ) {
-					case '--in' :
+					case '--src' :
 						theConfig.srcDir = argContent [ 1 ] || theConfig.srcDir;
 						break;
-					case '--out' :
-						theConfig.docDir = argContent [ 1 ] || theConfig.docDir;
+					case '--dest' :
+						theConfig.destDir = argContent [ 1 ] || theConfig.destDir;
 						break;
 					case '--validate' :
 						theConfig.validate = true;
@@ -237,7 +237,7 @@ class AppLoader {
 		}
 
 		theConfig.srcDir = this.#validatePath ( theConfig.srcDir, true );
-		theConfig.docDir = this.#validatePath ( theConfig.docDir, true );
+		theConfig.destDir = this.#validatePath ( theConfig.destDir, true );
 		theConfig.appDir = this.#validatePath ( theConfig.appDir, false );
 		// the config is now frozen
 		Object.freeze ( theConfig );
@@ -266,7 +266,7 @@ class AppLoader {
 		this.#cleanOldFiles ( );
 
 		// copy the css file in the documentation directory
-		fs.copyFileSync ( theConfig.appDir + 'ESSimpleDoc.css', theConfig.docDir + 'ESSimpleDoc.css' );
+		fs.copyFileSync ( theConfig.appDir + 'ESSimpleDoc.css', theConfig.destDir + 'ESSimpleDoc.css' );
 
 		// starting the build
 		new DocBuilder ( ).buildFiles ( this.#sourceFileNames );
@@ -276,10 +276,10 @@ class AppLoader {
 
 		/* eslint-disable-next-line no-magic-numbers */
 		const execTime = String ( deltaTime / 1000000000n ) + '.' + String ( deltaTime % 1000000000n ).substr ( 0, 3 );
-		console.error ( `\nDocumentation generated in ${execTime} seconds in the folder \x1b[36m${theConfig.docDir}\x1b[0m` );
+		console.error ( `\nDocumentation generated in ${execTime} seconds in the folder \x1b[36m${theConfig.destDir}\x1b[0m` );
 		if ( theConfig.launch ) {
 			console.error ( '\n\t... launching in the browser...\n' );
-			childProcess.exec ( theConfig.docDir + 'index.html' );
+			childProcess.exec ( theConfig.destDir + 'index.html' );
 		}
 	}
 }

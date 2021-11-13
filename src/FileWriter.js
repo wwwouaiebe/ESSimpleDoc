@@ -50,13 +50,13 @@ class FileWriter {
 	}
 
 	/**
-	Creates all the directories in the dirs parameter, starting from theConfig.docDir
+	Creates all the directories in the dirs parameter, starting from theConfig.destDir
 	@param {Array.<String>} dirs The directories to create
 	*/
 
 	#createDirs ( dirs ) {
 
-		this.#currentDir = theConfig.docDir;
+		this.#currentDir = theConfig.destDir;
 
 		dirs.forEach (
 			dir => {
