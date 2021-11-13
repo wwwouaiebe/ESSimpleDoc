@@ -153,34 +153,28 @@ class AppLoader {
 	- verify that the path is a directory
 	- complete the path with a \
 	@param {String} path The path to validate
-	@param {Boolean} expectDir A flag asserting that the path must be a directory
 	*/
 
-	#validatePath ( path, expectDir ) {
+	#validatePath ( path ) {
 		let returnPath = path;
 		if ( '' === returnPath ) {
-			console.error ( 'Invalid or missing \x1b[31m--src or out\x1b[0m parameter' );
+			console.error ( 'Invalid or missing \x1b[31m--src or dest\x1b[0m parameter' );
 			process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
 		}
+		let pathSeparator = null;
 		try {
+			returnPath = fs.realpathSync ( path );
+			pathSeparator = -1 !== returnPath.indexOf ( '\\' ) ? '\\' : '/';
 			const lstat = fs.lstatSync ( returnPath );
-			if ( lstat.isDirectory ( ) ) {
-				returnPath = fs.realpathSync ( returnPath ) + '/';
-			}
-			else if ( lstat.isFile ( ) ) {
-				if ( expectDir ) {
-					throw new Error ( 'Expedcting dir' );
-				}
-				returnPath = fs.realpathSync (
-					returnPath.substr ( 0, returnPath.lastIndexOf ( '/' ) + 1 ) + '../src'
-				) + '\\';
+			if ( lstat.isFile ( ) ) {
+				returnPath = returnPath.substr ( 0, returnPath.lastIndexOf ( pathSeparator ) );
 			}
 		}
 		catch {
-			console.error ( 'Invalid path for the --src or --dest parameter\x1b[31m%s\x1b[0m ', returnPath );
+			console.error ( 'Invalid path for the --src or --dest parameter \x1b[31m%s\x1b[0m', returnPath );
 			process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
 		}
-
+		returnPath += pathSeparator;
 		return returnPath;
 	}
 
@@ -235,10 +229,9 @@ class AppLoader {
 			);
 			theConfig.appDir = process.argv [ 1 ];
 		}
-
-		theConfig.srcDir = this.#validatePath ( theConfig.srcDir, true );
-		theConfig.destDir = this.#validatePath ( theConfig.destDir, true );
-		theConfig.appDir = this.#validatePath ( theConfig.appDir, false );
+		theConfig.srcDir = this.#validatePath ( theConfig.srcDir );
+		theConfig.destDir = this.#validatePath ( theConfig.destDir );
+		theConfig.appDir = this.#validatePath ( theConfig.appDir );
 
 		// the config is now frozen
 		Object.freeze ( theConfig );

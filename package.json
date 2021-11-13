@@ -28,7 +28,7 @@
     "url": "git+https://github.com/wwwouaiebe/ESSimpleDoc.git"
   },
   "engines": {
-    "node": ">=16.11.1"
+    "node": ">=16.13.0"
   },
   "author": "wwwouaiebe",
   "license": "GPL-3.0",
