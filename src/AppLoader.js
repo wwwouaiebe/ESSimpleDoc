@@ -239,6 +239,7 @@ class AppLoader {
 		theConfig.srcDir = this.#validatePath ( theConfig.srcDir, true );
 		theConfig.destDir = this.#validatePath ( theConfig.destDir, true );
 		theConfig.appDir = this.#validatePath ( theConfig.appDir, false );
+
 		// the config is now frozen
 		Object.freeze ( theConfig );
 	}
