@@ -192,7 +192,18 @@ class AppLoader {
 	#createConfig ( options ) {
 
 		if ( options ) {
-			console.error ( 'todo' );
+			theConfig.srcDir = options.src;
+			theConfig.docDir = options.dest;
+			theConfig.appDir = process.cwd ( ) + '\\node_modules\\essimpledoc\\src';
+			if ( options.launch ) {
+				theConfig.launch = true;
+			}
+			if ( options.noSourcesColor ) {
+				theConfig.noSourcesColor = true;
+			}
+			if ( options.validate ) {
+				theConfig.validate = true;
+			}
 		}
 		else {
 			process.argv.forEach (
@@ -228,7 +239,6 @@ class AppLoader {
 		theConfig.srcDir = this.#validatePath ( theConfig.srcDir, true );
 		theConfig.docDir = this.#validatePath ( theConfig.docDir, true );
 		theConfig.appDir = this.#validatePath ( theConfig.appDir, false );
-
 		// the config is now frozen
 		Object.freeze ( theConfig );
 	}
