@@ -109,7 +109,7 @@ and errors and warnings displayed.
 
 ### 'Duplicate class name' warning
 
-Sorry... it's a limitation of ESSimpleDoc. You cannot have duplicate classes name, or it's impossible
+Sorry... it's a limitation of ESSimpleDoc. You cannot have duplicate class names, or it's impossible
 to create a link to the class documentation...
 
 ### 'Missing description' error
@@ -211,6 +211,22 @@ Also, links to the classes and variables are added in the html version of source
 
 When the --noSourcesColor parameter is present, JS keywords are not colored and links not added.
 
+### Samples of call to ESSimpleDoc from Node
+
+```
+node ./PathToEsSimpleDoc/index.js --src=./PathToTheSourceFiles --dest=./PathToTheHtmlFiles --validate --launch
+```
+
+Ig you have installed ESSimpleDoc globally you can also do this:
+
+```
+esd --src=./PathToTheSourceFiles --dest=./PathToTheHtmlFiles --validate --launch
+```
+
+### Using Grunt
+
+See the Grunt-ESSimpleDoc on [Github](https://github.com/wwwouaiebe/Grunt-ESSimpleDoc) or [NPM](https://www.npmjs.com/package/grunt-essimpledoc).
+
 ## View or hide the private methods and properties.
 
 By default, private methods and properties are hidden in the HTML classes files.
@@ -225,11 +241,11 @@ Of course ESSimpleDoc is self documented. You can see the documentation on the
 
 ### duplicate classes names
 
-No... it's impossible to create the links  to the classes...
+No really... it's impossible to create the links  to the classes...
 
 ### default parameters
 
-When a parameter of o method have a default value, you will always receive 
+When a parameter of a method have a default value, you will always receive 
 a 'Mismatch between the @param tags and parameters in the code' error.
 
 ### Source files extension
@@ -246,10 +262,6 @@ npm install essimpledoc --save-dev
 
 But you can also download from [Github](https://github.com/wwwouaiebe/ESSimpleDoc#readme).
 
-### Using Grunt
-
-See the Grunt-ESSimpleDoc on [Github](https://github.com/wwwouaiebe/Grunt-ESSimpleDoc) or [NPM](https://www.npmjs.com/package/grunt-essimpledoc).
-
 ### And also...
 
 ESSimpleDoc was build for my needs... So only the documentation for classes and variables declarations
@@ -264,6 +276,6 @@ You know surely JS as me. So if you find a bug or need a modification:
 
 ## Thanks to...
 
-- eslint for the verification of the code
+- [eslint](https://eslint.org/) for the verification of the code
 - [@babel/parser](https://babeljs.io/docs/en/babel-parser) for parsing the files
 - [Marked](https://marked.js.org/) for parsing the markdown in the descriptions
