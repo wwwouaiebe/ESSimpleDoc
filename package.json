@@ -4,9 +4,9 @@
   "description": "A simple documentation generator for ES modules",
   "main": "bin/index.js",
   "bin": {
-    "essimpledoc": "./src/index.js"
+    "esd": "./src/index.js"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
   "keywords": [
     "documentation",
     "es",
