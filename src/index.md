@@ -27,7 +27,7 @@ and MethodOrPropertyDoc contains one CommentsDoc.
 - TypeDescription is a container used to store types found in the @type, @return and @param tags of the the leading comments.
 
 When all the doc containers are created, the documentation is controlled (when the --validate parameter is present ),
-using the [DocValidator](DocValidator.html) class.
+using the [DocsValidator](DocsValidator.html) class.
 
 And finally, the html files are created from the doc containers:
 - for the classes by the [ClassHtmlBuilder](ClassHtmlBuilder.html)

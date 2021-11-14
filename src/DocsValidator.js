@@ -31,7 +31,7 @@ Validate the doc objects
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class docsValidator {
+class DocsValidator {
 
 	/**
 	A counter for the errors
@@ -396,6 +396,6 @@ class docsValidator {
 
 }
 
-export default docsValidator;
+export default DocsValidator;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */
