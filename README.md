@@ -16,7 +16,7 @@ classes declarations and variables declarations in the code
 
 ## How to document the code
 
-Because my old code was documented with JSDoc tags, I have keeped this, but only a limited set of tags.
+Because my old code was documented with JSDoc tags, I have keeped this, but only on a limited set of tags.
 
 Each class, class property, class method or global variable that you document must have a leading comment block
 starting with ```/**``` and finishing with ```*/```
@@ -32,18 +32,18 @@ between the tag and the next @ char will be considered as a description.
 ### @type tag
 
 This tag is used to document the type of a property or a variable. The tag must be followed by a
-type description between {}. All the text following the } will be ignored.
+type description between {&nbsp;}. All the text following the {&nbsp;} will be ignored.
 
 ### @return and @returns tags
 
-These tags are used to document the return value od a method. The tag must be followed by a
-type description between {}. All the text following the } is considered as a description
+These tags are used to document the return value of a method. The tag must be followed by a
+type description between {&nbsp;}. All the text following the {&nbsp;} is considered as a description
 of the return.
 
 ### @param tag
 
 This tag is used to document a parameter of a method. The tag must be followed by a
-type description between {} and the parameter name, exactly as it is in the code. All the text following the 
+type description between {&nbsp;} and the parameter name, exactly as it is in the code. All the text following the 
 parameter name is considered as a description of the parameter.
 
 ### @ignore tag
@@ -55,11 +55,11 @@ added after the description in the documentation.
 
 ### How to document the type
 
-The types of the properties, variables, parameters and returns have to be documented between {}. Only
+The types of the properties, variables, parameters and returns have to be documented between {&nbsp;}. Only
 JS script types, JS built-in objects and classes declared in your code are considered as valid types.
 
 Arrays, Map and others containers can be follwed by a . folowed by the type of the contained objects 
-betwwen < > so the complete type of an array of strings is {Array.<String>}.
+betwwen &lt; &gt;> so the complete type of an array of strings is {Array.&lt;String&gt;>}.
 
 You can also add a ? before to type when the property, variable, type or param can be nullable.
 
@@ -114,11 +114,11 @@ to create a link to the class documentation...
 
 ### 'Missing description' error
 
-No description found for a class method, property or variable. Add a description
+No description found for a class, method, property or variable. Add a description
 
 ### 'Unknown type' warning
 
-A type is unknown. Verify that the type is correct. If you are using external libraries on can add types
+A type is unknown. Verify that the type is correct. If you are using external libraries, you can add types
 to the #mdnLinks property of the LinkBuilder class. Yes, I aggree, that will be better in a config file...
 
 ### 'Constructor with @return tag' error
@@ -173,7 +173,8 @@ the documentation for the setter.
 
 ### 'Setter don\'t have getter and don\'t have description' error
 
-A setter don't have the corresponding getter. Add a documentation for the setter.
+A setter don't have the corresponding getter **and** don't have documentation.
+Add a documentation for the setter.
 
 ## Parameters
 
@@ -189,7 +190,7 @@ The parameter must be followed by an = and the path where the documentation file
 
 The path can be an absolute path or a relative path to the current working directory.
 
-If your source directory have have subdirectories, the same directories structure will be created in
+If your source directory have subdirectories, the same directories structure will be created in
 the dest directory.
 
 **Warning**. The dest directory will be completely erased when ESSimpleDoc start to avoid to have orphan
@@ -217,13 +218,19 @@ You need to click on the **✔️#** to show and on the **❌#** to hide
 
 ## Samples
 
-Of course ESSimpleDoc is self documented. You can see the documentation on the [github page]() of ESSimpleDoc
+Of course ESSimpleDoc is self documented. You can see the documentation on the
+[github page](https://wwwouaiebe.github.io/ESSimpleDoc/) of ESSimpleDoc
 
 ## Known limitations
 
 ### duplicate classes names
 
+No... it's impossible to create the links  to the classes...
+
 ### default parameters
+
+When a parameter of o method have a default value, you will always receive 
+a 'Mismatch between the @param tags and parameters in the code' error.
 
 ### Source files extension
 
@@ -241,7 +248,7 @@ But you can also download from [Github](https://github.com/wwwouaiebe/ESSimpleDo
 
 ### Using Grunt
 
-See the Grunt-ESSimpleDoc on [Github](https://github.com/wwwouaiebe/Grunt-ESSimpleDoc) or [NPM](https://www.npmjs.com/package/grunt-essimpledoc)?
+See the Grunt-ESSimpleDoc on [Github](https://github.com/wwwouaiebe/Grunt-ESSimpleDoc) or [NPM](https://www.npmjs.com/package/grunt-essimpledoc).
 
 ### And also...
 
@@ -255,29 +262,8 @@ You know surely JS as me. So if you find a bug or need a modification:
 2. You do the correction / modification
 3. If your modifications are usefull for others users, create a pull request
 
+## Thanks to...
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Coming soon...
-
+- eslint for the verification of the code
+- [@babel/parser](https://babeljs.io/docs/en/babel-parser) for parsing the files
+- [Marked](https://marked.js.org/) for parsing the markdown in the descriptions
