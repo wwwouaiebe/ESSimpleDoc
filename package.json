@@ -6,7 +6,7 @@
   "bin": {
     "esd": "./src/index.js"
   },
-  "version": "0.1.2",
+  "version": "1.0.0",
   "keywords": [
     "documentation",
     "es",
