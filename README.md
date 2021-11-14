@@ -217,7 +217,7 @@ When the --noSourcesColor parameter is present, JS keywords are not colored and 
 node ./PathToEsSimpleDoc/index.js --src=./PathToTheSourceFiles --dest=./PathToTheHtmlFiles --validate --launch
 ```
 
-Ig you have installed ESSimpleDoc globally you can also do this:
+If you have installed ESSimpleDoc globally you can also do this:
 
 ```
 esd --src=./PathToTheSourceFiles --dest=./PathToTheHtmlFiles --validate --launch

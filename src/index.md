@@ -27,7 +27,7 @@ and MethodOrPropertyDoc contains one CommentsDoc.
 - TypeDescription is a container used to store types found in the @type, @return and @param tags of the the leading comments.
 
 When all the doc containers are created, the documentation is controlled (when the --validate parameter is present ),
-using the docValidator class.
+using the [DocValidator](DocValidator.html) class.
 
 And finally, the html files are created from the doc containers:
 - for the classes by the [ClassHtmlBuilder](ClassHtmlBuilder.html)
@@ -35,7 +35,7 @@ And finally, the html files are created from the doc containers:
 - for the sources by the [SourceHtmlBuilder](SourceHtmlBuilder.html)
 - and for the home page by the [IndexHtmlBuilder](IndexHtmlBuilder.html)
 
-[NavHtmlBuilder[(NavHtmlBuilder.html) is responsible of the creation of the &lt;nav&gt; html tag present in all the html pages
+The [NavHtmlBuilder](NavHtmlBuilder.html) class is responsible of the creation of the &lt;nav&gt; html tag present in all the html pages
 
 The global object [theLinkBuilder](variables.html#theLinkBuilder) is a container for all the html links created.
 

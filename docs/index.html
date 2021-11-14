@@ -28,7 +28,7 @@ and MethodOrPropertyDoc contains one CommentsDoc.</li>
 <li>TypeDescription is a container used to store types found in the @type, @return and @param tags of the the leading comments.</li>
 </ul>
 <p>When all the doc containers are created, the documentation is controlled (when the --validate parameter is present ),
-using the docValidator class.</p>
+using the <a href="DocValidator.html">DocValidator</a> class.</p>
 <p>And finally, the html files are created from the doc containers:</p>
 <ul>
 <li>for the classes by the <a href="ClassHtmlBuilder.html">ClassHtmlBuilder</a></li>
@@ -36,7 +36,7 @@ using the docValidator class.</p>
 <li>for the sources by the <a href="SourceHtmlBuilder.html">SourceHtmlBuilder</a></li>
 <li>and for the home page by the <a href="IndexHtmlBuilder.html">IndexHtmlBuilder</a></li>
 </ul>
-<p>[NavHtmlBuilder[(NavHtmlBuilder.html) is responsible of the creation of the &lt;nav&gt; html tag present in all the html pages</p>
+<p>The <a href="NavHtmlBuilder.html">NavHtmlBuilder</a> class is responsible of the creation of the &lt;nav&gt; html tag present in all the html pages</p>
 <p>The global object <a href="variables.html#theLinkBuilder">theLinkBuilder</a> is a container for all the html links created.</p>
 <p>The global object <a href="variables.html#theConfig">theConfig</a> is a container for the program&#39;s configuration.</p>
 <p>The <a href="FileWriter.html">FileWriter</a> class is a simple helper class to write files.</p>
