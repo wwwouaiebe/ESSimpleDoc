@@ -32,7 +32,11 @@ import theConfig from './Config.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
-Start the app: read the arguments, set the config, create the source file list and remove the old documentation if any.
+Start the app:
+- read and validate the arguments
+- set the config
+- create the source file list
+- remove the old documentation if any
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
@@ -164,7 +168,9 @@ class AppLoader {
 		let pathSeparator = null;
 		try {
 			returnPath = fs.realpathSync ( path );
-			pathSeparator = -1 !== returnPath.indexOf ( '\\' ) ? '\\' : '/';
+
+			// path.sep seems not working...
+			pathSeparator = -1 === returnPath.indexOf ( '\\' ) ? '/' : '\\';
 			const lstat = fs.lstatSync ( returnPath );
 			if ( lstat.isFile ( ) ) {
 				returnPath = returnPath.substr ( 0, returnPath.lastIndexOf ( pathSeparator ) );
