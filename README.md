@@ -59,7 +59,7 @@ The types of the properties, variables, parameters and returns have to be docume
 JS script types, JS built-in objects and classes declared in your code are considered as valid types.
 
 Arrays, Map and others containers can be follwed by a . folowed by the type of the contained objects 
-betwwen &lt; &gt;> so the complete type of an array of strings is {Array.&lt;String&gt;>}.
+between &lt; &gt; so the complete type of an array of strings is {Array.&lt;String&gt;}.
 
 You can also add a ? before to type when the property, variable, type or param can be nullable.
 
