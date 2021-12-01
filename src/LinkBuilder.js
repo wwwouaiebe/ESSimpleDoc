@@ -82,10 +82,11 @@ class LinkBuilder {
 
 	#mdnLinks = Object.freeze (
 		{
+
+			// Global objects
 			Array : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array',
 			ArrayBuffer : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer',
 			Boolean : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean',
-			CryptoKey : 'https://developer.mozilla.org/en-US/docs/Web/API/CryptoKey',
 			Error : 'https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Error',
 			Function : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function',
 			Map : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map',
@@ -95,13 +96,23 @@ class LinkBuilder {
 			RegExp : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp',
 			String : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String',
 			Uint8Array : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array',
+
+			// Statements
 			Class : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/class',
+
+			// API
+			CryptoKey : 'https://developer.mozilla.org/en-US/docs/Web/API/CryptoKey',
 			Event : 'https://developer.mozilla.org/en-US/docs/Web/API/Event',
 			GeolocationPosition : 'https://developer.mozilla.org/fr/docs/Web/API/GeolocationPosition',
 			GeolocationPositionError : 'https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError',
 			IDBFactory : 'https://developer.mozilla.org/en-US/docs/Web/API/IDBFactory',
 			HTMLElement : 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement',
+			Node : 'https://developer.mozilla.org/en-US/docs/Web/API/Node',
+			NodeList : 'https://developer.mozilla.org/fr/docs/Web/API/NodeList',
 			SVGElement : 'https://developer.mozilla.org/en-US/docs/Web/API/SVGElement',
+			XMLDocument : 'https://developer.mozilla.org/en-US/docs/Web/API/XMLDocument',
+
+			// Others
 			LeafletObject : 'https://leafletjs.com/reference.html',
 			OsmElement : 'https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL',
 			JsonObject : 'https://www.json.org/json-en.html'
