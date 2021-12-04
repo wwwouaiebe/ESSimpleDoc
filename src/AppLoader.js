@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+	- v1.1.0:
+		- Issue ♯2 : Add a version number...
 Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -57,6 +59,13 @@ class AppLoader {
 	// eslint-disable-next-line no-magic-numbers
 	static get #EXIT_BAD_PARAMETER ( ) { return 9; }
 
+	/**
+	The version number
+	@type {String}
+	*/
+	
+	static get #version ( ) { return 'v1.1.0'; }
+	
 	/**
 	The constructor
 	*/
@@ -134,6 +143,7 @@ class AppLoader {
 
 	#showHelp ( ) {
 		console.error ( '\n\t\x1b[36m--help\x1b[0m : this help\n' );
+		console.error ( '\t\x1b[36m--version\x1b[0m : the version number\n' );
 		console.error ( '\t\x1b[36m--src\x1b[0m : the path to the directory where the sources are located\n' );
 		console.error (
 			'\t\x1b[36m--dest\x1b[0m : the path to the directory where' +
@@ -228,6 +238,10 @@ class AppLoader {
 					case '--help' :
 						this.#showHelp ( );
 						break;
+					case '--version' :
+					console.error ( `\n\t\x1b[36mVersion : ${AppLoader.#version}\x1b[0m\n` );
+						process.exit ( 0 );
+						break;
 					default :
 						break;
 					}
@@ -257,7 +271,7 @@ class AppLoader {
 		this.#createConfig ( options );
 
 		// console.clear ( );
-		console.error ( 'Starting ESSimpleDoc...' );
+		console.error ( `\nStarting ESSimpleDoc ${AppLoader.#version}...` );
 
 		// source files list
 		this.#readDir ( '' );
