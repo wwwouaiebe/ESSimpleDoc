@@ -40,6 +40,74 @@ import theLinkBuilder from './LinkBuilder.js';
 import DocsValidator from './DocsValidator.js';
 import IndexHtmlBuilder from './IndexHtmlBuilder.js';
 
+/**
+A simple container to store the line, column and html tag value to insert in the source file
+for comments, string literals, template literals and regexp literals
+*/
+
+class TagData {
+
+	/**
+	The line number in the source file where the tag must be inserted
+	@type {Number}
+	*/
+
+	#line;
+
+	/**
+	The column number in the source file where the tag must be inserted
+	@type {?Number}
+	*/
+
+	#column;
+
+	/**
+	The tag to insert.
+	@type {String}
+	*/
+
+	#tag;
+
+	/**
+	The constructor
+	@param {Number} line The line number in the source file where the tag must be inserted
+	@param {?Number} column The column number in the source file where the tag must be inserted
+	@param {String} tag The tag to insert.
+	*/
+
+	constructor ( line, column, tag ) {
+		Object.freeze ( this );
+		this.#line = line;
+		this.#column = column;
+		this.#tag = tag;
+	}
+
+	/**
+	The line number in the source file where the tag must be inserted
+	@type {Number}
+	*/
+
+	get line ( ) { return this.#line; }
+
+	/**
+	The column number in the source file where the tag must be inserted
+	If the tag must be inserted at the end of the line the value is null
+	@type {?Number}
+	*/
+
+	get column ( ) { return this.#column; }
+
+	/**
+	The tag to insert.
+	To avoid  a replacement of the < ,> and " chars when creating the source html file
+	the < char is replaced with §lt§, the > char with §gt§ and the " char with §quot§ and then
+	replaced with the correct value inthe source html file.
+	@type {String}
+	*/
+
+	get tag ( ) { return this.#tag; }
+}
+
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 Build the complete documentation: generate AST from the source files, then extracting doc objects from AST
@@ -111,7 +179,12 @@ class DocBuilder {
 		sourceType : 'module'
 	};
 
-	#tags;
+	/**
+	A Map with all the TagData of all the source files ordered by SourceFileName
+	@type {Map.<Array.<TagData>>}
+	*/
+
+	#tagsDataMap;
 
 	/**
 	The constructor
@@ -125,13 +198,13 @@ class DocBuilder {
 
 	/**
 	Build all the docs for a file
-	@param {Object} parserResult The root
+	@param {Object} ast The root
 	[ast node](https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md) given by the babel/parser
 	@param {String} sourceFileName The source file name, including relative path since theConfig.srcDir
 	*/
 
-	#buildDocs ( parserResult, sourceFileName ) {
-		parserResult.program.body.forEach (
+	#buildDocs ( ast, sourceFileName ) {
+		ast.program.body.forEach (
 			astNode => {
 				switch ( astNode.type ) {
 				case 'ClassDeclaration' :
@@ -157,117 +230,65 @@ class DocBuilder {
 		);
 	}
 
+	/**
+	Traverse the ast created by the Babel parser and extract the TagData objects for the
+	template literals, string literals, regexp literals and comments
+	@param {Object} ast The root
+	[ast node](https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md) given by the babel/parser
+	@param {String} sourceFileName The source file name, including relative path since theConfig.srcDir
+	*/
+
 	#traverseAst ( ast, sourceFileName ) {
-		const tags = [];
+
+		const tagsData = [];
+
+		/*
+		A helper function for extracting the comments TagData
+		Yes, I know... I don't like functions, but traverse will not know this
+		*/
+
+		function addCommentTags ( comment ) {
+			let currentLine = comment.loc.start.line;
+			tagsData.push ( new TagData ( currentLine, comment.loc.start.column, '§lt§span class=§quot§Comment§quot§§gt§' ) );
+			while ( currentLine !== comment.loc.end.line ) {
+				tagsData.push ( new TagData ( currentLine, null, '§lt§/span§gt§' ) );
+				currentLine ++;
+				tagsData.push ( new TagData ( currentLine, 0, '§lt§span class=§quot§Comment§quot§§gt§' ) );
+			}
+			tagsData.push ( new TagData ( comment.loc.end.line, comment.loc.end.column, '§lt§/span§gt§' ) );
+		}
+
 		traverse.default (
 			ast,
 			{
 				enter ( path ) {
 					switch ( path.node.type ) {
-						case 'TemplateLiteral' :
-						case 'RegExpLiteral' :
-						case 'StringLiteral' :
-							tags.push (
-								{
-									line : path.node.loc.start.line,
-									column : path.node.loc.start.column,
-									tag : '§lt§span class=' + '§quot§' + path.node.type + '§quot§§gt§'
-								}
-							);
-							tags.push (
-								{
-									line : path.node.loc.end.line,
-									column : path.node.loc.end.column,
-									tag : '§lt§/span§gt§'
-								}
-							);
-							break;
-						default:
-							break;
+					case 'TemplateLiteral' :
+					case 'RegExpLiteral' :
+					case 'StringLiteral' :
+						tagsData.push (
+							new TagData (
+								path.node.loc.start.line,
+								path.node.loc.start.column,
+								'§lt§span class=' + '§quot§' + path.node.type + '§quot§§gt§'
+							)
+						);
+						tagsData.push ( new TagData ( path.node.loc.end.line, path.node.loc.end.column, '§lt§/span§gt§' ) );
+						break;
+					default :
+						break;
 					}
 
 					if ( path.node.leadingComments ) {
-						path.node.leadingComments.forEach (
-							comment => {
-								let currentLine = comment.loc.start.line;
-								let currentColumn = comment.loc.start.column;
-								tags.push ( 
-									{
-										line : currentLine,
-										column : currentColumn,
-										tag : '§lt§span class=§quot§Comment§quot§§gt§'
-									}
-								);
-								while ( currentLine !== comment.loc.end.line ) {
-									tags.push (
-										{
-											line : currentLine,
-											column : null,
-											tag : '§lt§/span§gt§'
-										}
-									);
-									currentLine ++;
-									tags.push (
-										{
-											line : currentLine,
-											column : 0,
-											tag : '§lt§span class=§quot§Comment§quot§§gt§'
-										}
-									);
-								}
-								tags.push (
-									{
-										line : comment.loc.end.line,
-										column : comment.loc.end.column,
-										tag : '§lt§/span§gt§'
-									}
-								);
-							}
-						);
+						path.node.leadingComments.forEach ( addCommentTags );
 					}
 					if ( path.node.trailingComments ) {
-						path.node.trailingComments.forEach (
-							comment => {
-								let currentLine = comment.loc.start.line;
-								let currentColumn = comment.loc.start.column;
-								tags.push (
-									{
-										line : currentLine,
-										column : currentColumn,
-										tag : '§lt§span class=§quot§Comment§quot§§gt§'
-									}
-								);
-								while ( currentLine !== comment.loc.end.line ) {
-									tags.push (
-										{
-											line : currentLine,
-											column : null,
-											tag : '§lt§/span§gt§'
-										}
-									);
-									currentLine ++;
-									tags.push (
-										{
-											line : currentLine,
-											column : 0,
-											tag : '§lt§span class=§quot§Comment§quot§§gt§'
-										}
-									);
-								}
-								tags.push (
-									{
-										line : comment.loc.end.line,
-										column : comment.loc.end.column,
-										tag : '§lt§/span§gt§'
-									}
-								);
-							}
-						);
+						path.node.trailingComments.forEach ( addCommentTags );
 					}
 				}
 			}
 		);
-		this.#tags.set ( sourceFileName, tags );
+		this.#tagsDataMap.set ( sourceFileName, tagsData );
 	}
 
 	/**
@@ -277,7 +298,7 @@ class DocBuilder {
 
 	buildFiles ( sourceFilesList ) {
 		let ast = null;
-		this.#tags = new Map ( );
+		this.#tagsDataMap = new Map ( );
 		sourceFilesList.forEach (
 			sourceFileName => {
 				try {
@@ -295,7 +316,9 @@ class DocBuilder {
 					process.exit ( 1 );
 				}
 
-				this.#traverseAst ( ast, sourceFileName );
+				if ( ! theConfig.noSourcesColor ) {
+					this.#traverseAst ( ast, sourceFileName );
+				}
 
 				// buiding docs for the source
 				this.#buildDocs ( ast, sourceFileName );
@@ -327,7 +350,7 @@ class DocBuilder {
 		sourceFilesList.forEach (
 			sourceFileName => {
 				const fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
-				sourceHtmlBuilder.build ( fileContent, sourceFileName, this.#tags.get ( sourceFileName ) );
+				sourceHtmlBuilder.build ( fileContent, sourceFileName, this.#tagsDataMap.get ( sourceFileName ) );
 			}
 		);
 

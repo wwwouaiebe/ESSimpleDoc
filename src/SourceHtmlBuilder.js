@@ -155,9 +155,10 @@ class SourceHtmlBuilder {
 	Build the  source html file.
 	@param {String} fileContent The file content
 	@param {String} fileName The file name, including the path since theConfig.destDir
+	@param {Array.<TagData>} tagsData An array with the tags to insert in the souce file
 	*/
 
-	build ( fileContent, fileName, tags ) {
+	build ( fileContent, fileName, tagsData ) {
 
 		this.#sourcesCounter ++;
 
@@ -183,56 +184,71 @@ class SourceHtmlBuilder {
 		// title
 		html += `<h1>File : ${fileName}</h1>`;
 
-		tags.sort (
-			( first, second ) => {
-				if ( first.line === second.line ) {
-					if ( null === second.column ) {
-						return -1;
+		if ( tagsData ) {
+
+			// tagsDdata is sorted by line number and column number.
+			// TagsData with column === null are the last
+			tagsData.sort (
+				( first, second ) => {
+					if ( first.line === second.line ) {
+						if ( null === second.column ) {
+							return -1;
+						}
+						else if ( null === first.column ) {
+							return 1;
+						}
+						return second.column - first.column;
 					}
-					else if ( null === first.column ) {
-						return 1;
-					}
-					return second.column - first.column;
+
+					return first.line - second.line;
+
 				}
+			);
 
-				return first.line - second.line;
+			// File content is splitted into lines
+			let lines = fileContent.split ( /\r\n|\r|\n/ );
 
-			}
-		);
-
-		let lines = fileContent.split ( /\r\n|\r|\n/ );
-		let previousTag = { line : -1, column : -1, tag : '' };
-
-		tags.forEach (
-			tag => {
-				if ( previousTag.line !== tag.line || previousTag.column !== tag.column ) {
-					let line = lines [ tag.line - 1 ];
-					if ( null === tag.column ) {
-						line += tag.tag;
+			// and then tags are inserted
+			let previousTag = { line : -1, column : -1, tag : '' };
+			tagsData.forEach (
+				tag => {
+					if ( previousTag.line !== tag.line || previousTag.column !== tag.column ) {
+						let line = lines [ tag.line - 1 ];
+						if ( null === tag.column ) {
+							line += tag.tag;
+						}
+						else {
+							line = line.substring ( 0, tag.column ) + tag.tag + line.substring ( tag.column );
+						}
+						lines [ tag.line - 1 ] = line;
 					}
-					else {
-						line = line.substring ( 0, tag.column ) + tag.tag + line.substring ( tag.column );
-					}
-					lines [ tag.line - 1 ] = line;
+
+					previousTag = tag;
 				}
+			);
 
-				previousTag = tag;
-			}
-		);
+			// Line are reassembled into a unique string to avoid a lot of replaceAll
+			this.#fileContent = '';
+			lines.forEach (
+				line => this.#fileContent += line + '\n'
+			);
+		}
+		else {
+			this.#fileContent = fileContent;
+		}
 
-		this.#fileContent = '';
-
-		lines.forEach (
-			line => this.#fileContent += line + '\n'
-		);
-
-		// Removing html entities and tabs
 		this.#fileContent = this.#fileContent
+
+			// Removing tabs
 			.replaceAll ( '\t', '    ' )
+
+			// Removing html entities
 			.replaceAll ( /\u003c/g, '&lt;' )
 			.replaceAll ( /\u003e/g, '&gt;' )
 			.replaceAll ( /\u0022/g, '&quot;' )
 			.replaceAll ( /\u0027/g, '&apos;' )
+
+			// replacing < > and quot in tags for literals and comments
 			.replaceAll ( /§lt§/g, '<' )
 			.replaceAll ( /§gt§/g, '>' )
 			.replaceAll ( /§quot§/g, '"' );
@@ -244,12 +260,12 @@ class SourceHtmlBuilder {
 			this.#setVariablesLinks ( );
 		}
 
-		// creating the file content
+		// creating the file content in a html table
 		let lineCounter = 0;
 		html += '<table class="srcCode">';
 
 		// splitting file into lines
-		this.#fileContent.split ( /\n/ ).forEach (
+		this.#fileContent.split ( /\r\n|\r|\n/ ).forEach (
 			line => {
 
 				// and adding a row in the html table
