@@ -158,33 +158,32 @@ class DocBuilder {
 	}
 
 	#traverseAst ( ast, sourceFileName ) {
-
-		let tags = [];
+		const tags = [];
 		traverse.default (
 			ast,
 			{
 				enter ( path ) {
-					if (
-						'TemplateLiteral' === path.node.type
-						||
-						'RegExpLiteral' === path.node.type
-						||
-						'StringLiteral' === path.node.type
-					) {
-						tags.push (
-							{
-								line : path.node.loc.start.line,
-								column : path.node.loc.start.column,
-								tag : '§lt§span class=' + '§quot§' + path.node.type + '§quot§§gt§'
-							}
-						);
-						tags.push (
-							{
-								line : path.node.loc.end.line,
-								column : path.node.loc.end.column,
-								tag : '§lt§/span§gt§'
-							}
-						);
+					switch ( path.node.type ) {
+						case 'TemplateLiteral' :
+						case 'RegExpLiteral' :
+						case 'StringLiteral' :
+							tags.push (
+								{
+									line : path.node.loc.start.line,
+									column : path.node.loc.start.column,
+									tag : '§lt§span class=' + '§quot§' + path.node.type + '§quot§§gt§'
+								}
+							);
+							tags.push (
+								{
+									line : path.node.loc.end.line,
+									column : path.node.loc.end.column,
+									tag : '§lt§/span§gt§'
+								}
+							);
+							break;
+						default:
+							break;
 					}
 
 					if ( path.node.leadingComments ) {
@@ -192,7 +191,7 @@ class DocBuilder {
 							comment => {
 								let currentLine = comment.loc.start.line;
 								let currentColumn = comment.loc.start.column;
-								tags.push (
+								tags.push ( 
 									{
 										line : currentLine,
 										column : currentColumn,
