@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+	- v1.1.0:
+		- Issue ♯1 : Improve colorization of sources files...
 Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -89,32 +91,6 @@ class SourceHtmlBuilder {
 	#fileContent;
 
 	/**
-	A counter for the comments in the source file
-	@type {Number}
-	*/
-
-	#commentCounter;
-
-	/**
-	A helper method for the parseLine method. Count the occurences of word in text
-	@param {String} text The text in witch the word must be searched
-	@param {String} word The word to search
-	@return {Number} The number of occurences found.
-	*/
-
-	#countWords ( text, word ) {
-		let counter = 0;
-		let position = text.indexOf ( word );
-
-		while ( -1 !== position ) {
-			counter ++;
-			position = text.indexOf ( word, position + 1 );
-		}
-
-		return counter;
-	}
-
-	/**
 	Colorize the js keywords in the source file content
 	*/
 
@@ -160,30 +136,6 @@ class SourceHtmlBuilder {
 	}
 
 	/**
-	Parse a line of the source file content, adding span to the comments
-	@param {String} line The line to parseLine
-	@return {String} The line parsed and completed with span html tags
-	*/
-
-	#parseLine ( line ) {
-		let parsedLine = line;
-		if ( 0 !== this.#commentCounter ) {
-			parsedLine = '<span class="codeComments">' + parsedLine;
-		}
-		this.#commentCounter = this.#commentCounter +
-			this.#countWords ( parsedLine, '/*' ) -
-			this.#countWords ( parsedLine, '*/' );
-		parsedLine = parsedLine.replaceAll ( '/*', '<span class="codeComments">/*' ).replaceAll ( '*/', '*/</span>' );
-		if ( -1 !== parsedLine.indexOf ( '//' ) ) {
-			parsedLine = parsedLine.replace ( '//', '<span class="codeComments">//' ) + '</span>';
-		}
-		if ( 0 !== this.#commentCounter ) {
-			parsedLine += '</span>';
-		}
-		return parsedLine;
-	}
-
-	/**
 	The constructor
 	*/
 
@@ -205,7 +157,7 @@ class SourceHtmlBuilder {
 	@param {String} fileName The file name, including the path since theConfig.destDir
 	*/
 
-	build ( fileContent, fileName ) {
+	build ( fileContent, fileName, tags ) {
 
 		this.#sourcesCounter ++;
 
@@ -231,13 +183,59 @@ class SourceHtmlBuilder {
 		// title
 		html += `<h1>File : ${fileName}</h1>`;
 
+		tags.sort (
+			( first, second ) => {
+				if ( first.line === second.line ) {
+					if ( null === second.column ) {
+						return -1;
+					}
+					else if ( null === first.column ) {
+						return 1;
+					}
+					return second.column - first.column;
+				}
+
+				return first.line - second.line;
+
+			}
+		);
+
+		let lines = fileContent.split ( /\r\n|\r|\n/ );
+		let previousTag = { line : -1, column : -1, tag : '' };
+
+		tags.forEach (
+			tag => {
+				if ( previousTag.line !== tag.line || previousTag.column !== tag.column ) {
+					let line = lines [ tag.line - 1 ];
+					if ( null === tag.column ) {
+						line += tag.tag;
+					}
+					else {
+						line = line.substring ( 0, tag.column ) + tag.tag + line.substring ( tag.column );
+					}
+					lines [ tag.line - 1 ] = line;
+				}
+
+				previousTag = tag;
+			}
+		);
+
+		this.#fileContent = '';
+
+		lines.forEach (
+			line => this.#fileContent += line + '\n'
+		);
+
 		// Removing html entities and tabs
-		this.#fileContent = fileContent
+		this.#fileContent = this.#fileContent
 			.replaceAll ( '\t', '    ' )
 			.replaceAll ( /\u003c/g, '&lt;' )
 			.replaceAll ( /\u003e/g, '&gt;' )
 			.replaceAll ( /\u0022/g, '&quot;' )
-			.replaceAll ( /\u0027/g, '&apos;' );
+			.replaceAll ( /\u0027/g, '&apos;' )
+			.replaceAll ( /§lt§/g, '<' )
+			.replaceAll ( /§gt§/g, '>' )
+			.replaceAll ( /§quot§/g, '"' );
 
 		// Adding color span and links
 		if ( ! theConfig.noSourcesColor ) {
@@ -248,11 +246,10 @@ class SourceHtmlBuilder {
 
 		// creating the file content
 		let lineCounter = 0;
-		this.#commentCounter = 0;
 		html += '<table class="srcCode">';
 
 		// splitting file into lines
-		this.#fileContent.split ( /\r\n|\r|\n/ ).forEach (
+		this.#fileContent.split ( /\n/ ).forEach (
 			line => {
 
 				// and adding a row in the html table
@@ -260,7 +257,7 @@ class SourceHtmlBuilder {
 				const strLineCounter = String ( lineCounter ).padStart ( 5, '_' );
 				html +=
 					`<tr><td><a id="L${strLineCounter}">${lineCounter}</a></td>` +
-					`<td><pre>${this.#parseLine ( line )}</pre></td></tr>`;
+					`<td><pre>${line}</pre></td></tr>`;
 			}
 		);
 

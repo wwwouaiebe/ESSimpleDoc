@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+	- v1.1.0:
+		- Issue ♯1 : Improve colorization of sources files...
 Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -26,6 +28,7 @@ Doc reviewed 20211111
 import process from 'process';
 import fs from 'fs';
 import babelParser from '@babel/parser';
+import traverse from '@babel/traverse';
 
 import ClassDocBuilder from './ClassDocBuilder.js';
 import VariableDocBuilder from './VariableDocBuilder.js';
@@ -108,6 +111,8 @@ class DocBuilder {
 		sourceType : 'module'
 	};
 
+	#tags;
+
 	/**
 	The constructor
 	*/
@@ -152,6 +157,120 @@ class DocBuilder {
 		);
 	}
 
+	#traverseAst ( ast, sourceFileName ) {
+
+		let tags = [];
+		traverse.default (
+			ast,
+			{
+				enter ( path ) {
+					if (
+						'TemplateLiteral' === path.node.type
+						||
+						'RegExpLiteral' === path.node.type
+						||
+						'StringLiteral' === path.node.type
+					) {
+						tags.push (
+							{
+								line : path.node.loc.start.line,
+								column : path.node.loc.start.column,
+								tag : '§lt§span class=' + '§quot§' + path.node.type + '§quot§§gt§'
+							}
+						);
+						tags.push (
+							{
+								line : path.node.loc.end.line,
+								column : path.node.loc.end.column,
+								tag : '§lt§/span§gt§'
+							}
+						);
+					}
+
+					if ( path.node.leadingComments ) {
+						path.node.leadingComments.forEach (
+							comment => {
+								let currentLine = comment.loc.start.line;
+								let currentColumn = comment.loc.start.column;
+								tags.push (
+									{
+										line : currentLine,
+										column : currentColumn,
+										tag : '§lt§span class=§quot§Comment§quot§§gt§'
+									}
+								);
+								while ( currentLine !== comment.loc.end.line ) {
+									tags.push (
+										{
+											line : currentLine,
+											column : null,
+											tag : '§lt§/span§gt§'
+										}
+									);
+									currentLine ++;
+									tags.push (
+										{
+											line : currentLine,
+											column : 0,
+											tag : '§lt§span class=§quot§Comment§quot§§gt§'
+										}
+									);
+								}
+								tags.push (
+									{
+										line : comment.loc.end.line,
+										column : comment.loc.end.column,
+										tag : '§lt§/span§gt§'
+									}
+								);
+							}
+						);
+					}
+					if ( path.node.trailingComments ) {
+						path.node.trailingComments.forEach (
+							comment => {
+								let currentLine = comment.loc.start.line;
+								let currentColumn = comment.loc.start.column;
+								tags.push (
+									{
+										line : currentLine,
+										column : currentColumn,
+										tag : '§lt§span class=§quot§Comment§quot§§gt§'
+									}
+								);
+								while ( currentLine !== comment.loc.end.line ) {
+									tags.push (
+										{
+											line : currentLine,
+											column : null,
+											tag : '§lt§/span§gt§'
+										}
+									);
+									currentLine ++;
+									tags.push (
+										{
+											line : currentLine,
+											column : 0,
+											tag : '§lt§span class=§quot§Comment§quot§§gt§'
+										}
+									);
+								}
+								tags.push (
+									{
+										line : comment.loc.end.line,
+										column : comment.loc.end.column,
+										tag : '§lt§/span§gt§'
+									}
+								);
+							}
+						);
+					}
+				}
+			}
+		);
+		this.#tags.set ( sourceFileName, tags );
+	}
+
 	/**
 	Build all the docs for the app and then build all the html files
 	@param {Array.<String>} sourceFilesList The source files names, including relative path since theConfig.srcDir
@@ -159,6 +278,7 @@ class DocBuilder {
 
 	buildFiles ( sourceFilesList ) {
 		let ast = null;
+		this.#tags = new Map ( );
 		sourceFilesList.forEach (
 			sourceFileName => {
 				try {
@@ -175,6 +295,8 @@ class DocBuilder {
 
 					process.exit ( 1 );
 				}
+
+				this.#traverseAst ( ast, sourceFileName );
 
 				// buiding docs for the source
 				this.#buildDocs ( ast, sourceFileName );
@@ -206,7 +328,7 @@ class DocBuilder {
 		sourceFilesList.forEach (
 			sourceFileName => {
 				const fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
-				sourceHtmlBuilder.build ( fileContent, sourceFileName );
+				sourceHtmlBuilder.build ( fileContent, sourceFileName, this.#tags.get ( sourceFileName ) );
 			}
 		);
 
