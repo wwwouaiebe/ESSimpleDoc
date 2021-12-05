@@ -21,6 +21,8 @@ Changes:
 		- created
 	- v1.1.0:
 		- Issue ♯2 : Add a version number...
+	- v1.1.0:
+		- Issue ♯3 : String.substr ( ) is deprecated... Replace...
 Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -63,9 +65,9 @@ class AppLoader {
 	The version number
 	@type {String}
 	*/
-	
+
 	static get #version ( ) { return 'v1.1.0'; }
-	
+
 	/**
 	The constructor
 	*/
@@ -183,7 +185,7 @@ class AppLoader {
 			pathSeparator = -1 === returnPath.indexOf ( '\\' ) ? '/' : '\\';
 			const lstat = fs.lstatSync ( returnPath );
 			if ( lstat.isFile ( ) ) {
-				returnPath = returnPath.substr ( 0, returnPath.lastIndexOf ( pathSeparator ) );
+				returnPath = returnPath.substring ( 0, returnPath.lastIndexOf ( pathSeparator ) );
 			}
 		}
 		catch {
@@ -239,7 +241,7 @@ class AppLoader {
 						this.#showHelp ( );
 						break;
 					case '--version' :
-					console.error ( `\n\t\x1b[36mVersion : ${AppLoader.#version}\x1b[0m\n` );
+						console.error ( `\n\t\x1b[36mVersion : ${AppLoader.#version}\x1b[0m\n` );
 						process.exit ( 0 );
 						break;
 					default :
@@ -289,7 +291,7 @@ class AppLoader {
 		const deltaTime = process.hrtime.bigint ( ) - startTime;
 
 		/* eslint-disable-next-line no-magic-numbers */
-		const execTime = String ( deltaTime / 1000000000n ) + '.' + String ( deltaTime % 1000000000n ).substr ( 0, 3 );
+		const execTime = String ( deltaTime / 1000000000n ) + '.' + String ( deltaTime % 1000000000n ).substring ( 0, 3 );
 		console.error ( `\nDocumentation generated in ${execTime} seconds in the folder \x1b[36m${theConfig.destDir}\x1b[0m` );
 		if ( theConfig.launch ) {
 			console.error ( '\n\t... launching in the browser...\n' );

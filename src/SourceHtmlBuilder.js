@@ -21,6 +21,7 @@ Changes:
 		- created
 	- v1.1.0:
 		- Issue ♯1 : Improve colorization of sources files...
+		- Issue ♯3 : String.substr ( ) is deprecated... Replace...
 Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -283,7 +284,7 @@ class SourceHtmlBuilder {
 		html += navHtmlBuilder.footer;
 		html +=
 			'<script>document.getElementById ( new URL ( window.location' +
-			' ).hash.substr( 1 ) )?.parentNode.classList.add ( \'hash\' )</script>';
+			' ).hash.substring( 1 ) )?.parentNode.classList.add ( \'hash\' )</script>';
 		html += '</body></html>';
 
 		// write file

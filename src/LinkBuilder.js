@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+	- v1.1.0:
+		- Issue ♯3 : String.substr ( ) is deprecated... Replace...
 Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -151,7 +153,7 @@ class LinkBuilder {
 	setClassLink ( classDoc ) {
 		this.#classesLinks.set (
 			classDoc.name,
-			classDoc.file.substr ( 0, classDoc.file.lastIndexOf ( '/' ) + 1 ) + classDoc.name + '.html'
+			classDoc.file.substring ( 0, classDoc.file.lastIndexOf ( '/' ) + 1 ) + classDoc.name + '.html'
 		);
 	}
 
