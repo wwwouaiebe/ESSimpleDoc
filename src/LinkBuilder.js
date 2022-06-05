@@ -112,6 +112,8 @@ class LinkBuilder {
 			Node : 'https://developer.mozilla.org/en-US/docs/Web/API/Node',
 			NodeList : 'https://developer.mozilla.org/fr/docs/Web/API/NodeList',
 			SVGElement : 'https://developer.mozilla.org/en-US/docs/Web/API/SVGElement',
+			Touch : 'https://developer.mozilla.org/en-US/docs/Web/API/Touch',
+			TouchList : 'https://developer.mozilla.org/en-US/docs/Web/API/TouchList',
 			XMLDocument : 'https://developer.mozilla.org/en-US/docs/Web/API/XMLDocument',
 
 			// Others
