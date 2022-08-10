@@ -60,6 +60,13 @@ class Config {
 	validate;
 
 	/**
+	A flag indicating the HTML files must not be created. Coming from the --noFiles parameter
+	@type {boolean}
+	*/
+
+	noFiles;
+
+	/**
 	A flag indicating that the documentation must be opened in the browser immediately after
 	the generation. Coming from the --launch parameter
 	@type {boolean}
@@ -84,6 +91,7 @@ class Config {
 		this.docDir = '';
 		this.appDir = '';
 		this.validate = false;
+		this.noFiles = false;
 		this.launch = false;
 		this.noSourcesColor = false;
 	}

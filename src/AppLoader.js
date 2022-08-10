@@ -66,7 +66,7 @@ class AppLoader {
 	@type {String}
 	*/
 
-	static get #version ( ) { return 'v1.1.0'; }
+	static get #version ( ) { return 'v1.2.0'; }
 
 	/**
 	The constructor
@@ -216,6 +216,9 @@ class AppLoader {
 			if ( options.validate ) {
 				theConfig.validate = true;
 			}
+			if ( options.noFiles ) {
+				theConfig.noFiles = true;
+			}
 		}
 		else {
 			process.argv.forEach (
@@ -230,6 +233,9 @@ class AppLoader {
 						break;
 					case '--validate' :
 						theConfig.validate = true;
+						break;
+					case '--noFiles' :
+						theConfig.noFiles = true;
 						break;
 					case '--launch' :
 						theConfig.launch = true;
@@ -278,11 +284,14 @@ class AppLoader {
 		// source files list
 		this.#readDir ( '' );
 
-		// Cleaning old files
-		this.#cleanOldFiles ( );
+		if ( ! theConfig.noFiles ) {
 
-		// copy the css file in the documentation directory
-		fs.copyFileSync ( theConfig.appDir + 'ESSimpleDoc.css', theConfig.destDir + 'ESSimpleDoc.css' );
+			// Cleaning old files
+			this.#cleanOldFiles ( );
+
+			// copy the css file in the documentation directory
+			fs.copyFileSync ( theConfig.appDir + 'ESSimpleDoc.css', theConfig.destDir + 'ESSimpleDoc.css' );
+		}
 
 		// starting the build
 		new DocBuilder ( ).buildFiles ( this.#sourceFileNames );

@@ -339,28 +339,31 @@ class DocBuilder {
 			docsValidator.validate ( this.#classesDocs, this.#variablesDocs );
 		}
 
-		// Building classes html files
-		const classHtmlBuilder = new ClassHtmlBuilder ( );
-		this.#classesDocs.forEach ( classDoc => classHtmlBuilder.build ( classDoc ) );
+		if ( ! theConfig.noFiles ) {
 
-		console. error ( `\n\tCreated ${classHtmlBuilder.classesCounter} class files` );
+			// Building classes html files
+			const classHtmlBuilder = new ClassHtmlBuilder ( );
+			this.#classesDocs.forEach ( classDoc => classHtmlBuilder.build ( classDoc ) );
 
-		// Building sources html files
-		const sourceHtmlBuilder = new SourceHtmlBuilder ( );
-		sourceFilesList.forEach (
-			sourceFileName => {
-				const fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
-				sourceHtmlBuilder.build ( fileContent, sourceFileName, this.#tagsDataMap.get ( sourceFileName ) );
-			}
-		);
+			console. error ( `\n\tCreated ${classHtmlBuilder.classesCounter} class files` );
 
-		console.error ( `\n\tCreated ${sourceHtmlBuilder.sourcesCounter} source files` );
+			// Building sources html files
+			const sourceHtmlBuilder = new SourceHtmlBuilder ( );
+			sourceFilesList.forEach (
+				sourceFileName => {
+					const fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
+					sourceHtmlBuilder.build ( fileContent, sourceFileName, this.#tagsDataMap.get ( sourceFileName ) );
+				}
+			);
 
-		// Building the variables html file
-		new VariablesHtmlBuilder ( ).build ( this.#variablesDocs );
+			console.error ( `\n\tCreated ${sourceHtmlBuilder.sourcesCounter} source files` );
 
-		// Building the index.html file
-		new IndexHtmlBuilder ( ).build ( );
+			// Building the variables html file
+			new VariablesHtmlBuilder ( ).build ( this.#variablesDocs );
+
+			// Building the index.html file
+			new IndexHtmlBuilder ( ).build ( );
+		}
 	}
 }
 
