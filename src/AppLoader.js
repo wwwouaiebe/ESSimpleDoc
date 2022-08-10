@@ -23,6 +23,8 @@ Changes:
 		- Issue ♯2 : Add a version number...
 	- v1.1.0:
 		- Issue ♯3 : String.substr ( ) is deprecated... Replace...
+	- v1.2.0:
+		- Issue ♯4 : Add an option to avoid the HTML files generation
 Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */

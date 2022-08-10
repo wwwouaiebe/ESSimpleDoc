@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+	- v1.2.0:
+		- Issue ♯4 : Add an option to avoid the HTML files generation
 Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */

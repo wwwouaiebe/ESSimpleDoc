@@ -200,6 +200,10 @@ files in the directory. Never place important files in that directory.
 
 When present, the documentation is validated
 
+### --noFiles parameter
+
+When present, the HTML files are not generated
+
 ### --launch parameter
 
 When present the home page of the documentation is directly opened in the browser.
@@ -214,7 +218,7 @@ When the --noSourcesColor parameter is present, JS keywords are not colored and 
 ### Samples of call to ESSimpleDoc from Node
 
 ```
-node ./PathToEsSimpleDoc/index.js --src=./PathToTheSourceFiles --dest=./PathToTheHtmlFiles --validate --launch
+node ./PathToEsSimpleDoc/src/index.js --src=./PathToTheSourceFiles --dest=./PathToTheHtmlFiles --validate --launch
 ```
 
 If you have installed ESSimpleDoc globally you can also do this:
