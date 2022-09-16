@@ -209,7 +209,17 @@ class LinkBuilder {
 	get sourcesLinks ( ) {
 		if ( ! this.#sourcesLinksCache ) {
 			this.#sourcesLinksCache = Array.from ( this.#sourcesLinks ).sort (
-				( first, second ) => first [ 0 ] .localeCompare ( second [ 0 ] )
+				( first, second ) => {
+					const firstPath = first [ 0 ].substring ( 0, first [ 0 ].lastIndexOf ( '/' ) );
+					const firstFile = first [ 0 ].substring ( first [ 0 ].lastIndexOf ( '/' ) + 1 );
+					const secondPath = second [ 0 ].substring ( 0, second [ 0 ].lastIndexOf ( '/' ) );
+					const secondFile = second [ 0 ].substring ( second [ 0 ].lastIndexOf ( '/' ) + 1 );
+					const pathCompare = firstPath.localeCompare ( secondPath );
+					if ( 0 === pathCompare ) {
+						return firstFile.localeCompare ( secondFile );
+					}
+					return pathCompare;
+				}
 			);
 		}
 		return this.#sourcesLinksCache;
