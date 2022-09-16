@@ -21,6 +21,8 @@ Changes:
 		- created
 	- v1.1.0:
 		- Issue ♯3 : String.substr ( ) is deprecated... Replace...
+	- v1.2.1:
+		- Issue ♯5 : Sources files are not sorted correctly in nav part of the html pages
 Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
