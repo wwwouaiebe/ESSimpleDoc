@@ -19,11 +19,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Changes:
 	- v1.0.0:
 		- created
+	- v1.2.2:
+		- Added complete path on error
 Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import theLinkBuilder from './LinkBuilder.js';
+import theConfig from './Config.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -301,7 +304,7 @@ class DocsValidator {
 		console.error (
 			`\t${color}${rule.errorLevel}\x1b[0m '${rule.ruleMessage}' for ` +
 			`${className + methodPrefix + doc.name} in file ` +
-			`${color}${doc.file}\x1b[0m at line ${color}${doc.line}\x1b[0m)`
+			`\n\t${color}${theConfig.srcDir}${doc.file}:${doc.line}\x1b[0m)`
 		);
 	}
 
