@@ -110,6 +110,7 @@ class LinkBuilder {
 			GeolocationPosition : 'https://developer.mozilla.org/fr/docs/Web/API/GeolocationPosition',
 			GeolocationPositionError : 'https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError',
 			IDBFactory : 'https://developer.mozilla.org/en-US/docs/Web/API/IDBFactory',
+			HTMLCollection : 'https://developer.mozilla.org/fr/docs/Web/API/HTMLCollection',
 			HTMLElement : 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement',
 			Node : 'https://developer.mozilla.org/en-US/docs/Web/API/Node',
 			NodeList : 'https://developer.mozilla.org/fr/docs/Web/API/NodeList',
