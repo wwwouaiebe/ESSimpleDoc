@@ -93,6 +93,13 @@ class CommentsDocBuilder {
 	#beginNewLineRegExp;
 
 	/**
+	 * A RegExp to find a new line folowwed by a star followed by a space
+	 * @type {RegExp}
+	 */
+
+	#newLineStarSpaceRegExp;
+
+	/**
 	A RegExp to find a type in the string ( a string starting with { and ending with }
 	@type {RegExp}
 	*/
@@ -118,6 +125,7 @@ class CommentsDocBuilder {
 		this.#endSpaceNewlineRegExp = RegExp ( '[ |\\n]$' );
 		this.#multipleSpacesRegExp = RegExp ( '[ ]+', 'g' );
 		this.#spaceNewlineSpaceRegExp = RegExp ( '[ ]*[\\n][ ]*', 'g' );
+		this.#newLineStarSpaceRegExp = RegExp ( '[\\n][*][ ]', 'g' );
 		this.#beginNewLineRegExp = RegExp ( '^\\n' );
 		this.#typeRegExp = RegExp ( '{.*}' );
 		this.#nameRegExp = RegExp ( '^[a-zA-Z0-9]*' );
@@ -302,6 +310,9 @@ class CommentsDocBuilder {
 			.replaceAll ( '\t', ' ' ) // tab
 			.replaceAll ( this.#multipleSpacesRegExp, ' ' ) // multiple spaces
 			.replaceAll ( this.#spaceNewlineSpaceRegExp, '\n' ) // spaces + eol + spaces
+
+			.replaceAll ( this.#newLineStarSpaceRegExp, '\n' ) // eol + space + *
+
 			.replaceAll ( '@', '§§§@' ) // strange text
 			.replace ( this.#beginNewLineRegExp, '' ) // eol at the beginning
 			.split ( '§§§' )
@@ -313,10 +324,10 @@ class CommentsDocBuilder {
 	}
 
 	/**
-	Build a CommentsDoc object from the leading comments found in the code before the class/method/properties/variable
-	@param {Array.<String>} leadingComments The leadingComments to use
-	@return {CommentsDoc} An object with the comments
-	*/
+	 * Build a CommentsDoc object from the leading comments found in the code before the class/method/properties/variable
+	 * @param {Array.<String>} leadingComments The leadingComments to use
+	 * @return {CommentsDoc} An object with the comments
+	 */
 
 	build ( leadingComments ) {
 
