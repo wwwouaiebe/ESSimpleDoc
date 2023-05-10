@@ -30,6 +30,11 @@ import theLinkBuilder from './LinkBuilder.js';
 import NavHtmlBuilder from './NavHtmlBuilder.js';
 import { marked } from 'marked';
 
+marked.use ( {
+	mangle : false,
+	headerIds : false
+} );
+
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
 Build the html page for a class
