@@ -92,7 +92,7 @@ class LinkBuilder {
 			ArrayBuffer : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer',
 			Boolean : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean',
 			Error : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error',
-			Fle : 'https://developer.mozilla.org/en-US/docs/Web/API/File',
+			File : 'https://developer.mozilla.org/en-US/docs/Web/API/File',
 			Function : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function',
 			Map : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map',
 			Number : 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number',
