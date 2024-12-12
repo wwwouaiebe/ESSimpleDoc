@@ -68,7 +68,7 @@ class AppLoader {
 	@type {String}
 	*/
 
-	static get #version ( ) { return 'v1.3.0'; }
+	static get #version ( ) { return 'v1.3.5'; }
 
 	/**
 	The constructor
