@@ -1,0 +1,6 @@
+{
+    "ESLintFiles" : [ "./src/**/*.js" ],
+    "styleLintFiles" : [ ],
+    "tasks" : [
+    ]
+}

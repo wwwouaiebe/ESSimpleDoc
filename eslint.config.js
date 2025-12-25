@@ -12,14 +12,13 @@ export default [
 		},
 		"parserOptions": {
 			"ecmaVersion": "latest",
-			"sourceType": "module"
-		},
-		"parser": "@babel/eslint-parser",
-		"parserOptions": {
+			"sourceType": "module",
 			"requireConfigFile": false
 		},
 		*/
-		"rules" : {
+
+		"rules": {
+			"no-unused-private-class-members": ["warn"],
 			"curly" : [ "warn" ],
 			"complexity" : [ "warn", 20 ],
 			"default-case" : [ "warn" ],
@@ -28,14 +27,15 @@ export default [
 			"no-case-declarations" : [ "warn" ],
 			"no-else-return" : ["warn" ],
 			"no-eval" : [ "error" ],
-			"no-console" : ["warn", { "allow" : ["error", "clear"] }],
+			"no-empty" : [ "warn" ],
+			"no-console" : ["warn", { "allow" : ["error"] }],
 			"no-extend-native" : [ "error" ],
 			"no-extra-bind" : [ "error" ],
 			"no-implicit-coercion" : [ "error" ],
 			"no-implicit-globals" :  [ "error" ],
 			"no-labels" : [ "error" ],
 			"no-lone-blocks" : [ "error" ],
-			"no-magic-numbers" : [ "warn", { "ignoreArrayIndexes" : false, "detectObjects" : true, "ignore": [ -1, 0, 1, 2, 3, 4, 5 ] } ],
+			"no-magic-numbers" : [ "warn", { "ignoreArrayIndexes" : false, "detectObjects" : true } ],
 			"no-multi-spaces" : [ "warn" ],
 			"no-param-reassign" : [ "warn" ],
 			"no-self-assign" : [ "warn" ],
@@ -46,11 +46,11 @@ export default [
 			"no-useless-return" : [ "warn" ],
 			"no-unused-vars" : [ "warn" ],
 			"prefer-promise-reject-errors" : [ "warn" ],
-			"yoda" : [ "warn" , "always" ],
+			"yoda" : [ "warn" , "always" ],			
 			"init-declarations" : [ "warn", "always" ],
 			"no-shadow" : [ "error", { "builtinGlobals" : true, "hoist" : "all"} ],
 			"no-undef-init" : [ "warn" ],
-			"no-use-before-define": ["warn", { "functions": true, "classes": true }],
+			"no-use-before-define": ["warn", { "functions": true, "classes": true }],		
 			"array-bracket-newline" : [ "warn" , "consistent" ],
 			"array-bracket-spacing" : [ "warn" , "always" ],
 			"array-element-newline" : [ "warn" , "consistent" ],
@@ -72,6 +72,7 @@ export default [
 			"key-spacing" : [ "warn", { "beforeColon": true , "afterColon": true , "mode": "strict" } ],
 			"keyword-spacing" : [ "warn" ],
 			"lines-around-comment" : [ "warn", { "beforeBlockComment": true , "afterBlockComment": true , "beforeLineComment": true , "afterLineComment": false} ],
+			"max-classes-per-file": ["warn", 1],
 			"max-lines" : [ "warn", { "max": 300, "skipBlankLines": true , "skipComments": true } ],
 			"max-depth" : [ "warn" , { "max" : 4 } ],
 			"max-len" : [ "warn" , { "code" : 128 } ],
@@ -109,7 +110,7 @@ export default [
 			"space-unary-ops": [ "warn" , { "words": true, "nonwords": true, "overrides": { "-": false  } } ],
 			"spaced-comment" : [ "warn" , "always" ],
 			"switch-colon-spacing" : [ "warn" , {"after": true, "before": true}],
-			"wrap-regex" : [ "warn" ],
+			"wrap-regex" : [ "warn" ],			
 			"arrow-body-style" : [ "warn" , "as-needed" ],
 			"arrow-parens" : [ "warn" , "as-needed" ],
 			"arrow-spacing" : [ "warn", { "before": true, "after": true } ],
