@@ -23,47 +23,57 @@ Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import CommentsDocBuilder from './CommentsDocBuilder.js';
-import VariableDoc from './VariableDoc.js';
-
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
-Build the variableDoc object for a variable
+Base class with properties needed to build the html files for classes/methods/properties/variables
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class VariableDocBuilder {
+class VariableDoc {
 
 	/**
-	The constructor
+	The name found in ast
+	@type {?String}
 	*/
 
-	constructor ( ) {
-		Object.freeze ( this );
-	}
+	name = null;
 
 	/**
-	Build a VariableDoc object from an
-	[ast node](https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md)
-	@param {Object} variableDeclarationNode An ast node of type VariableDeclaration
-	@param {String} fileName the file name in witch the variableDeclarationNnode was found, including path
-	@return {VariableDoc} The created object
+	The path between the html file and theConfig.destDir ( something like '../../../', depending of the folders tree )
+	@type {?String}
 	*/
 
-	build ( variableDeclarationNode, fileName ) {
+	rootPath = null;
 
-		const variableDoc = new VariableDoc ( );
-		variableDoc.name = variableDeclarationNode.declarations [ 0 ].id.name;
-		variableDoc.kind = variableDeclarationNode?.kind;
-		variableDoc.file = fileName;
-		variableDoc.rootPath = '';
-		variableDoc.line = variableDeclarationNode.loc.start.line;
-		variableDoc.commentsDoc = new CommentsDocBuilder ( ).build ( variableDeclarationNode.leadingComments );
+	/**
+	The file name in witch the class/method/property/variable is declared, including path since theConfig.destDir
+	@type {?String}
+	*/
 
-		return Object.freeze ( variableDoc );
-	}
+	file = null;
+
+	/**
+	The line at witch the class/method/property/variable is declared - found in ast
+	@type {?String}
+	*/
+
+	line = null;
+
+	/**
+	The doc found in the comments of the class/method/property/variable
+	@type {?CommentsDoc}
+	*/
+
+	commentsDoc = null;
+
+	/**
+	The constructor. Seal the object, so it's not possible to add new properties to the object
+	*/
+
+	constructor ( ) { }
+
 }
 
-export default VariableDocBuilder;
+export default VariableDoc;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

@@ -1,6 +1,10 @@
-{
-    "ESLintFiles" : [ "./src/**/*.js" ],
-    "styleLintFiles" : [ ],
-    "tasks" : [
-    ]
-}
+[
+    {
+        "name" : "Running ESLint",
+        "ESLintFiles" : [ "./src/**/*.js" ]
+    },
+    {
+        "name" : "Running StyleLint",
+        "styleLintFiles" : [ "./src/**/*.css" ]
+    }
+]

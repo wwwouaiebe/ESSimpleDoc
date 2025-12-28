@@ -23,47 +23,67 @@ Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import CommentsDocBuilder from './CommentsDocBuilder.js';
-import VariableDoc from './VariableDoc.js';
-
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
-Build the variableDoc object for a variable
+A class with properties found in the comments and needed to build the html files for
+classes/methods/properties/variables
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class VariableDocBuilder {
+class CommentsDoc {
+
+	/**
+	The description of the commented class/method/property/variable
+	@type {?String}
+	*/
+
+	desc = null;
+
+	/**
+	The sample of the commented class/method/property/variable
+	@type {?String}
+	*/
+
+	sample = null;
+
+	/**
+	The type of the commented variable
+	@type {?String}
+	*/
+
+	type = null;
+
+	/**
+	The params of the commented method
+	@type {?Array.<TypeDescription>}
+	*/
+
+	params = null;
+
+	/**
+	The returns type of the commented method
+	@type {TypeDescription}
+	*/
+
+	returns = null;
+
+	/**
+	A flag indicating that the class/method/property/variable have to be ignored
+	@type {Boolean}
+	*/
+
+	ignore = null;
 
 	/**
 	The constructor
 	*/
 
 	constructor ( ) {
-		Object.freeze ( this );
+		Object.seal ( this );
 	}
 
-	/**
-	Build a VariableDoc object from an
-	[ast node](https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md)
-	@param {Object} variableDeclarationNode An ast node of type VariableDeclaration
-	@param {String} fileName the file name in witch the variableDeclarationNnode was found, including path
-	@return {VariableDoc} The created object
-	*/
-
-	build ( variableDeclarationNode, fileName ) {
-
-		const variableDoc = new VariableDoc ( );
-		variableDoc.name = variableDeclarationNode.declarations [ 0 ].id.name;
-		variableDoc.kind = variableDeclarationNode?.kind;
-		variableDoc.file = fileName;
-		variableDoc.rootPath = '';
-		variableDoc.line = variableDeclarationNode.loc.start.line;
-		variableDoc.commentsDoc = new CommentsDocBuilder ( ).build ( variableDeclarationNode.leadingComments );
-
-		return Object.freeze ( variableDoc );
-	}
 }
 
-export default VariableDocBuilder;
+export default CommentsDoc;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

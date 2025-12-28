@@ -189,6 +189,7 @@ class LinkBuilder {
 	getSourceLink ( doc ) {
 		let sourceLink = this.#sourcesLinks.get ( doc.file );
 		if ( sourceLink ) {
+			// eslint-disable-next-line no-magic-numbers
 			return doc.rootPath + sourceLink + '#L' + String ( doc.line ).padStart ( 5, '_' );
 		}
 		return null;

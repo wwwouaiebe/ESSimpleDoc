@@ -23,47 +23,39 @@ Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import CommentsDocBuilder from './CommentsDocBuilder.js';
 import VariableDoc from './VariableDoc.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
-Build the variableDoc object for a variable
+A class with properties needed to build the html files for classes
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class VariableDocBuilder {
+class ClassDoc extends VariableDoc {
+
+	/**
+	The super class name
+	@type {?String}
+	*/
+
+	superClass = null;
+
+	/**
+	The methods and properties of the class
+	@type {?Array.<methodOrPropertyDoc>}
+	*/
+
+	methodsAndProperties = null;
 
 	/**
 	The constructor
 	*/
 
 	constructor ( ) {
-		Object.freeze ( this );
-	}
-
-	/**
-	Build a VariableDoc object from an
-	[ast node](https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md)
-	@param {Object} variableDeclarationNode An ast node of type VariableDeclaration
-	@param {String} fileName the file name in witch the variableDeclarationNnode was found, including path
-	@return {VariableDoc} The created object
-	*/
-
-	build ( variableDeclarationNode, fileName ) {
-
-		const variableDoc = new VariableDoc ( );
-		variableDoc.name = variableDeclarationNode.declarations [ 0 ].id.name;
-		variableDoc.kind = variableDeclarationNode?.kind;
-		variableDoc.file = fileName;
-		variableDoc.rootPath = '';
-		variableDoc.line = variableDeclarationNode.loc.start.line;
-		variableDoc.commentsDoc = new CommentsDocBuilder ( ).build ( variableDeclarationNode.leadingComments );
-
-		return Object.freeze ( variableDoc );
+		super ( );
 	}
 }
 
-export default VariableDocBuilder;
+export default ClassDoc;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

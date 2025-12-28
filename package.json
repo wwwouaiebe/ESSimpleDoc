@@ -2,7 +2,7 @@
     "type": "module",
     "name": "essimpledoc",
     "version": "1.3.11",
-    "buildNumber": 2,
+    "buildNumber": 15,
     "description": "A simple documentation generator for ES modules",
     "main": "bin/index.js",
     "bin": {

@@ -271,6 +271,7 @@ class SourceHtmlBuilder {
 
 				// and adding a row in the html table
 				lineCounter ++;
+				// eslint-disable-next-line no-magic-numbers
 				const strLineCounter = String ( lineCounter ).padStart ( 5, '_' );
 				html +=
 					`<tr><td><a id="L${strLineCounter}">${lineCounter}</a></td>` +

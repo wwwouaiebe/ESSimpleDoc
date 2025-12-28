@@ -23,47 +23,59 @@ Doc reviewed 20211111
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import CommentsDocBuilder from './CommentsDocBuilder.js';
 import VariableDoc from './VariableDoc.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
-Build the variableDoc object for a variable
+A class with properties needed to build the html files for methods/properties
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class VariableDocBuilder {
+class MethodOrPropertyDoc extends VariableDoc {
 
 	/**
-	The constructor
+	A flag indicating that the method or property is static - found in ast
+	@type {?boolean}
 	*/
 
-	constructor ( ) {
-		Object.freeze ( this );
-	}
+	static = null;
 
 	/**
-	Build a VariableDoc object from an
-	[ast node](https://github.com/babel/babel/blob/main/packages/babel-parser/ast/spec.md)
-	@param {Object} variableDeclarationNode An ast node of type VariableDeclaration
-	@param {String} fileName the file name in witch the variableDeclarationNnode was found, including path
-	@return {VariableDoc} The created object
+	A flag indicating that the method is async
+	@type {?boolean}
 	*/
 
-	build ( variableDeclarationNode, fileName ) {
+	async = null;
 
-		const variableDoc = new VariableDoc ( );
-		variableDoc.name = variableDeclarationNode.declarations [ 0 ].id.name;
-		variableDoc.kind = variableDeclarationNode?.kind;
-		variableDoc.file = fileName;
-		variableDoc.rootPath = '';
-		variableDoc.line = variableDeclarationNode.loc.start.line;
-		variableDoc.commentsDoc = new CommentsDocBuilder ( ).build ( variableDeclarationNode.leadingComments );
+	/**
+	A flag indicating that the method or property is private - found in ast
+	@type {?boolean}
+	*/
 
-		return Object.freeze ( variableDoc );
-	}
+	private = null;
+
+	/**
+	The kind of method ( = 'get', 'set' or 'constructor' ) - found in ast
+	@type {?String}
+	*/
+
+	kind = null;
+
+	/**
+	The type ( = 'method' or 'property' ) - found in ast
+	@type {?String}
+	*/
+
+	isA = null;
+
+	/**
+	The params names found in ast
+	@type {?Array.<String>}
+	*/
+
+	params = null;
 }
 
-export default VariableDocBuilder;
+export default MethodOrPropertyDoc;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

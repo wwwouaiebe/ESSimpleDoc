@@ -126,6 +126,7 @@ class ClassHtmlBuilder {
 			methodOrPropertyDoc.params.forEach (
 				param => params += param + ', '
 			);
+			// eslint-disable-next-line no-magic-numbers
 			params = params.substring ( 0, params.length - 2 );
 		}
 
@@ -207,6 +208,7 @@ class ClassHtmlBuilder {
 	@param {MethodOrPropertyDoc} methodOrPropertyDoc The object with the extracted documentation for the method or property
 	*/
 
+	// eslint-disable-next-line complexity
 	#buildMethodOrProperty ( methodOrPropertyDoc ) {
 
 		// Header

@@ -24,7 +24,8 @@ Doc reviewed 20211111
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import CommentsDocBuilder from './CommentsDocBuilder.js';
-import { MethodOrPropertyDoc, ClassDoc } from './Docs.js';
+import MethodOrPropertyDoc from './MethodOrPropertyDoc.js';
+import ClassDoc from './ClassDoc.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -72,6 +73,7 @@ class ClassDocBuilder {
 	@return {MethodOrPropertyDoc} The created object
 	*/
 
+	// eslint-disable-next-line complexity
 	#buildMethodOrPropertyDoc ( methodOrPropertyNode ) {
 
 		const methodOrPropertyDoc = new MethodOrPropertyDoc ( );
