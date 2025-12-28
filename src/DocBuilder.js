@@ -177,11 +177,11 @@ class DocBuilder {
 
 		function addCommentTags ( comment ) {
 			let currentLine = comment.loc.start.line;
-			tagsData.push ( new TagData ( currentLine, comment.loc.start.column, '§lt§span class=§quot§Comment§quot§§gt§' ) );
+			tagsData.push ( new TagData ( currentLine, comment.loc.start.column, '§lt§span class=§quot§comment§quot§§gt§' ) );
 			while ( currentLine !== comment.loc.end.line ) {
 				tagsData.push ( new TagData ( currentLine, null, '§lt§/span§gt§' ) );
 				currentLine ++;
-				tagsData.push ( new TagData ( currentLine, 0, '§lt§span class=§quot§Comment§quot§§gt§' ) );
+				tagsData.push ( new TagData ( currentLine, 0, '§lt§span class=§quot§comment§quot§§gt§' ) );
 			}
 			tagsData.push ( new TagData ( comment.loc.end.line, comment.loc.end.column, '§lt§/span§gt§' ) );
 		}
@@ -198,7 +198,8 @@ class DocBuilder {
 							new TagData (
 								path.node.loc.start.line,
 								path.node.loc.start.column,
-								'§lt§span class=' + '§quot§' + path.node.type + '§quot§§gt§'
+								'§lt§span class=' + '§quot§' +
+									path.node.type.toLowerCase ( ).replaceAll ( /literal/g, '-literal' ) + '§quot§§gt§'
 							)
 						);
 						tagsData.push ( new TagData ( path.node.loc.end.line, path.node.loc.end.column, '§lt§/span§gt§' ) );

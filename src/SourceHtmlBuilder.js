@@ -99,7 +99,7 @@ class SourceHtmlBuilder {
 		SourceHtmlBuilder.#jsKeywords.forEach (
 			keyword => {
 				const regexp = new RegExp ( '(?<=[\n| |,|;|.])' + keyword + '(?=[ |,|;|.])', 'g' );
-				this.#fileContent = this.#fileContent.replaceAll ( regexp, '<span class="jsKeyword">' + keyword + '</span>' );
+				this.#fileContent = this.#fileContent.replaceAll ( regexp, '<span class="js-keyword">' + keyword + '</span>' );
 			}
 		);
 	}
@@ -114,7 +114,7 @@ class SourceHtmlBuilder {
 				const regexp = new RegExp ( '(?<=[\n| |,|;|.|{])' + classLink [ 0 ] + '(?=[ |,|;|.|}|\r|\n])', 'g' );
 				this.#fileContent = this.#fileContent.replaceAll (
 					regexp,
-					`<a class="classLink" href="${this.#rootPath + classLink [ 1 ]}">` + classLink [ 0 ] + '</a>'
+					`<a class="class-link" href="${this.#rootPath + classLink [ 1 ]}">` + classLink [ 0 ] + '</a>'
 				);
 			}
 		);
@@ -130,7 +130,7 @@ class SourceHtmlBuilder {
 				const regexp = new RegExp ( '(?<=[\n| |,|;|.])' + variableLink [ 0 ] + '(?=[ |,|;|.|\r|\n])', 'g' );
 				this.#fileContent = this.#fileContent.replaceAll (
 					regexp,
-					`<a class="variableLink" href="${this.#rootPath + variableLink [ 1 ]}">` + variableLink [ 0 ] + '</a>'
+					`<a class="variable-link" href="${this.#rootPath + variableLink [ 1 ]}">` + variableLink [ 0 ] + '</a>'
 				);
 			}
 		);
@@ -263,7 +263,7 @@ class SourceHtmlBuilder {
 
 		// creating the file content in a html table
 		let lineCounter = 0;
-		html += '<table class="srcCode">';
+		html += '<table class="src-code">';
 
 		// splitting file into lines
 		this.#fileContent.split ( /\r\n|\r|\n/ ).forEach (

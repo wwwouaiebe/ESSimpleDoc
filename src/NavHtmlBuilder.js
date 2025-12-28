@@ -68,7 +68,7 @@ class NavHtmlBuilder {
 			link => {
 				if ( firstLetter !== link [ 0 ] [ 0 ].toUpperCase ( ) ) {
 					firstLetter = link [ 0 ] [ 0 ].toUpperCase ( );
-					this.#navHtml += `<li class="navLetter">${firstLetter}</li>`;
+					this.#navHtml += `<li class="nav-letter">${firstLetter}</li>`;
 				}
 				this.#navHtml += `<li><a href="${this.#rootPath + link [ 1 ]}">${link [ 0 ]}</a> </li>`;
 			}
@@ -88,7 +88,7 @@ class NavHtmlBuilder {
 				const fileName = link [ 0 ].substring ( link [ 0 ].lastIndexOf ( '/' ) + 1 );
 				if ( path !== filePath ) {
 					path = filePath;
-					this.#navHtml += `<li class="navLetter">${filePath}</li>`;
+					this.#navHtml += `<li class="nav-letter">${filePath}</li>`;
 				}
 				this.#navHtml += `<li><a href="${this.#rootPath + link [ 1 ]}">${fileName}</a> </li>`;
 			}
@@ -108,21 +108,21 @@ class NavHtmlBuilder {
 
 		this.#navHtml = '<nav>';
 
-		this.#navHtml += `<div id="homeNav"><a href="${this.#rootPath + 'index.html'}">🏠</a></div>`;
+		this.#navHtml += `<div id="home-nav"><a href="${this.#rootPath + 'index.html'}">🏠</a></div>`;
 
-		this.#navHtml += '<div id="sourcesNav">Sources</div><ul id="sourcesNavList">';
+		this.#navHtml += '<div id="sources-nav">Sources</div><ul id="sources-nav-list">';
 		this.#buildSourcesList ( theLinkBuilder.sourcesLinks );
 		this.#navHtml += '</ul>';
 
-		this.#navHtml += '<div id="variablesNav">Globals</div><ul id="variablesNavList">';
+		this.#navHtml += '<div id="variables-nav">Globals</div><ul id="variables-nav-list">';
 		this.#buildList ( theLinkBuilder.variablesLinks );
 		this.#navHtml += '</ul>';
 
-		this.#navHtml += '<div id="classesNav">Classes</div><ul id="classesNavList">';
+		this.#navHtml += '<div id="classes-nav">Classes</div><ul id="classes-nav-list">';
 		this.#buildList ( theLinkBuilder.classesLinks );
 		this.#navHtml += '</ul>';
 
-		this.#navHtml += '<div id="showPrivateNav" title="Show or hide private properties and methods">#</div>';
+		this.#navHtml += '<div id="show-private-nav" title="Show or hide private properties and methods">#</div>';
 
 		this.#navHtml += '</nav>';
 

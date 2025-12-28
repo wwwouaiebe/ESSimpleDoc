@@ -90,35 +90,35 @@ nav > div
 	cursor: pointer;
 }
 
-#sourcesNav 
+#sources-nav 
 {
 	background-color : blue;
 	border-color : blue;
 	left : 1cm;
 }
 
-#homeNav
+#home-nav
 {
 	color : black;
 	left:0;
 	width: 1cm;
 }
 
-#variablesNav 
+#variables-nav 
 {
 	background-color : green;
 	border-color : green;
 	left : 3cm;	
 }
 
-#classesNav
+#classes-nav
 {
 	background-color : red;
 	border-color : red;
 	left : 5cm;
 }
 
-#showPrivateNav
+#show-private-nav
 {
 	color : black;
 	left : 7cm;
@@ -126,15 +126,15 @@ nav > div
 	display: none;
 }
 
-body.havePrivateButton #showPrivateNav {
+body.have-private-button #show-private-nav {
 	display: inherit;
 }
 
-#showPrivateNav::before {
+#show-private-nav::before {
 	content : "✔️"
 }
 
-body.showPrivate #showPrivateNav::before {
+body.show-private #show-private-nav::before {
 	content : "❌"
 }
 
@@ -156,7 +156,7 @@ nav > div ~ ul > li
 	padding-right : 0.5cm;
 }
 
-nav  > div ~ ul > li.navLetter
+nav  > div ~ ul > li.nav-letter
 {
 	display : block;
 	margin-top : 3mm;
@@ -168,9 +168,9 @@ nav  > div ~ ul > li.navLetter
 	color: white;
 }
 
-nav > div#sourcesNav:hover ~ ul#sourcesNavList,
-nav > div#variablesNav:hover ~ ul#variablesNavList,
-nav > div#classesNav:hover ~ ul#classesNavList,
+nav > div#sources-nav:hover ~ ul#sources-nav-list,
+nav > div#variables-nav:hover ~ ul#variables-nav-list,
+nav > div#classes-nav:hover ~ ul#classes-nav-list,
 nav > div ~ ul:hover
 {
 	width: calc(100vw - 2cm);
@@ -290,7 +290,7 @@ table.params tr > th
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-table.srcCode {
+table.src-code {
 	font-family : monospace;
 	margin-left : 0;
 	border-style:solid;
@@ -299,14 +299,14 @@ table.srcCode {
 	padding: 0.5cm;
 }
 
-table.srcCode pre
+table.src-code pre
 {
 	margin : 0;
 	padding : 0;
 	font-weight: bolder;
 }
 
-table.srcCode tr > td:first-child
+table.src-code tr > td:first-child
 {
 	color : gray;
 	text-align: right;
@@ -315,42 +315,42 @@ table.srcCode tr > td:first-child
 
 /* code comments in green */
 
-.Comment,
-.Comment > .jsKeyword,
-.Comment > .classLink,
-.Comment > .variableLink
+.comment,
+.comment > .js-keyword,
+.comment > .class-link,
+.comment > .variable-link
 {
 	color : green;
 	font-weight: normal;
 }
 
-.TemplateLiteral,
-.TemplateLiteral > .jsKeyword,
-.TemplateLiteral > .classLink,
-.TemplateLiteral > .variableLink,
-.RegExpLiteral,
-.RegExpLiteral > .jsKeyword,
-.RegExpLiteral > .classLink,
-.RegExpLiteral > .variableLink
+.template-literal,
+.template-literal > .js-keyword,
+.template-literal > .class-link,
+.template-literal > .variable-link,
+.regexp-literal,
+.regexp-literal > .js-keyword,
+.regexp-literal > .class-link,
+.regexp-literal > .variable-link
 {
 	color : gray;
 }
 
 /* JS keywords in blue */ 
 
-.jsKeyword {
+.js-keyword {
 	color : blue;
 }
 
 /* classes links in red */
 
-.classLink {
+.class-link {
 	color: red;
 }
 
 /* variables links in dark red */
 
-.variableLink
+.variable-link
 {
 	color: darkred;
 }
@@ -374,7 +374,7 @@ table.srcCode tr > td:first-child
 	display: none;
 }
 
-body.showPrivate .private 
+body.show-private .private 
 {
 	display : inherit;
 }

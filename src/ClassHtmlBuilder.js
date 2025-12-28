@@ -330,7 +330,7 @@ class ClassHtmlBuilder {
 		this.#html =
 			'<!DOCTYPE html><html><head><meta charset="UTF-8">' +
 			`<link type="text/css" rel="stylesheet" href="${classDoc.rootPath}ESSimpleDoc.css"></head>` +
-			'<body class=\'havePrivateButton\'>';
+			'<body class=\'have-private-button\'>';
 
 		// <nav> tag build
 		const navHtmlBuilder = new NavHtmlBuilder ( );
@@ -442,8 +442,8 @@ class ClassHtmlBuilder {
 		this.#html += navHtmlBuilder.footer;
 		this.#html +=
 			'<script>' +
-			'document.getElementById(\'showPrivateNav\')' +
-			'.addEventListener(\'click\',()=>document.body.classList.toggle(\'showPrivate\'))' +
+			'document.getElementById(\'show-private-nav\')' +
+			'.addEventListener(\'click\',()=>document.body.classList.toggle(\'show-private\'))' +
 			'</script>';
 		this.#html += '</body></html>';
 
