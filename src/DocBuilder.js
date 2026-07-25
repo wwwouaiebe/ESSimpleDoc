@@ -29,7 +29,7 @@ Doc reviewed 20211111
 
 import process from 'process';
 import fs from 'fs';
-import babelParser from '@babel/parser';
+import { parse } from '@babel/parser';
 import traverse from '@babel/traverse';
 
 import ClassDocBuilder from './ClassDocBuilder.js';
@@ -99,7 +99,7 @@ class DocBuilder {
 			'functionBind',
 			'importMeta',
 			[ 'pipelineOperator', {
-				proposal : 'minimal'
+				proposal : 'fsharp'
 			} ],
 			'throwExpressions'
 		],
@@ -186,7 +186,7 @@ class DocBuilder {
 			tagsData.push ( new TagData ( comment.loc.end.line, comment.loc.end.column, '§lt§/span§gt§' ) );
 		}
 
-		traverse.default (
+		traverse (
 			ast,
 			{
 				enter ( path ) {
@@ -234,13 +234,17 @@ class DocBuilder {
 
 					// Reading the source
 					const fileContent = fs.readFileSync ( theConfig.srcDir + sourceFileName, 'utf8' );
-					ast = babelParser.parse ( fileContent, this.#parserOptions );
+					ast = parse ( fileContent, this.#parserOptions );
 				}
 				catch ( err ) {
+					console.error ( err );
+
+					/*
 					console.error (
 						`\n\t\x1b[31mError\x1b[0m parsing file \x1b[31m${sourceFileName}\x1b[0m` +
 						` at line ${err.loc.line} column ${err.loc.column} : \n\t\t${err.message}\n`
 					);
+					*/
 
 					process.exit ( 1 );
 				}
